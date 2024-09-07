@@ -21,7 +21,7 @@ public class TestQRCodeController {
 	public void postCreateQRTest() {
 		
 		try {
-			qrCodeService.createQrCode("myQrCodeFb", "https://www.facebook.com/2810pnl");
+			qrCodeService.createQrCodeForTable("A1", "28");
 		} catch (WriterException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

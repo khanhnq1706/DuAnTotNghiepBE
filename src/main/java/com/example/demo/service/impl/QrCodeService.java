@@ -17,6 +17,8 @@ import com.google.zxing.qrcode.QRCodeWriter;
 @Service
 public class QrCodeService {
 
+	 private String hosting ="http://localhost:8080";
+	
 	 public  void createQrCode( String nameQrCode, String linkQrCode) throws WriterException, IOException {
 	    	
     	 String data =linkQrCode;
@@ -37,7 +39,26 @@ public class QrCodeService {
 
          System.out.println("Done !");
     }
-    
+	 public  void createQrCodeForTable( String nameTable, String idTable) throws WriterException, IOException {
+	    	
+    	 String data ="http://localhost:8080/userview?table="+idTable;
+     	
+         QRCodeWriter qrCodeWriter = new QRCodeWriter();
+         BitMatrix matrix =  qrCodeWriter.encode(data, BarcodeFormat.QR_CODE,250,250);
+
+       
+         File rootOutputFile = new File("src/main/resources/static/QRCode");
+         if(!rootOutputFile.exists()) {
+        	 rootOutputFile.mkdirs();
+         }
+         Path path = Paths.get(rootOutputFile.getAbsolutePath(),"QRCode_Table_"+ nameTable+".PNG");
+         MatrixToImageWriter.writeToPath(matrix, "PNG", path);
+
+         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+         MatrixToImageWriter.writeToStream(matrix, "PNG", outputStream);
+
+         System.out.println("Done !");
+    }
 	
 	
 }
