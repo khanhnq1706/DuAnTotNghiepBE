@@ -17,15 +17,15 @@ public class TestQRCodeController {
 	@Autowired
 	private QrCodeService qrCodeService;
 	
-	@PostMapping("testCreateQR")
-	public void postCreateQRTest() {
-		
-		try {
-			qrCodeService.createQrCodeForTable("A1", "28");
-		} catch (WriterException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	@PostMapping("testCreateQR")
+//	public void postCreateQRTest() {
+//		
+//		try {
+//			qrCodeService.createQrCodeForTable("A1", "28");
+//		} catch (WriterException | IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 	
 }

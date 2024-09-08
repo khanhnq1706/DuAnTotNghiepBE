@@ -22,7 +22,7 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryFoodEntity extends BaseEntity {
-	@Id  @GeneratedValue(strategy = GenerationType.AUTO)
+	@Id  @GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idCategory;
 	
 	@Column(columnDefinition = "varchar(100)")

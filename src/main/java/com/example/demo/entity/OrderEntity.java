@@ -23,14 +23,14 @@ import lombok.experimental.FieldDefaults;
 public class OrderEntity extends BaseEntity {
 
 	@Id 
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idOrder;
 	
 	String statusOrder;
 	
 	@OneToOne
 	@JoinColumn(name = "id_table")
-	tableEntity tableEntity;
+	TableEntity tableEntity;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_User")
