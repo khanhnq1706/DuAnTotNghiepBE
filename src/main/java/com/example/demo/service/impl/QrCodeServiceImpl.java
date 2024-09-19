@@ -22,7 +22,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 @Service
-public class QrCodeService {
+public class QrCodeServiceImpl {
 
 	@Autowired
 	private QrRepository qrRepository;

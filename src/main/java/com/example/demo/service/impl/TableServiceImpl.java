@@ -13,7 +13,7 @@ import com.example.demo.request.TableRequestDTO;
 import com.example.demo.respone.TableResponseDTO;
 
 @Service
-public class TableService {
+public class TableServiceImpl {
 
 	@Autowired
 	private TableRepository tableRepository;
