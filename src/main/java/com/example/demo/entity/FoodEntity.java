@@ -25,6 +25,7 @@ public class FoodEntity extends BaseEntity {
 	int idFood;
 	String nameFood;
 	float priceFood;
+ String imgFood;
 	boolean isSelling;
 	boolean isDeleted;
 
