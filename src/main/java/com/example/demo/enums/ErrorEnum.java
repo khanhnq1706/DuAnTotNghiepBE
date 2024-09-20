@@ -5,9 +5,19 @@ public enum ErrorEnum {
 	NULL_FT(1101,"First test null"),
 	
 	// Error code table : 100*
-	Table_exist(1001,"Table exist in database"),Table_not_exist(1002,"Table not exist in database")
+	Table_exist(1001,"Table exist in database"),
+	Table_not_exist(1002,"Table not exist in database"),
+
+	// error  code Food : 110*
+	FOOD_ALREADY_EXISTS(1101,"Name's Food already exists"),
+	FOOD_NOT_EXISTS(1102,"Food not exists")
+
 	// erroe code qr : 120*
-	,QR_exist(1201,"Qr exist in database")
+	,QR_exist(1201,"Qr exist in database"),
+	// error  code category food : 130*
+	Category_not_found(1301,"Category not found in database"),
+
+
 	;
 	private int code;
 	private String message;
