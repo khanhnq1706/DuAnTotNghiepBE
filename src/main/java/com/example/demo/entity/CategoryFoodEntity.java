@@ -24,14 +24,11 @@ import lombok.experimental.FieldDefaults;
 public class CategoryFoodEntity extends BaseEntity {
 	@Id  @GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idCategory;
-	
+	boolean isDeleted;
+
 	@Column(columnDefinition = "varchar(100)")
 	String nameCategory;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_user")
-	UserEnitty userCreated;
 
-	@OneToMany(mappedBy = "listCategory")
+	@OneToMany(mappedBy = "category")
 	List<FoodEntity> listFoodCreated;
 }

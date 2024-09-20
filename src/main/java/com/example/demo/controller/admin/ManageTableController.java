@@ -15,20 +15,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.request.TableRequestDTO;
 import com.example.demo.respone.ApiRespone;
 import com.example.demo.respone.TableResponseDTO;
-import com.example.demo.service.impl.TableService;
+import com.example.demo.service.impl.TableServiceImpl;
 
 @RestController
 @RequestMapping("api")
 public class ManageTableController {
 
 	@Autowired
-	private TableService tableService;
+	private TableServiceImpl tableServiceImpl;
 
 	@GetMapping("tables")
 
 	public ApiRespone<List<TableResponseDTO>> getTable(@RequestBody TableRequestDTO request) {
 		ApiRespone<List<TableResponseDTO>> response = new ApiRespone<List<TableResponseDTO>>();
-		response.setResult(tableService.getAllTable());
+		response.setResult(tableServiceImpl.getAllTable());
 		return response;
 	}
 
@@ -37,14 +37,14 @@ public class ManageTableController {
 	@PostMapping("table")
 	public ApiRespone<TableResponseDTO> postTable(@RequestBody TableRequestDTO request) {
 		ApiRespone<TableResponseDTO> response = new ApiRespone<TableResponseDTO>();
-		response.setResult(tableService.saveTable(request));
+		response.setResult(tableServiceImpl.saveTable(request));
 		return response;
 	}
 
 	@PutMapping("table/{id}")
 	public ApiRespone<TableResponseDTO> putTable(@RequestBody TableRequestDTO request,@PathVariable("id") int idTable) {
 		ApiRespone<TableResponseDTO> response = new ApiRespone<TableResponseDTO>();
-		response.setResult(tableService.updateTable(request, idTable));
+		response.setResult(tableServiceImpl.updateTable(request, idTable));
 		return response;
 	}
 	

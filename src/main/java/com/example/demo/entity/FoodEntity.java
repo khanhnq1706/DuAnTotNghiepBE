@@ -25,15 +25,13 @@ public class FoodEntity extends BaseEntity {
 	int idFood;
 	String nameFood;
 	float priceFood;
+ String imgFood;
 	boolean isSelling;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_user")
-	UserEnitty userCreated;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
+	boolean isDeleted;
+
+	@ManyToOne()
 	@JoinColumn(name = "id_category")
-	CategoryFoodEntity listCategory;
+	CategoryFoodEntity category;
 	
 	@OneToMany(mappedBy = "foodEntity")
 	List<OrderDetailEntity> listOrderDetail;
