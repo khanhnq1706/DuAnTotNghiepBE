@@ -32,7 +32,7 @@ public class FoodEntity extends BaseEntity {
 	Boolean isDeleted;
 	String note;
 
-	@ManyToOne()
+	@ManyToOne
 	@JoinColumn(name = "id_category")
 	CategoryFoodEntity category;
 	
