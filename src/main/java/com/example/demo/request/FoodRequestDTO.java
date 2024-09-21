@@ -23,4 +23,5 @@ public class FoodRequestDTO {
     @NotNull(message = "Is_Deleted_not_null")
     String isDeleted;
     Integer idCategory;
+    String note;
 }
