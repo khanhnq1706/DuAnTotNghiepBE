@@ -33,7 +33,7 @@ public class OrderDetailEntity  {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idOrderDetail;
 	@Min(1)
-    @Max(15)
+    @Max(50)
 	@Column(nullable = false)
 	private int quantity;
 	@Min(1)
