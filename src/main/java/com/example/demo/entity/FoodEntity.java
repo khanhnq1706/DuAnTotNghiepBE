@@ -26,6 +26,7 @@ public class FoodEntity extends BaseEntity {
 	String nameFood;
 	float priceFood;
 	boolean isSelling;
+	String imgFood;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_user")
