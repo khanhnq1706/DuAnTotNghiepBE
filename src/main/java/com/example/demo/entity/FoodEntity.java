@@ -15,27 +15,38 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.Where;
 
 @Data
 @NoArgsConstructor @AllArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Where(clause = "is_Deleted = false")
 public class FoodEntity extends BaseEntity {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idFood;
 	String nameFood;
 	float priceFood;
-	boolean isSelling;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_user")
-	UserEnitty userCreated;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
+ 	String imgFood;
+	Boolean isSelling;
+	Boolean isDeleted;
+
+	@ManyToOne()
 	@JoinColumn(name = "id_category")
-	CategoryFoodEntity listCategory;
+	CategoryFoodEntity category;
 	
 	@OneToMany(mappedBy = "foodEntity")
 	List<OrderDetailEntity> listOrderDetail;
-	
+
+	@Override
+	public String toString() {
+		return "FoodEntity{" +
+				"idFood=" + idFood +
+				", nameFood='" + nameFood + '\'' +
+				", priceFood=" + priceFood +
+				", imgFood='" + imgFood + '\'' +
+				", isSelling=" + isSelling +
+				", isDeleted=" + isDeleted +
+				'}';
+	}
 }
