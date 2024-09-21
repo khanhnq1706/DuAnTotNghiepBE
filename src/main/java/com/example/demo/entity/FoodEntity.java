@@ -31,7 +31,7 @@ public class FoodEntity extends BaseEntity {
 	Boolean isSelling;
 	Boolean isDeleted;
 
-	@ManyToOne()
+	@ManyToOne
 	@JoinColumn(name = "id_category")
 	CategoryFoodEntity category;
 	
