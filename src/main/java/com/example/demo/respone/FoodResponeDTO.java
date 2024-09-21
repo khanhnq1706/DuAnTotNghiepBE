@@ -17,4 +17,5 @@ public class FoodResponeDTO {
     Boolean isSelling;
     Boolean isDeleted;
     String note;
+    Integer idCategory;
 }
