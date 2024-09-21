@@ -32,13 +32,9 @@ public class OrderEntity extends BaseEntity {
 
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int idOrder;
+	private int idOrder;
 	 @Enumerated(EnumType.STRING)
-	OrderStatus statusOrder;
-	 @Temporal(TemporalType.DATE)
-	Date createdDate;
-	 @Temporal(TemporalType.DATE)
-	Date updatedDate;
+	private OrderStatus statusOrder;
 	@OneToOne
 	@JoinColumn(name = "id_table")
 	TableEntity tableEntity;
@@ -48,7 +44,4 @@ public class OrderEntity extends BaseEntity {
 	
 	@OneToMany(mappedBy = "orderEntity")
 	List<OrderDetailEntity> listOrderDetail;
-	public void preCreate() {
-		createdDate = new Date();
-	}
 }

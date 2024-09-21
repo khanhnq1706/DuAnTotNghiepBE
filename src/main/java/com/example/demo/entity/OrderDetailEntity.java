@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import java.util.Date;
+
 import com.example.demo.enums.PaymentMethod;
 import com.example.demo.enums.PaymentStatus;
 
@@ -12,6 +14,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,19 +28,19 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderDetailEntity  {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	int idOrderDetail;
+	private int idOrderDetail;
 	@Column(nullable = false)
-	int quantity;
+	private int quantity;
 	@Column(nullable = false)
-	long price;
+	private long price;
 	@Column(nullable = false)
-	long totalPrice;
+	private long totalPrice;
 	@Enumerated(EnumType.STRING)
 	PaymentStatus paymentStatus;
 	@Enumerated(EnumType.STRING)
 	PaymentMethod paymentMethod;
 	@Column(columnDefinition = "nvarchar(255)")
-	String note;
+	private String note;
 	@ManyToOne
 	@JoinColumn(name = "id_order")
 	OrderEntity orderEntity;
@@ -44,8 +48,15 @@ public class OrderDetailEntity  {
 	@ManyToOne
 	@JoinColumn(name = "id_food")
 	FoodEntity foodEntity;
-	
-	
-	
-	int quatity;
+	@PrePersist
+	@PreUpdate
+	public void preTotal() {
+	    if (quantity < 0 || price < 0) {
+	        throw new IllegalArgumentException("Số lượng hoặc đơn giá không hợp lệ");
+	    }
+	    totalPrice = quantity * price;
+//	    if (discount > 0) {
+//	        totalPrice -= totalPrice * discount / 100;
+//	    }
+	}
 }
