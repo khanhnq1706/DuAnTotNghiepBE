@@ -1,9 +1,9 @@
 package com.example.demo.request;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
@@ -11,11 +11,16 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FoodRequestDTO {
+
     int idFood;
+    @NotBlank(message = "Name_food_not_blank")
     String nameFood;
-    float priceFood;
-//    String imgFood;
-    boolean isSelling;
-    boolean isDeleted;
-    int idCategory;
+    @NotNull(message = "Price_food_not_null")
+    @Min(value = 0, message = "Price_food_not_negative")
+    Float priceFood;
+    @NotNull(message = "Is_Selling_not_null")
+    String isSelling;
+    @NotNull(message = "Is_Deleted_not_null")
+    String isDeleted;
+    Integer idCategory;
 }

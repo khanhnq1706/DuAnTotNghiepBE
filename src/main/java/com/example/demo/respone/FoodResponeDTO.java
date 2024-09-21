@@ -14,6 +14,6 @@ public class FoodResponeDTO {
     String nameFood;
     float priceFood;
     String imgFood;
-    boolean isSelling;
-    boolean isDeleted;
+    Boolean isSelling;
+    Boolean isDeleted;
 }

@@ -23,13 +23,14 @@ public class ManageFoodController {
                 .build();
     }
     @PostMapping
-    public ApiRespone<?> postFood(@ModelAttribute FoodRequestDTO requestDTO, @RequestParam(name = "file",required = false) MultipartFile file  ) {
+    public ApiRespone<?> postFood(@ModelAttribute @Valid FoodRequestDTO requestDTO, @RequestParam(name = "file",required = false) MultipartFile file  ) {
         return ApiRespone.builder()
                 .result(foodService.saveFood(requestDTO,file))
                 .build();
     }
     @PutMapping("{id}")
-    public ApiRespone<?> putFood(@PathVariable("id") int idFood ,@ModelAttribute FoodRequestDTO requestDTO, @RequestParam(name = "file",required = false) MultipartFile file  ) {
+    public ApiRespone<?> putFood(@PathVariable("id") int idFood ,@ModelAttribute @Valid FoodRequestDTO requestDTO, @RequestParam(name = "file",required = false) MultipartFile file  ) {
+//        System.out.println("testing here :"+requestDTO.toString());
         return ApiRespone.builder()
                 .result(foodService.updateFood(idFood,requestDTO,file))
                 .build();

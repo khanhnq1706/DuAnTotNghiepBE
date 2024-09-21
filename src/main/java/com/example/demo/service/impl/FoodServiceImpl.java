@@ -60,22 +60,26 @@ public class FoodServiceImpl implements FoodService {
     public FoodResponeDTO updateFood(int idFood,FoodRequestDTO requestDTO, MultipartFile file) {
         CategoryFoodEntity categoryFood = categoryRepository.findById(requestDTO.getIdCategory())
                 .orElseThrow(() -> new RuntimeException("Category_not_found"));
-        FoodEntity foodEntity ;
-        foodEntity = foodRepository.findById(idFood).orElseThrow(() -> new RuntimeException("FOOD_NOT_EXISTS"));
-        BeanUtils.copyProperties(requestDTO, foodEntity);
+        FoodEntity foodEntity = foodRepository.findById(idFood)
+                .orElseThrow(() -> new RuntimeException("FOOD_NOT_EXISTS"));
+        String imgFoodTemp = foodEntity.getImgFood();
 
-        if (file != null && !file.getOriginalFilename().equals("")) {
-            System.out.println(file.getOriginalFilename());
-            foodEntity.setImgFood(file.getOriginalFilename());
+        foodEntity =foodMapper.toFoodEntity(requestDTO);
+
+        if (file != null && !file.getOriginalFilename().trim().equals("")) {
+            imgFoodTemp = file.getOriginalFilename();
             fileService.saveFile(file);
-            System.out.println("file :"+ file.getOriginalFilename());
         }
         foodEntity.setCategory(categoryFood);
         foodEntity.setIdFood(idFood);
+        foodEntity.setImgFood(imgFoodTemp);
 
+        System.out.println(foodMapper.toFoodEntity(requestDTO).toString());
         System.out.println(foodEntity.toString());
 
-        return foodMapper.toFoodResponeDTO(foodRepository.save(foodEntity));
+        foodRepository.save(foodEntity);
+
+        return foodMapper.toFoodResponeDTO(foodEntity);
     }
 
 }
