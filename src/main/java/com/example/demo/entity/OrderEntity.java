@@ -18,6 +18,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,8 +34,10 @@ public class OrderEntity extends BaseEntity {
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idOrder;
-	 @Enumerated(EnumType.STRING)
+	@NotNull
+	@Enumerated(EnumType.STRING)
 	private OrderStatus statusOrder;
+	@NotNull
 	@OneToOne
 	@JoinColumn(name = "id_table")
 	TableEntity tableEntity;

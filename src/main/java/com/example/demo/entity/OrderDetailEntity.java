@@ -16,6 +16,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,14 +32,20 @@ import lombok.experimental.FieldDefaults;
 public class OrderDetailEntity  {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idOrderDetail;
+	@Min(1)
+    @Max(15)
 	@Column(nullable = false)
 	private int quantity;
+	@Min(1)
 	@Column(nullable = false)
 	private long price;
 	@Column(nullable = false)
 	private long totalPrice;
+	@NotNull
 	@Enumerated(EnumType.STRING)
+	@NotNull
 	PaymentStatus paymentStatus;
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	PaymentMethod paymentMethod;
 	@Column(columnDefinition = "nvarchar(255)")
