@@ -23,7 +23,4 @@ public class BaseEntity {
 	Date dateModify;
 
 	
-	
-	
-	
 }

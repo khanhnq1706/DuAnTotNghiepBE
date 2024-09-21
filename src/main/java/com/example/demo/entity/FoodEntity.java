@@ -30,6 +30,7 @@ public class FoodEntity extends BaseEntity {
  	String imgFood;
 	Boolean isSelling;
 	Boolean isDeleted;
+	String note;
 
 	@ManyToOne()
 	@JoinColumn(name = "id_category")

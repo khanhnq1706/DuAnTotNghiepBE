@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.stream.Collectors;
@@ -37,6 +38,7 @@ public class FoodServiceImpl implements FoodService {
         return foodRepository.findAll(pageable).map(foodMapper::toFoodResponeDTO);
     }
 
+    @Transactional
     @Override
     public FoodResponeDTO saveFood(FoodRequestDTO requestDTO, MultipartFile file) {
         FoodEntity foodEntity = foodRepository.findByNameFood(requestDTO.getNameFood());
@@ -56,6 +58,7 @@ public class FoodServiceImpl implements FoodService {
         return foodMapper.toFoodResponeDTO(foodRepository.save(foodEntity));
     }
 
+    @Transactional
     @Override
     public FoodResponeDTO updateFood(int idFood,FoodRequestDTO requestDTO, MultipartFile file) {
         CategoryFoodEntity categoryFood = categoryRepository.findById(requestDTO.getIdCategory())
