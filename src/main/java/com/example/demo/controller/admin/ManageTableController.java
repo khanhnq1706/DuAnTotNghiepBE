@@ -20,27 +20,27 @@ import com.example.demo.respone.TableResponseDTO;
 import com.example.demo.service.TableService;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("api/v1/tables")
 public class ManageTableController {
 
 	@Autowired
 	private TableService tableService;
 
-	@GetMapping("tables")
+	@GetMapping
 	public ApiRespone<List<TableResponseDTO>> getTable() {
 		ApiRespone<List<TableResponseDTO>> response = new ApiRespone<List<TableResponseDTO>>();
 		response.setResult(tableService.getAllTables());
 		return response;
 	}
 
-	@PostMapping("table")
+	@PostMapping
 	public ApiRespone<TableResponseDTO> postTable(@RequestBody TableRequestDTO request) {
 		ApiRespone<TableResponseDTO> response = new ApiRespone<TableResponseDTO>();
 		response.setResult(tableService.saveTables(request));
 		return response;
 	}
 
-	@PutMapping("table/{id}")
+	@PutMapping("{id}")
 	public ApiRespone<TableResponseDTO> putTable(@RequestBody TableRequestDTO request,
 			@PathVariable("id") int idTable) {
 		ApiRespone<TableResponseDTO> response = new ApiRespone<TableResponseDTO>();
@@ -53,7 +53,7 @@ public class ManageTableController {
 		}
 	}
 
-	@DeleteMapping("table/{id}")
+	@DeleteMapping("{id}")
 	public ApiRespone<?> deleteTable(@PathVariable("id") int idTable) {
 		return tableService.deleteTable(idTable);
 	}
