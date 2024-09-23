@@ -2,6 +2,8 @@ package com.example.demo.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,14 +26,12 @@ import lombok.experimental.FieldDefaults;
 public class CategoryFoodEntity extends BaseEntity {
 	@Id  @GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idCategory;
-	
+	boolean isDeleted;
+
 	@Column(columnDefinition = "varchar(100)")
 	String nameCategory;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_user")
-	UserEnitty userCreated;
 
-	@OneToMany(mappedBy = "listCategory")
+	@OneToMany(mappedBy = "category")
+	@JsonManagedReference
 	List<FoodEntity> listFoodCreated;
 }
