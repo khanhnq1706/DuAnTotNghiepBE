@@ -2,7 +2,8 @@ package com.example.demo.entity;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,18 +21,22 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryFoodEntity extends BaseEntity {
-	@Id  @GeneratedValue(strategy = GenerationType.IDENTITY)
-	int idCategory;
-	boolean isDeleted;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    int idCategory;
+    boolean isDeleted;
 
-	@Column(columnDefinition = "varchar(100)")
-	String nameCategory;
+    @Column(columnDefinition = "varchar(100)")
+    String nameCategory;
 
-	@OneToMany(mappedBy = "category")
-	@JsonManagedReference
-	List<FoodEntity> listFoodCreated;
+
+    @OneToMany(mappedBy = "category")
+    @JsonIgnore
+    List<FoodEntity> listFoodCreated;
+
 }

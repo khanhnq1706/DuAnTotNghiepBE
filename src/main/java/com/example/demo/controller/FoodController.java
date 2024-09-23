@@ -14,6 +14,7 @@ import com.example.demo.entity.CategoryFoodEntity;
 import com.example.demo.entity.FoodEntity;
 import com.example.demo.repository.FoodFindRepository;
 import com.example.demo.request.FoodRequestDTO;
+import com.example.demo.respone.CategoryRespone;
 import com.example.demo.respone.FoodResponeDTO;
 import com.example.demo.service.impl.CategoryServiceImpl;
 import com.example.demo.service.impl.FoodServiceImpl;
@@ -38,18 +39,29 @@ public class FoodController {
 	
 	@Autowired
 	private CategoryServiceImpl categoryServiceImpl;
-	
+	// danh sách món ăn
 	@GetMapping("")
 	public List<FoodEntity> getListFood() {
 		return foodFindRepository.findAll();
 	}
 	
-	
+	// lọc theo id 
 	@GetMapping("{id}")
-	public List<FoodEntity> findByIdCategory(@PathVariable int id) {
-		CategoryFoodEntity categoryFoodEntity = categoryServiceImpl.findById(id).orElse(null);
-		return foodServiceImpl.findByCategory(categoryFoodEntity);
+	public List<FoodResponeDTO> getFoodbyidCategory(@PathVariable int id) {
+		CategoryFoodEntity  category = categoryServiceImpl.findByidCategory(id);
+		return foodServiceImpl.findByCategory(category);
 	}
+	
+	// lọc theo id và tên
+	@GetMapping("/find/{id}")
+	public List<FoodResponeDTO> getFoodbyIdCategoryandName(@PathVariable int id, @RequestParam String name) {
+		CategoryFoodEntity  category = categoryServiceImpl.findByidCategory(id);
+		return foodServiceImpl.findByCategoryAndNameFoodLike(category, "%" +name + "%");
+	}
+	
+	
+	
+	
 	
 	
 	

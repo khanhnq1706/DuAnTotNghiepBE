@@ -17,80 +17,130 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class FoodServiceImpl implements FoodService {
-    @Autowired
-    private FoodRepository foodRepository;
-    @Autowired
-    private FoodMapper foodMapper;
+	@Autowired
+	private FoodRepository foodRepository;
+	@Autowired
+	private FoodMapper foodMapper;
 
-    @Autowired
-    private FileService fileService;
+	@Autowired
+	private FileService fileService;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Override
-    public Page<FoodResponeDTO> getAllFood(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return foodRepository.findAll(pageable).map(foodMapper::toFoodResponeDTO);
-    }
-
-    @Transactional
-    @Override
-    public FoodResponeDTO saveFood(FoodRequestDTO requestDTO, MultipartFile file) {
-        FoodEntity foodEntity = foodRepository.findByNameFood(requestDTO.getNameFood());
-        CategoryFoodEntity categoryFood = categoryRepository.findById(requestDTO.getIdCategory())
-                .orElseThrow(() -> new RuntimeException("Category_not_found"));
-        if (foodEntity != null) {
-            throw new RuntimeException("FOOD_ALREADY_EXISTS");
-        }
-        foodEntity = foodMapper.toFoodEntity(requestDTO);
-        if (file != null) {
-            System.out.println(file.getOriginalFilename());
-            foodEntity.setImgFood(file.getOriginalFilename());
-            fileService.saveFile(file);
-        }
-        foodEntity.setCategory(categoryFood);
-
-        return foodMapper.toFoodResponeDTO(foodRepository.save(foodEntity));
-    }
-
-    @Transactional
-    @Override
-    public FoodResponeDTO updateFood(int idFood,FoodRequestDTO requestDTO, MultipartFile file) {
-        CategoryFoodEntity categoryFood = categoryRepository.findById(requestDTO.getIdCategory())
-                .orElseThrow(() -> new RuntimeException("Category_not_found"));
-        FoodEntity foodEntity = foodRepository.findById(idFood)
-                .orElseThrow(() -> new RuntimeException("FOOD_NOT_EXISTS"));
-        String imgFoodTemp = foodEntity.getImgFood();
-
-        foodEntity =foodMapper.toFoodEntity(requestDTO);
-
-        if (file != null && !file.getOriginalFilename().trim().equals("")) {
-            imgFoodTemp = file.getOriginalFilename();
-            fileService.saveFile(file);
-        }
-        foodEntity.setCategory(categoryFood);
-        foodEntity.setIdFood(idFood);
-        foodEntity.setImgFood(imgFoodTemp);
-
-        System.out.println(foodMapper.toFoodEntity(requestDTO).toString());
-        System.out.println(foodEntity.toString());
-
-        foodRepository.save(foodEntity);
-
-        return foodMapper.toFoodResponeDTO(foodEntity);
-    }
+	@Autowired
+	private CategoryRepository categoryRepository;
 
 	@Override
-	public List<FoodEntity> findByCategory(CategoryFoodEntity category) {
-		return foodRepository.findByCategory(category);
+	public Page<FoodResponeDTO> getAllFood(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		return foodRepository.findAll(pageable).map(foodMapper::toFoodResponeDTO);
 	}
 
+	@Override
+	public FoodResponeDTO getFoodById(int idFood) {
 
+		FoodEntity foodEntity = foodRepository.findById(idFood)
+				.orElseThrow(() -> new RuntimeException(" FOOD_NOT_EXISTS"));
+		FoodResponeDTO responeDTO = foodMapper.toFoodResponeDTO(foodEntity);
+		responeDTO.setIdCategory(foodEntity.getCategory().getIdCategory());
+		return responeDTO;
+	}
+
+	@Transactional
+	@Override
+	public FoodResponeDTO saveFood(FoodRequestDTO requestDTO, MultipartFile file) {
+		FoodEntity foodEntity = foodRepository.findByNameFood(requestDTO.getNameFood().trim());
+		CategoryFoodEntity categoryFood = categoryRepository.findById(requestDTO.getIdCategory())
+				.orElseThrow(() -> new RuntimeException("Category_not_found"));
+		if (foodEntity != null) {
+			throw new RuntimeException("FOOD_ALREADY_EXISTS");
+		}
+		foodEntity = foodMapper.toFoodEntity(requestDTO);
+		if (file != null) {
+			System.out.println(file.getOriginalFilename());
+			foodEntity.setImgFood(file.getOriginalFilename());
+			fileService.saveFile(file);
+		}
+		foodEntity.setCategory(categoryFood);
+
+		return foodMapper.toFoodResponeDTO(foodRepository.save(foodEntity));
+	}
+
+	@Transactional
+	@Override
+	public FoodResponeDTO updateFood(int idFood, FoodRequestDTO requestDTO, MultipartFile file) {
+		CategoryFoodEntity categoryFood = categoryRepository.findById(requestDTO.getIdCategory())
+				.orElseThrow(() -> new RuntimeException("Category_not_found"));
+		FoodEntity foodEntity = foodRepository.findById(idFood)
+				.orElseThrow(() -> new RuntimeException("FOOD_NOT_EXISTS"));
+		String imgFoodTemp = foodEntity.getImgFood();
+
+		foodEntity = foodMapper.toFoodEntity(requestDTO);
+
+		if (file != null && !file.getOriginalFilename().trim().equals("")) {
+			imgFoodTemp = file.getOriginalFilename();
+			fileService.saveFile(file);
+		}
+		foodEntity.setCategory(categoryFood);
+		foodEntity.setIdFood(idFood);
+		foodEntity.setImgFood(imgFoodTemp);
+
+		System.out.println(foodMapper.toFoodEntity(requestDTO).toString());
+		System.out.println(foodEntity.toString());
+
+		foodRepository.save(foodEntity);
+
+		return foodMapper.toFoodResponeDTO(foodEntity);
+	}
+
+	@Override
+	public List<FoodResponeDTO> findByCategory(CategoryFoodEntity category) {
+
+		List<FoodEntity> ListfoodEntity = foodRepository.findByCategory(category);
+		List<FoodResponeDTO> listFoodDto = new ArrayList<>();
+
+		for (FoodEntity entity : ListfoodEntity) {
+			FoodResponeDTO foodDto = new FoodResponeDTO();
+			foodDto.setIdCategory(entity.getCategory().getIdCategory());
+			foodDto.setIdFood(entity.getIdFood());
+			foodDto.setImgFood(entity.getImgFood());
+			foodDto.setIsDeleted(entity.getIsDeleted());
+			foodDto.setIsSelling(entity.getIsSelling());
+			foodDto.setNameFood(entity.getNameFood());
+			foodDto.setNote(entity.getNote());
+			foodDto.setPriceFood(entity.getPriceFood());
+			listFoodDto.add(foodDto);
+		}
+
+		return listFoodDto;
+	}
+
+	@Override
+	public List<FoodResponeDTO> findByCategoryAndNameFoodLike(CategoryFoodEntity category, String nameFood) {
+
+		List<FoodEntity> ListfoodEntity = foodRepository.findByCategoryAndNameFoodLike(category,nameFood);
+		
+		
+		List<FoodResponeDTO> listFoodDto = new ArrayList<>();
+
+		for (FoodEntity entity : ListfoodEntity) {
+			FoodResponeDTO foodDto = new FoodResponeDTO();
+			foodDto.setIdCategory(entity.getCategory().getIdCategory());
+			foodDto.setIdFood(entity.getIdFood());
+			foodDto.setImgFood(entity.getImgFood());
+			foodDto.setIsDeleted(entity.getIsDeleted());
+			foodDto.setIsSelling(entity.getIsSelling());
+			foodDto.setNameFood(entity.getNameFood());
+			foodDto.setNote(entity.getNote());
+			foodDto.setPriceFood(entity.getPriceFood());
+			listFoodDto.add(foodDto);
+		}
+
+		return listFoodDto;
+	}
 
 }

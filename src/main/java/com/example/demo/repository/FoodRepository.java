@@ -12,4 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface FoodRepository extends JpaRepository<FoodEntity, Integer> {
     FoodEntity findByNameFood(String name);
     List<FoodEntity> findByCategory(CategoryFoodEntity category);
+    List<FoodEntity> findByCategoryAndNameFoodLike(CategoryFoodEntity category,String nameFood);
 }

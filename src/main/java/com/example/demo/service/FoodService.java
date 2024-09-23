@@ -14,5 +14,9 @@ public interface FoodService {
     public Page<FoodResponeDTO> getAllFood(int page, int size);
     public FoodResponeDTO saveFood(FoodRequestDTO requestDTO, MultipartFile file);
     public FoodResponeDTO updateFood(int idFood,FoodRequestDTO requestDTO, MultipartFile file);
-    public List<FoodEntity> findByCategory(CategoryFoodEntity category);
+
+    public List<FoodResponeDTO> findByCategory(CategoryFoodEntity category);
+    public List<FoodResponeDTO> findByCategoryAndNameFoodLike(CategoryFoodEntity category,String nameFood);
+    public FoodResponeDTO getFoodById(int idFood);
+
 }
