@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
+@EnableJpaAuditing
 public class CodeBaseDatnApplication {
 
 	public static void main(String[] args) {
