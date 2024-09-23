@@ -38,10 +38,19 @@ public class FoodServiceImpl implements FoodService {
         return foodRepository.findAll(pageable).map(foodMapper::toFoodResponeDTO);
     }
 
+    @Override
+    public FoodResponeDTO getFoodById(int idFood) {
+
+        FoodEntity foodEntity = foodRepository.findById(idFood).orElseThrow(() -> new RuntimeException(" FOOD_NOT_EXISTS"));
+        FoodResponeDTO responeDTO = foodMapper.toFoodResponeDTO(foodEntity);
+        responeDTO.setIdCategory(foodEntity.getCategory().getIdCategory());
+        return responeDTO;
+    }
+
     @Transactional
     @Override
     public FoodResponeDTO saveFood(FoodRequestDTO requestDTO, MultipartFile file) {
-        FoodEntity foodEntity = foodRepository.findByNameFood(requestDTO.getNameFood());
+        FoodEntity foodEntity = foodRepository.findByNameFood(requestDTO.getNameFood().trim());
         CategoryFoodEntity categoryFood = categoryRepository.findById(requestDTO.getIdCategory())
                 .orElseThrow(() -> new RuntimeException("Category_not_found"));
         if (foodEntity != null) {
@@ -60,14 +69,14 @@ public class FoodServiceImpl implements FoodService {
 
     @Transactional
     @Override
-    public FoodResponeDTO updateFood(int idFood,FoodRequestDTO requestDTO, MultipartFile file) {
+    public FoodResponeDTO updateFood(int idFood, FoodRequestDTO requestDTO, MultipartFile file) {
         CategoryFoodEntity categoryFood = categoryRepository.findById(requestDTO.getIdCategory())
                 .orElseThrow(() -> new RuntimeException("Category_not_found"));
         FoodEntity foodEntity = foodRepository.findById(idFood)
                 .orElseThrow(() -> new RuntimeException("FOOD_NOT_EXISTS"));
         String imgFoodTemp = foodEntity.getImgFood();
 
-        foodEntity =foodMapper.toFoodEntity(requestDTO);
+        foodEntity = foodMapper.toFoodEntity(requestDTO);
 
         if (file != null && !file.getOriginalFilename().trim().equals("")) {
             imgFoodTemp = file.getOriginalFilename();

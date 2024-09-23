@@ -9,4 +9,5 @@ public interface FoodService {
     public Page<FoodResponeDTO> getAllFood(int page, int size);
     public FoodResponeDTO saveFood(FoodRequestDTO requestDTO, MultipartFile file);
     public FoodResponeDTO updateFood(int idFood,FoodRequestDTO requestDTO, MultipartFile file);
+    public FoodResponeDTO getFoodById(int idFood);
 }
