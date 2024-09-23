@@ -26,27 +26,28 @@ public class QrCodeService {
 
 	@Autowired
 	private QrRepository qrRepository;
-	
+
 	@Autowired
 	private TableRepository tableRepository;
-	
+
 	@Autowired
-	private  QrMaper qrMaper;
+	private QrMaper qrMaper;
 
 	private String hosting = "http://localhost:8080";
-	private String formatNameQr ="QRCode_Table_";
+	private String formatNameQr = "QRCode_Table_";
 
 	public QrResposneDTO createQr(int idTable) {
-		 TableEntity table = tableRepository.findById(idTable).orElseThrow(()->new RuntimeException("Table_not_exist"));
-		 if(qrRepository.findByTableEntity(table)!=null) {
-			 throw new RuntimeException("QR_exist");
-		 }
-		 QrEntity qrCode = new QrEntity();
-		 String nameImg = formatNameQr+table.getNameTable()+".png";
-		 qrCode.setTableEntity(table);
-		 qrCode.setNameImage(nameImg);
-		 qrCode.setLinkImage(hosting+"/QRCode/"+nameImg);
-		 try {
+		TableEntity table = tableRepository.findById(idTable)
+				.orElseThrow(() -> new RuntimeException("Table_not_exist"));
+		if (qrRepository.findByTableEntity(table) != null) {
+			throw new RuntimeException("QR_exist");
+		}
+		QrEntity qrCode = new QrEntity();
+		String nameImg = formatNameQr + table.getNameTable() + ".png";
+		qrCode.setTableEntity(table);
+		qrCode.setNameImage(nameImg);
+		qrCode.setLinkImage(hosting + "/QRCode/" + nameImg);
+		try {
 			generateQrCodeForTable(nameImg, idTable);
 			qrRepository.save(qrCode);
 		} catch (WriterException e) {
@@ -70,7 +71,7 @@ public class QrCodeService {
 		if (!rootOutputFile.exists()) {
 			rootOutputFile.mkdirs();
 		}
-		Path path = Paths.get(rootOutputFile.getAbsolutePath(), nameTable );
+		Path path = Paths.get(rootOutputFile.getAbsolutePath(), nameTable);
 		MatrixToImageWriter.writeToPath(matrix, "PNG", path);
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
