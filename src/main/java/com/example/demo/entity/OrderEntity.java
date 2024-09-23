@@ -26,7 +26,7 @@ public class OrderEntity extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idOrder;
 	
-	String statusOrder;
+	
 	
 	@OneToOne
 	@JoinColumn(name = "id_table")
@@ -36,7 +36,12 @@ public class OrderEntity extends BaseEntity {
 	@JoinColumn(name = "id_User")
 	UserEnitty userEnitty;
 	
+	
+	
 	@OneToMany(mappedBy = "orderEntity")
 	List<OrderDetailEntity> listOrderDetail;
+	
+	
+	String statusOrder;
 	
 }
