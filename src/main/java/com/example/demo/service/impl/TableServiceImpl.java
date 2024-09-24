@@ -2,6 +2,9 @@ package com.example.demo.service.impl;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -39,6 +42,13 @@ public class TableServiceImpl implements TableService {
     public List<TableResponseDTO> getAllTables() {
         return tableRepository.findAll().stream().map(element -> tableMapper.toTableResponseDTO(element))
                 .collect(Collectors.toList());
+    }
+
+    // GetPage
+    @Override
+    public Page<TableResponseDTO> getAllPages(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return tableRepository.findAll(pageable).map(tableMapper::toTableResponseDTO);
     }
 
     // Update

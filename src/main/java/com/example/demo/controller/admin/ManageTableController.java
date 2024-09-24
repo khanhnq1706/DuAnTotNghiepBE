@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.request.TableRequestDTO;
@@ -27,10 +28,9 @@ public class ManageTableController {
 	private TableService tableService;
 
 	@GetMapping
-	public ApiRespone<List<TableResponseDTO>> getTable() {
-		ApiRespone<List<TableResponseDTO>> response = new ApiRespone<List<TableResponseDTO>>();
-		response.setResult(tableService.getAllTables());
-		return response;
+	public ApiRespone<?> getAllTables(@RequestParam(required = false, defaultValue = "0") int page,
+			@RequestParam(required = false, defaultValue = "10") int size) {
+		return ApiRespone.builder().result(tableService.getAllPages(page, size)).build();
 	}
 
 	@PostMapping
