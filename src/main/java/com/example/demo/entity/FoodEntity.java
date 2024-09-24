@@ -17,23 +17,28 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FoodEntity extends BaseEntity {
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idFood;
 	String nameFood;
 	float priceFood;
- String imgFood;
+	String imgFood;
 	boolean isSelling;
-	boolean isDeleted;
 
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_user")
+	UserEnitty userCreated;
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_category")
 	CategoryFoodEntity category;
-	
+
 	@OneToMany(mappedBy = "foodEntity")
 	List<OrderDetailEntity> listOrderDetail;
-	
+
 }
