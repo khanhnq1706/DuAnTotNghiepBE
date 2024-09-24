@@ -1,6 +1,8 @@
 package com.example.demo.service.impl;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -65,12 +67,15 @@ public class TableServiceImpl implements TableService {
     // Delete
     @Override
     public ApiRespone<?> deleteTable(int idTable) {
-        if (!tableRepository.existsById(idTable)) {
+        Optional<TableEntity> optionaltable = tableRepository.findById(idTable);
+        if (!optionaltable.isPresent()) {
             return ApiRespone.builder()
                     .message("Table not found")
                     .build();
         }
-        tableRepository.deleteById(idTable);
+        TableEntity table = optionaltable.get();
+        table.setDeleted(true);
+        tableRepository.save(table);
         return ApiRespone.builder()
                 .message("Table deleted successfully")
                 .build();
