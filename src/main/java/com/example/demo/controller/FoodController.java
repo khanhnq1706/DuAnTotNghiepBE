@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,9 +55,24 @@ public class FoodController {
 	
 	// lọc theo id và tên
 	@GetMapping("/find/{id}")
-	public List<FoodResponeDTO> getFoodbyIdCategoryandName(@PathVariable int id, @RequestParam String name) {
-		CategoryFoodEntity  category = categoryServiceImpl.findByidCategory(id);
-		return foodServiceImpl.findByCategoryAndNameFoodLike(category, "%" +name + "%");
+	public List<FoodResponeDTO> getFoodbyIdCategoryandName(
+			@PathVariable int id, 
+			@RequestParam String name, 
+			@RequestParam Optional<Boolean> sort) {
+		List<FoodResponeDTO> listFood = new ArrayList<>();
+		
+		if (id == 0) {
+			// tìm theo tên
+			listFood = foodServiceImpl.findByNameFoodLike( "%"+ name+ "%",sort.orElse(true));
+		}else {
+			// tìm theo tên và category
+			CategoryFoodEntity  category = categoryServiceImpl.findByidCategory(id);
+			listFood = foodServiceImpl.findByCategoryAndNameFoodLike(category, "%" + name + "%",sort.orElse(true));
+		}
+		
+		
+		return listFood;
+		
 	}
 	
 	

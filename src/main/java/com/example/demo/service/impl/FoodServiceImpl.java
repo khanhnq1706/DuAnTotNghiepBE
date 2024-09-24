@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,7 +62,7 @@ public class FoodServiceImpl implements FoodService {
 		}
 		foodEntity = foodMapper.toFoodEntity(requestDTO);
 		if (file != null) {
-			System.out.println(file.getOriginalFilename());
+//			System.out.println(file.getOriginalFilename());
 			foodEntity.setImgFood(file.getOriginalFilename());
 			fileService.saveFile(file);
 		}
@@ -89,9 +90,9 @@ public class FoodServiceImpl implements FoodService {
 		foodEntity.setIdFood(idFood);
 		foodEntity.setImgFood(imgFoodTemp);
 
-		System.out.println(foodMapper.toFoodEntity(requestDTO).toString());
-		System.out.println(foodEntity.toString());
-
+//		System.out.println(foodMapper.toFoodEntity(requestDTO).toString());
+//		
+//		System.out.println(foodEntity.toString());
 		foodRepository.save(foodEntity);
 
 		return foodMapper.toFoodResponeDTO(foodEntity);
@@ -120,27 +121,64 @@ public class FoodServiceImpl implements FoodService {
 	}
 
 	@Override
-	public List<FoodResponeDTO> findByCategoryAndNameFoodLike(CategoryFoodEntity category, String nameFood) {
+	public List<FoodResponeDTO> findByCategoryAndNameFoodLike(CategoryFoodEntity category, String nameFood, boolean sort) {
 
 		List<FoodEntity> ListfoodEntity = foodRepository.findByCategoryAndNameFoodLike(category,nameFood);
 		
+		if (sort) {
+			// tăng dần
+			ListfoodEntity.sort(Comparator.comparing(FoodEntity::getPriceFood));
+		}else {
+			// giảm dần
+			ListfoodEntity.sort(Comparator.comparing(FoodEntity::getPriceFood).reversed());
+			
+		}
 		
-		List<FoodResponeDTO> listFoodDto = new ArrayList<>();
+	
 
-		for (FoodEntity entity : ListfoodEntity) {
-			FoodResponeDTO foodDto = new FoodResponeDTO();
-			foodDto.setIdCategory(entity.getCategory().getIdCategory());
-			foodDto.setIdFood(entity.getIdFood());
-			foodDto.setImgFood(entity.getImgFood());
-			foodDto.setIsDeleted(entity.getIsDeleted());
-			foodDto.setIsSelling(entity.getIsSelling());
-			foodDto.setNameFood(entity.getNameFood());
-			foodDto.setNote(entity.getNote());
-			foodDto.setPriceFood(entity.getPriceFood());
-			listFoodDto.add(foodDto);
+		return mapToFoodResponseDTO(ListfoodEntity);
+	}
+
+	@Override
+	public List<FoodResponeDTO> findByNameFoodLike(String nameFood) {
+		List<FoodEntity> ListfoodEntity = foodRepository.findByNameFoodLike(nameFood);
+		
+		
+		
+		return this.mapToFoodResponseDTO(ListfoodEntity);
+	}
+	
+	public List<FoodResponeDTO> findByNameFoodLike(String nameFood,boolean sort) {
+		List<FoodEntity> ListfoodEntity = foodRepository.findByNameFoodLike(nameFood);
+
+		if (sort) {
+			// tăng dần
+			ListfoodEntity.sort(Comparator.comparing(FoodEntity::getPriceFood));
+		}else {
+			// giảm dần
+			ListfoodEntity.sort(Comparator.comparing(FoodEntity::getPriceFood).reversed());
+			
 		}
 
-		return listFoodDto;
+		return this.mapToFoodResponseDTO(ListfoodEntity);
+	}
+	
+	private List<FoodResponeDTO> mapToFoodResponseDTO(List<FoodEntity> ListfoodEntity) {
+	    List<FoodResponeDTO> listFoodDto = new ArrayList<>();
+	    
+	    for (FoodEntity entity : ListfoodEntity) {
+	        FoodResponeDTO foodDto = new FoodResponeDTO();
+	        foodDto.setIdCategory(entity.getCategory().getIdCategory());
+	        foodDto.setIdFood(entity.getIdFood());
+	        foodDto.setImgFood(entity.getImgFood());
+	        foodDto.setIsDeleted(entity.getIsDeleted());
+	        foodDto.setIsSelling(entity.getIsSelling());
+	        foodDto.setNameFood(entity.getNameFood());
+	        foodDto.setNote(entity.getNote());
+	        foodDto.setPriceFood(entity.getPriceFood());
+	        listFoodDto.add(foodDto);
+	    }
+	    return listFoodDto;
 	}
 
 }
