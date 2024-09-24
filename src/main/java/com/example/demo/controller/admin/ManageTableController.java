@@ -29,7 +29,7 @@ public class ManageTableController {
 
 	@GetMapping
 	public ApiRespone<?> getAllTables(@RequestParam(required = false, defaultValue = "0") int page,
-			@RequestParam(required = false, defaultValue = "10") int size) {
+			@RequestParam(required = false, defaultValue = "20") int size) {
 		return ApiRespone.builder().result(tableService.getAllPages(page, size)).build();
 	}
 
