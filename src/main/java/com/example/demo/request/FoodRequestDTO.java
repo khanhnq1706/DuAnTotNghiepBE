@@ -22,5 +22,7 @@ public class FoodRequestDTO {
     String isSelling;
     @NotNull(message = "Is_Deleted_not_null")
     String isDeleted;
+    @NotNull(message = "Id_category_not_null")
     Integer idCategory;
+    String note;
 }

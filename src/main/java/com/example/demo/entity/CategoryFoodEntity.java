@@ -26,9 +26,11 @@ public class CategoryFoodEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int idCategory;
     boolean isDeleted;
+
 	
     @Column(columnDefinition = "varchar(100)")
     String nameCategory;
+
 
     @OneToMany(mappedBy = "category")
     @JsonIgnore

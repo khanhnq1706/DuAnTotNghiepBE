@@ -24,6 +24,8 @@ public enum ErrorEnum {
 
     // error  code category food : 130*
     Category_not_found(1301, "Category not found in database"),
+    Id_category_not_null(1302, "Id Category not null"),
+
 
 
     ;
