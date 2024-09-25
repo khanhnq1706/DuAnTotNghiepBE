@@ -9,6 +9,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import lombok.Data;
 
 @Data
@@ -18,9 +20,9 @@ public class BaseEntity {
 
 	@Column(updatable = false)
 	@CreatedDate
-	Date dateCreate;
+	private Date dateCreate;
 	@LastModifiedDate
-	Date dateModify;
+	private Date dateModify;	
 
 	
 }
