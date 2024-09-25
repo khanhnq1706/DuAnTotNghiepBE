@@ -3,8 +3,7 @@ package com.example.demo.controller.admin;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,7 +21,7 @@ import com.example.demo.request.TableRequestDTO;
 import com.example.demo.respone.ApiRespone;
 import com.example.demo.respone.TableResponseDTO;
 import com.example.demo.service.TableService;
-import com.example.demo.service.impl.TableServiceImpl;
+
 
 @RestController
 @RequestMapping("api/v1/tables")
@@ -30,9 +29,11 @@ public class ManageTableController {
 
 	@Autowired
 	private TableService tableService;
+
 	@GetMapping
 	public ApiRespone<?> getAllTables(@RequestParam(required = false, defaultValue = "0") int page,
 			@RequestParam(required = false, defaultValue = "10") int size) {
+
 		return ApiRespone.builder().result(tableService.getAllPages(page, size)).build();
 	}
 
@@ -60,6 +61,7 @@ public class ManageTableController {
 	public ApiRespone<?> deleteTable(@PathVariable("id") int idTable) {
 		return tableService.deleteTable(idTable);
 	}
+
 	@GetMapping("search")
 	public ApiRespone<TableResponseDTO> findTable(
             @RequestParam(value = "tableName", required = false) String tableName) {
@@ -83,4 +85,5 @@ public class ManageTableController {
 			    ) {
 					return ApiRespone.builder().result(tableService.findAvailableTables(numberOfGuests, page, size)).build();	
 			    }
+
 }

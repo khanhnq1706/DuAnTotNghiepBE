@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
+import java.util.stream.Collectors;
+
 import com.example.demo.entity.TableEntity;
 import com.example.demo.enums.TableStatus;
 import com.example.demo.map.TableMapper;
@@ -54,6 +56,7 @@ public class TableServiceImpl implements TableService {
         Pageable pageable = PageRequest.of(page, size);
         return tableRepository.findAll(pageable).map(tableMapper::toTableResponseDTO);
     }
+
 
     // Update
     @Override
@@ -108,4 +111,5 @@ public class TableServiceImpl implements TableService {
 	    return (Page<TableResponseDTO>) tableRepository.findByStatus(status, pageable)
 	            .map(tableMapper::toTableResponseDTO);
 	}
+
 }

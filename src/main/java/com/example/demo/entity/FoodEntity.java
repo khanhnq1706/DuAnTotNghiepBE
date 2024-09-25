@@ -37,6 +37,7 @@ public class FoodEntity extends BaseEntity {
 	@JoinColumn(name = "id_user")
 	UserEnitty userCreated;
 	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_category")
 	CategoryFoodEntity category;
@@ -56,5 +57,6 @@ public class FoodEntity extends BaseEntity {
 				", isDeleted=" + isDeleted +
 				'}';
 	}
+
 
 }
