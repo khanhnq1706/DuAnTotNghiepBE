@@ -56,6 +56,9 @@ public class TableServiceImpl implements TableService {
     // Update
     @Override
     public TableResponseDTO updateTable(TableRequestDTO request, int idTable) {
+        if (tableRepository.findByNameTable(request.getNameTable()) != null) {
+            throw new RuntimeException("Table_exist");
+        }
         TableEntity table = tableRepository.findById(idTable)
                 .orElseThrow(() -> new RuntimeException("Table not found"));
         table.setNameTable(request.getNameTable());

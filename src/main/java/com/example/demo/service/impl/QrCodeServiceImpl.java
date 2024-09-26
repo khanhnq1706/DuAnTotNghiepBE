@@ -93,6 +93,7 @@ public class QrCodeServiceImpl implements QrCodeService {
 		QrEntity qrCode = qrRepository.findByTableEntity(table);
 		if (qrCode == null) {
 			String nameImg = formatNameQr + table.getNameTable() + ".png";
+			System.out.println("nameImg: " + nameImg);
 			qrCode.setNameImage(nameImg);
 			qrCode.setLinkImage(hosting + "/QRCode/" + nameImg);
 			this.deleteQrcode(nameImg);
