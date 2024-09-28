@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,8 +31,8 @@ public class TableEntity {
 	int idTable;
 	String nameTable;
 	boolean isDeleted ;
-	@Min(0)
-	private int maxCapacity;
+	@NotNull
+	String location;
 	@Enumerated(EnumType.STRING)
 	private TableStatus status;
 	@JsonIgnore

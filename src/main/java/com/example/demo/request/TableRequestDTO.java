@@ -4,6 +4,7 @@ import com.example.demo.enums.TableStatus;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,8 +18,8 @@ public class TableRequestDTO {
 
 	String nameTable;
 	boolean isDeleted;
-	@Min(0)
-	private int maxCapacity;
+	@NotNull
+	String location;
 	@Enumerated(EnumType.STRING)
 	private TableStatus status;;
 }

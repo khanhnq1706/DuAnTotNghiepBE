@@ -27,9 +27,6 @@ public class UserEnitty {
 	String password;
 	boolean isAdmin = false;
 	boolean isDeleted;
-
-	
-
 	@OneToMany(mappedBy = "userEnitty")
 	List<OrderEntity> listOrderEntity;
 	

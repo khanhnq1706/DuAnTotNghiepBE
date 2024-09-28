@@ -25,6 +25,5 @@ public interface TableService {
 
 	Page<TableResponseDTO> findTablesByStatus(TableStatus status, int page, int size);
 
-
-	Page<TableResponseDTO> findAvailableTables(int numberOfGuests, int page, int size);
+	Page<TableResponseDTO> findAvailableTables(int page, int size);
 }

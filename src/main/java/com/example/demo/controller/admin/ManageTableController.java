@@ -77,13 +77,12 @@ public class ManageTableController {
 	    ) {
 			return ApiRespone.builder().result(tableService.findTablesByStatus(status, page, size)).build();	
 	    }
-		@GetMapping("by-Capacity")
+		@GetMapping("all")
 		  public ApiRespone<?>getTablesCapacity(
-			    	@RequestParam(required = false) int numberOfGuests,
 			        @RequestParam(required = false, defaultValue = "0") int page,
 					@RequestParam(required = false, defaultValue = "10") int size
 			    ) {
-					return ApiRespone.builder().result(tableService.findAvailableTables(numberOfGuests, page, size)).build();	
+					return ApiRespone.builder().result(tableService.getAllPages( page, size)).build();	
 			    }
 
 }

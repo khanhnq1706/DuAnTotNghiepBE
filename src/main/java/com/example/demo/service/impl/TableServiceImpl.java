@@ -93,9 +93,9 @@ public class TableServiceImpl implements TableService {
 	
 	}
 	@Override
-	public Page<TableResponseDTO> findAvailableTables(int numberOfGuests, int page, int size) {
+	public Page<TableResponseDTO> findAvailableTables( int page, int size) {
 		 Pageable pageable = PageRequest.of(page, size);
-	    return (Page<TableResponseDTO>) tableRepository.findByStatusAndMaxCapacityLessThanEqual(TableStatus.AVAILABLE, numberOfGuests, pageable)
+	    return (Page<TableResponseDTO>) tableRepository.findByStatusAndAndIsDeletedFalse(TableStatus.AVAILABLE, pageable)
 	            .map(tableMapper::toTableResponseDTO);
 	}
 	@Transactional
@@ -108,7 +108,7 @@ public class TableServiceImpl implements TableService {
 	    }
 
 	    Pageable pageable = PageRequest.of(page, size);
-	    return (Page<TableResponseDTO>) tableRepository.findByStatus(status, pageable)
+	    return (Page<TableResponseDTO>) tableRepository.findByStatusAndAndIsDeletedFalse(status, pageable)
 	            .map(tableMapper::toTableResponseDTO);
 	}
 
