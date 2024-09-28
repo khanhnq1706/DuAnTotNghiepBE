@@ -8,10 +8,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.stream.Collectors;
 
 import java.util.stream.Collectors;
 
 import com.example.demo.entity.TableEntity;
+import com.example.demo.enums.TableStatus;
 import com.example.demo.map.TableMapper;
 import com.example.demo.repository.TableRepository;
 import com.example.demo.request.TableRequestDTO;
@@ -53,6 +57,7 @@ public class TableServiceImpl implements TableService {
         return tableRepository.findAll(pageable).map(tableMapper::toTableResponseDTO);
     }
 
+
     // Update
     @Override
     public TableResponseDTO updateTable(TableRequestDTO request, int idTable) {
@@ -80,4 +85,31 @@ public class TableServiceImpl implements TableService {
                 .message("Table deleted successfully")
                 .build();
     }
+
+	@Override
+	public TableResponseDTO searchTable(String name) {
+			TableEntity entity = tableRepository.findByNameTable(name);
+			return tableMapper.toTableResponseDTO(entity);
+	
+	}
+	@Override
+	public Page<TableResponseDTO> findAvailableTables(int numberOfGuests, int page, int size) {
+		 Pageable pageable = PageRequest.of(page, size);
+	    return (Page<TableResponseDTO>) tableRepository.findByStatusAndMaxCapacityLessThanEqual(TableStatus.AVAILABLE, numberOfGuests, pageable)
+	            .map(tableMapper::toTableResponseDTO);
+	}
+	@Transactional
+	@Override
+	public Page<TableResponseDTO> findTablesByStatus(TableStatus status, int page, int size) {
+
+	    // Kiểm tra tính hợp lệ của page và size
+	    if (page < 0 || size <= 0) {
+	        throw new IllegalArgumentException("Invalid page or size values");
+	    }
+
+	    Pageable pageable = PageRequest.of(page, size);
+	    return (Page<TableResponseDTO>) tableRepository.findByStatus(status, pageable)
+	            .map(tableMapper::toTableResponseDTO);
+	}
+
 }

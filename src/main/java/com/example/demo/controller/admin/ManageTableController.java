@@ -3,6 +3,7 @@ package com.example.demo.controller.admin;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.enums.TableStatus;
 import com.example.demo.request.TableRequestDTO;
 import com.example.demo.respone.ApiRespone;
 import com.example.demo.respone.TableResponseDTO;
 import com.example.demo.service.TableService;
+
 
 @RestController
 @RequestMapping("api/v1/tables")
@@ -29,7 +32,8 @@ public class ManageTableController {
 
 	@GetMapping
 	public ApiRespone<?> getAllTables(@RequestParam(required = false, defaultValue = "0") int page,
-			@RequestParam(required = false, defaultValue = "18") int size) {
+			@RequestParam(required = false, defaultValue = "10") int size) {
+
 		return ApiRespone.builder().result(tableService.getAllPages(page, size)).build();
 	}
 
@@ -57,4 +61,29 @@ public class ManageTableController {
 	public ApiRespone<?> deleteTable(@PathVariable("id") int idTable) {
 		return tableService.deleteTable(idTable);
 	}
+
+	@GetMapping("search")
+	public ApiRespone<TableResponseDTO> findTable(
+            @RequestParam(value = "tableName", required = false) String tableName) {
+		ApiRespone<TableResponseDTO> response = new ApiRespone<TableResponseDTO>();
+		response.setResult(tableService.searchTable(tableName));
+		return response;
+    }
+		@GetMapping("by-Status") 
+	    public ApiRespone<?>getTablesByStatus(
+	    	@RequestParam(required = false) TableStatus status,
+	        @RequestParam(required = false, defaultValue = "0") int page,
+			@RequestParam(required = false, defaultValue = "10") int size
+	    ) {
+			return ApiRespone.builder().result(tableService.findTablesByStatus(status, page, size)).build();	
+	    }
+		@GetMapping("by-Capacity")
+		  public ApiRespone<?>getTablesCapacity(
+			    	@RequestParam(required = false) int numberOfGuests,
+			        @RequestParam(required = false, defaultValue = "0") int page,
+					@RequestParam(required = false, defaultValue = "10") int size
+			    ) {
+					return ApiRespone.builder().result(tableService.findAvailableTables(numberOfGuests, page, size)).build();	
+			    }
+
 }
