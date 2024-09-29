@@ -139,6 +139,7 @@ public class QrCodeServiceImpl implements QrCodeService {
 	@Override
 	public ApiRespone<List<QrResposneDTO>> getAllQrCode() {
 		List<QrEntity> qrEntities = qrRepository.findAll();
+
 		List<QrResposneDTO> qrResposneDTOs = qrEntities.stream().map(qrMaper::toQRResposneDTO)
 				.collect(Collectors.toList());
 		return ApiRespone.<List<QrResposneDTO>>builder().result(qrResposneDTOs).build();

@@ -25,7 +25,6 @@ import com.example.demo.service.TableService;
 import jakarta.validation.Valid;
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping("api/v1/tables")
 public class ManageTableController {
 

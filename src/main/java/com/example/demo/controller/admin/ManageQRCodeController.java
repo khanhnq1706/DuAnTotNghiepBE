@@ -19,7 +19,6 @@ import com.example.demo.service.QrCodeService;
 import com.example.demo.service.impl.QrCodeServiceImpl;
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping("api/QRcode")
 public class ManageQRCodeController {
 
