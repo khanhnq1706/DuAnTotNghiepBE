@@ -11,9 +11,12 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
@@ -22,6 +25,6 @@ public class BaseEntity {
 	@CreatedDate
 	private Date dateCreate;
 	@LastModifiedDate
-	private Date dateModify;	
-	
+	Date dateModify;
+
 }
