@@ -12,5 +12,6 @@ import com.example.demo.entity.FoodEntity;
 @CrossOrigin("http://localhost:4200")
 public interface FoodFindRepository extends JpaRepository<FoodEntity, Integer> {
     Page<FoodEntity> findByCategoryIdCategory(@Param("idCategory") Integer idCategory, Pageable pageable);
+
     Page<FoodEntity> findByNameFoodContaining(String nameFood, Pageable pageable);
 }

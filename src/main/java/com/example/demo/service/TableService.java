@@ -21,10 +21,11 @@ public interface TableService {
 
 	Page<TableResponseDTO> getAllPages(int page, int size);
 
+	ApiRespone<TableResponseDTO> getTable(int idtable);
+
 	TableResponseDTO searchTable(String name);
 
 	Page<TableResponseDTO> findTablesByStatus(TableStatus status, int page, int size);
-
 
 	Page<TableResponseDTO> findAvailableTables(int numberOfGuests, int page, int size);
 }

@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,6 +24,7 @@ import com.example.demo.respone.ApiRespone;
 import com.example.demo.respone.TableResponseDTO;
 import com.example.demo.service.TableService;
 
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/v1/tables")
@@ -32,13 +35,17 @@ public class ManageTableController {
 
 	@GetMapping
 	public ApiRespone<?> getAllTables(@RequestParam(required = false, defaultValue = "0") int page,
-			@RequestParam(required = false, defaultValue = "10") int size) {
-
+			@RequestParam(required = false, defaultValue = "17") int size) {
 		return ApiRespone.builder().result(tableService.getAllPages(page, size)).build();
 	}
 
+	@GetMapping("{id}")
+	public ApiRespone<TableResponseDTO> getTable(@PathVariable("id") int idtable) {
+		return tableService.getTable(idtable);
+	}
+
 	@PostMapping
-	public ApiRespone<TableResponseDTO> postTable(@RequestBody TableRequestDTO request) {
+	public ApiRespone<TableResponseDTO> postTable(@Valid @RequestBody TableRequestDTO request) {
 		ApiRespone<TableResponseDTO> response = new ApiRespone<TableResponseDTO>();
 		response.setResult(tableService.saveTables(request));
 		return response;
@@ -50,11 +57,11 @@ public class ManageTableController {
 		ApiRespone<TableResponseDTO> response = new ApiRespone<TableResponseDTO>();
 		try {
 			response.setResult(tableService.updateTable(request, idTable));
-			return response;
+			response.setMessage("Cập nhật thành công!");
 		} catch (RuntimeException e) {
 			response.setMessage(e.getMessage());
-			return response;
 		}
+		return response;
 	}
 
 	@DeleteMapping("{id}")
@@ -62,28 +69,30 @@ public class ManageTableController {
 		return tableService.deleteTable(idTable);
 	}
 
+	// search
+
 	@GetMapping("search")
 	public ApiRespone<TableResponseDTO> findTable(
-            @RequestParam(value = "tableName", required = false) String tableName) {
+			@RequestParam(value = "tableName", required = false) String tableName) {
 		ApiRespone<TableResponseDTO> response = new ApiRespone<TableResponseDTO>();
 		response.setResult(tableService.searchTable(tableName));
 		return response;
-    }
-		@GetMapping("by-Status") 
-	    public ApiRespone<?>getTablesByStatus(
-	    	@RequestParam(required = false) TableStatus status,
-	        @RequestParam(required = false, defaultValue = "0") int page,
-			@RequestParam(required = false, defaultValue = "10") int size
-	    ) {
-			return ApiRespone.builder().result(tableService.findTablesByStatus(status, page, size)).build();	
-	    }
-		@GetMapping("by-Capacity")
-		  public ApiRespone<?>getTablesCapacity(
-			    	@RequestParam(required = false) int numberOfGuests,
-			        @RequestParam(required = false, defaultValue = "0") int page,
-					@RequestParam(required = false, defaultValue = "10") int size
-			    ) {
-					return ApiRespone.builder().result(tableService.findAvailableTables(numberOfGuests, page, size)).build();	
-			    }
+	}
+
+	@GetMapping("by-Status")
+	public ApiRespone<?> getTablesByStatus(
+			@RequestParam(required = false) TableStatus status,
+			@RequestParam(required = false, defaultValue = "0") int page,
+			@RequestParam(required = false, defaultValue = "10") int size) {
+		return ApiRespone.builder().result(tableService.findTablesByStatus(status, page, size)).build();
+	}
+
+	@GetMapping("by-Capacity")
+	public ApiRespone<?> getTablesCapacity(
+			@RequestParam(required = false) int numberOfGuests,
+			@RequestParam(required = false, defaultValue = "0") int page,
+			@RequestParam(required = false, defaultValue = "10") int size) {
+		return ApiRespone.builder().result(tableService.findAvailableTables(numberOfGuests, page, size)).build();
+	}
 
 }

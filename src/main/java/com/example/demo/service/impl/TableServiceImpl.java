@@ -23,6 +23,8 @@ import com.example.demo.respone.ApiRespone;
 import com.example.demo.respone.TableResponseDTO;
 import com.example.demo.service.TableService;
 
+import jakarta.validation.Valid;
+
 @Service
 public class TableServiceImpl implements TableService {
 
@@ -36,7 +38,10 @@ public class TableServiceImpl implements TableService {
     @Override
     public TableResponseDTO saveTables(TableRequestDTO request) {
         if (tableRepository.findByNameTable(request.getNameTable()) != null) {
-            throw new RuntimeException("Table_exist");
+            throw new RuntimeException("Bàn đã tồn tại!");
+        }
+        if (request.getNameTable() == null || request.getNameTable().isEmpty()) {
+            throw new RuntimeException("Tên bàn không được trống!");
         }
         TableEntity newTable = tableMapper.toTableEntity(request);
         TableEntity savedTable = tableRepository.save(newTable);
@@ -48,6 +53,16 @@ public class TableServiceImpl implements TableService {
     public List<TableResponseDTO> getAllTables() {
         return tableRepository.findAll().stream().map(element -> tableMapper.toTableResponseDTO(element))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ApiRespone<TableResponseDTO> getTable(int idtable) {
+        TableEntity table = tableRepository.findById(idtable)
+                .orElseThrow(() -> new RuntimeException("Table not found"));
+        TableResponseDTO responseDTO = tableMapper.toTableResponseDTO(table);
+        return ApiRespone.<TableResponseDTO>builder()
+                .result(responseDTO)
+                .build();
     }
 
     // GetPage
@@ -62,11 +77,17 @@ public class TableServiceImpl implements TableService {
     @Override
     public TableResponseDTO updateTable(TableRequestDTO request, int idTable) {
         TableEntity table = tableRepository.findById(idTable)
-                .orElseThrow(() -> new RuntimeException("Table not found"));
-        table.setNameTable(request.getNameTable());
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy bàn!"));
+        if (!table.getNameTable().equals(request.getNameTable()) &&
+                tableRepository.findByNameTable(request.getNameTable()) != null) {
+            throw new RuntimeException("Bàn đã tồn tại!");
+        }
+        if (request.getNameTable() == null || request.getNameTable().isEmpty()) {
+            throw new RuntimeException("Tên bàn không được trống!");
+        }
+        table.setNameTable(request.getNameTable().trim());
         table.setDeleted(request.isDeleted());
-        return tableMapper.toTableResponseDTO(
-                tableRepository.save(table));
+        return tableMapper.toTableResponseDTO(tableRepository.save(table));
     }
 
     // Delete
@@ -82,6 +103,7 @@ public class TableServiceImpl implements TableService {
         table.setDeleted(true);
         tableRepository.save(table);
         return ApiRespone.builder()
+                .result(table)
                 .message("Table deleted successfully")
                 .build();
     }
