@@ -9,7 +9,7 @@ public interface QrCodeService {
 
     QrResposneDTO createQr(int idTable);
 
-    QrResposneDTO recreateQr(int idTable);
+    ApiRespone<QrResposneDTO> recreateQr(int idTable);
 
     ApiRespone<QrResposneDTO> getQrcodeByIdTable(int idTable);
 

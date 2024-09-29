@@ -20,34 +20,30 @@ import com.example.demo.service.impl.QrCodeServiceImpl;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("api")
+@RequestMapping("api/QRcode")
 public class ManageQRCodeController {
 
 	@Autowired
-	QrCodeServiceImpl qrCodeServiceImpl;
-	@Autowired
 	QrCodeService qrCodeService;
 
-	@PostMapping("QRcode")
+	@PostMapping
 	public ApiRespone<QrResposneDTO> postQR(@RequestBody QrRequestDTO request) {
 		ApiRespone<QrResposneDTO> response = new ApiRespone<QrResposneDTO>();
-		response.setResult(qrCodeServiceImpl.createQr(request.getIdTable()));
+		response.setResult(qrCodeService.createQr(request.getIdTable()));
 		return response;
 	}
 
-	@PutMapping("reQRcode")
+	@PutMapping
 	public ApiRespone<QrResposneDTO> reCreateQr(@RequestBody QrRequestDTO request) {
-		ApiRespone<QrResposneDTO> response = new ApiRespone<QrResposneDTO>();
-		response.setResult(qrCodeService.recreateQr(request.getIdTable()));
-		return response;
+		return qrCodeService.recreateQr(request.getIdTable());
 	}
 
-	@GetMapping("getQrcode/{idtable}")
+	@GetMapping("{idtable}")
 	public ApiRespone<QrResposneDTO> getQrcode(@PathVariable("idtable") int idTable) {
 		return qrCodeService.getQrcodeByIdTable(idTable);
 	}
 
-	@GetMapping("getQrcode")
+	@GetMapping
 	public ApiRespone<List<QrResposneDTO>> getAllQrcode() {
 		return qrCodeService.getAllQrCode();
 	}

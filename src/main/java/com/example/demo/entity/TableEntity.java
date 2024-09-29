@@ -15,23 +15,25 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class TableEntity {
 
-	@Id @GeneratedValue(strategy =  GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idTable;
 	String nameTable;
-	boolean isDeleted ;
-	
+	boolean isDeleted;
+
 	@JsonIgnore
 	@OneToOne(mappedBy = "tableEntity")
 	QrEntity qrEntity;
-	
+
 	@JsonIgnore
 	@OneToOne(mappedBy = "tableEntity")
 	OrderEntity orderEntity;
-	
+
 }

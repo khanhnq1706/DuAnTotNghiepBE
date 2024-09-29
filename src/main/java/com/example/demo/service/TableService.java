@@ -18,4 +18,6 @@ public interface TableService {
 	List<TableResponseDTO> getAllTables();
 
 	Page<TableResponseDTO> getAllPages(int page, int size);
+
+	ApiRespone<TableResponseDTO> getTable(int idtable);
 }
