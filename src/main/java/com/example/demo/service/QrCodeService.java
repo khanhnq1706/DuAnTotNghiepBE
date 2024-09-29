@@ -14,4 +14,5 @@ public interface QrCodeService {
     ApiRespone<QrResposneDTO> getQrcodeByIdTable(int idTable);
 
     ApiRespone<List<QrResposneDTO>> getAllQrCode();
+
 }
