@@ -77,7 +77,10 @@ public class TableServiceImpl implements TableService {
                 tableRepository.findByNameTable(request.getNameTable()) != null) {
             throw new RuntimeException("Bàn đã tồn tại!");
         }
-        table.setNameTable(request.getNameTable());
+        if (request.getNameTable() == null || request.getNameTable().isEmpty()) {
+            throw new RuntimeException("Tên bàn không được trống!");
+        }
+        table.setNameTable(request.getNameTable().trim());
         table.setDeleted(request.isDeleted());
         return tableMapper.toTableResponseDTO(tableRepository.save(table));
     }
