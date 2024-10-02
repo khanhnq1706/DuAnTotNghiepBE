@@ -19,8 +19,10 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.Where;
 
-@Getter
-@Setter
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+@Data
 @NoArgsConstructor @AllArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -30,6 +32,7 @@ public class FoodEntity extends BaseEntity {
 	int idFood;
 	String nameFood;
 	float priceFood;
+
  	String imgFood;
 	Boolean isSelling;
 	Boolean isDeleted;
@@ -37,6 +40,7 @@ public class FoodEntity extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "id_category")
+	@JsonBackReference
 	CategoryFoodEntity category;
 	
 	@OneToMany(mappedBy = "foodEntity")
