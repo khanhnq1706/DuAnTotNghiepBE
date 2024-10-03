@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
@@ -29,15 +30,14 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class TableEntity {
+public class TableEntity extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idTable;
 	String nameTable;
 	boolean isDeleted;
-	@Min(0)
-	private int maxCapacity;
+
 	@Enumerated(EnumType.STRING)
 	private TableStatus status;
 
@@ -48,5 +48,4 @@ public class TableEntity {
 	@JsonIgnore
 	@OneToOne(mappedBy = "tableEntity")
 	OrderEntity orderEntity;
-
 }

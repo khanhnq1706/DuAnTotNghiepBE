@@ -1,6 +1,5 @@
 package com.example.demo.enums;
 
-
 public enum ErrorEnum {
     NULL_FT(1101, "First test null"),
 
@@ -8,7 +7,7 @@ public enum ErrorEnum {
     Table_exist(1001, "Table exist in database"),
     Table_not_exist(1002, "Table not exist in database"),
 
-    // error  code Food : 110*
+    // error code Food : 110*
     FOOD_ALREADY_EXISTS(1101, "Name's Food already exists"),
     FOOD_NOT_EXISTS(1102, "Food not exists"),
     Name_food_not_blank(1103, "Name food not blank "),
@@ -17,18 +16,20 @@ public enum ErrorEnum {
     Is_Selling_not_null(1106, "Is Selling not null"),
     Is_Deleted_not_null(1107, "Is Deleted not null")
 
-
     // erroe code qr : 120*
     , QR_exist(1201, "Qr exist in database"),
 
-
-    // error  code category food : 130*
+    // error code category food : 130*
     Category_not_found(1301, "Category not found in database"),
     Id_category_not_null(1302, "Id Category not null"),
 
-
+    // error code Table : 140*
+    Name_table_not_blank(1401, "Tên bàn không được trống!"),
+    Table_exists(1402, "Bàn đã tồn tại!"),
+    Table_not_found(1403, "Không tìm thấy bàn!")
 
     ;
+
     private int code;
     private String message;
 
@@ -52,6 +53,5 @@ public enum ErrorEnum {
     public void setMessage(String message) {
         this.message = message;
     }
-
 
 }
