@@ -12,15 +12,14 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TableResponseDTO {
 
-	String idTable;
+	int idTable;
 	String nameTable;
 	boolean isDeleted;
-	@Min(0)
-	private int maxCapacity;
-	@Enumerated(EnumType.STRING)
-	private TableStatus status;;
+	TableStatus status;
+	String displayName;
 }
