@@ -3,7 +3,8 @@ package com.example.demo.controller.admin;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -62,27 +63,16 @@ public class ManageTableController {
 		return tableService.deleteTable(idTable);
 	}
 
-	@GetMapping("search")
-	public ApiRespone<TableResponseDTO> findTable(
-            @RequestParam(value = "tableName", required = false) String tableName) {
-		ApiRespone<TableResponseDTO> response = new ApiRespone<TableResponseDTO>();
-		response.setResult(tableService.searchTable(tableName));
-		return response;
-    }
-		@GetMapping("by-Status") 
-	    public ApiRespone<?>getTablesByStatus(
-	    	@RequestParam(required = false) TableStatus status,
-	        @RequestParam(required = false, defaultValue = "0") int page,
-			@RequestParam(required = false, defaultValue = "10") int size
-	    ) {
-			return ApiRespone.builder().result(tableService.findTablesByStatus(status, page, size)).build();	
-	    }
-		@GetMapping("all")
-		  public ApiRespone<?>getTablesCapacity(
-			        @RequestParam(required = false, defaultValue = "0") int page,
-					@RequestParam(required = false, defaultValue = "10") int size
-			    ) {
-					return ApiRespone.builder().result(tableService.getAllPages( page, size)).build();	
-			    }
+	    @GetMapping("filter")
+	    public ApiRespone<?>getTablesFromFilter(@RequestParam(required = false) String  nameTable,
+	    		@RequestParam(required = false) String  status,
+	    		@RequestParam(required = false) String location,
+	    		@RequestParam(value = "page", defaultValue = "0") int page,
+	    		@RequestParam(value = "page", defaultValue = "10") int size){
+	    	Pageable pageable = PageRequest.of(page, size);
+	    	  return ApiRespone.builder()
+	                  .result(tableService.getTablesFromFilter(nameTable, status, location, pageable))
+	                  .build();
+	   }
 
 }

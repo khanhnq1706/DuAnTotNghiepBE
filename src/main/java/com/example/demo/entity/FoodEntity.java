@@ -13,13 +13,19 @@ import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Where(clause = "is_Deleted = false")
@@ -40,6 +46,7 @@ public class FoodEntity extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_category")
+	@Fetch(FetchMode.JOIN)
 	CategoryFoodEntity category;
 
 	@OneToMany(mappedBy = "foodEntity")

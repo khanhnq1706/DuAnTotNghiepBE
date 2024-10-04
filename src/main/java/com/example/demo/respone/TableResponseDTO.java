@@ -20,7 +20,6 @@ public class TableResponseDTO {
 	String idTable;
 	String nameTable;
 	boolean isDeleted;
-	@NotNull
 	String location;
 	@Enumerated(EnumType.STRING)
 	private TableStatus status;;

@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.example.demo.enums.TableStatus;
 
@@ -21,9 +22,11 @@ public interface TableService {
 
 	Page<TableResponseDTO> getAllPages(int page, int size);
 
-	TableResponseDTO searchTable(String name);
+	
+	
 
-	Page<TableResponseDTO> findTablesByStatus(TableStatus status, int page, int size);
+//	Page<TableResponseDTO> getTablesFromFilter(String nameTable, TableStatus status, String location,
+//			Pageable pageable);
 
-	Page<TableResponseDTO> findAvailableTables(int page, int size);
+	Page<TableResponseDTO> getTablesFromFilter(String nameTable, String status, String location, Pageable pageable);
 }

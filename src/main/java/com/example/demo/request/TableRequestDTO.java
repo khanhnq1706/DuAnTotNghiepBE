@@ -18,7 +18,6 @@ public class TableRequestDTO {
 
 	String nameTable;
 	boolean isDeleted;
-	@NotNull
 	String location;
 	@Enumerated(EnumType.STRING)
 	private TableStatus status;;

@@ -11,7 +11,7 @@ public enum ErrorEnum {
     // error  code Food : 110*
     FOOD_ALREADY_EXISTS(1101, "Name's Food already exists"),
     FOOD_NOT_EXISTS(1102, "Food not exists"),
-    Name_food_not_blank(1103, "Name food not blank "),
+    Name_food_not_blank(1103, "Name food not blank"),
     Price_food_not_negative(1104, "Price food not negative"),
     Price_food_not_null(1105, "Pirce food not null"),
     Is_Selling_not_null(1106, "Is Selling not null"),
@@ -24,6 +24,8 @@ public enum ErrorEnum {
 
     // error  code category food : 130*
     Category_not_found(1301, "Category not found in database"),
+    Id_category_not_null(1302, "Id Category not null"),
+
 
 
     ;

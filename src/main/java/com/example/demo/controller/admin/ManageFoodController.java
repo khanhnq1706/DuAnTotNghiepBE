@@ -5,6 +5,8 @@ import com.example.demo.respone.ApiRespone;
 import com.example.demo.service.FoodService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,11 +24,19 @@ public class ManageFoodController {
                 .result(foodService.getAllFood(page,size))
                 .build();
     }
+    @GetMapping("{idfood}")
+    public ApiRespone<?> getFoodById(@PathVariable("idfood") int idFood) {
+        return ApiRespone.builder()
+                .result(foodService.getFoodById(idFood))
+                .build();
+    }
     @PostMapping
     public ApiRespone<?> postFood(@ModelAttribute @Valid FoodRequestDTO requestDTO, @RequestParam(name = "file",required = false) MultipartFile file  ) {
+        System.out.println(requestDTO.toString());
         return ApiRespone.builder()
                 .result(foodService.saveFood(requestDTO,file))
                 .build();
+
     }
     @PutMapping("{id}")
     public ApiRespone<?> putFood(@PathVariable("id") int idFood ,@ModelAttribute @Valid FoodRequestDTO requestDTO, @RequestParam(name = "file",required = false) MultipartFile file  ) {
@@ -34,6 +44,17 @@ public class ManageFoodController {
         return ApiRespone.builder()
                 .result(foodService.updateFood(idFood,requestDTO,file))
                 .build();
+    }
+    @GetMapping("filter")
+    public ApiRespone<?>getFoodFromFilter(@RequestParam(required = false) String  nameFood,
+    		@RequestParam(required = false) String idCategory,
+    		@RequestParam(required = false) String isSelling,
+    		@RequestParam(value = "page", defaultValue = "0") int page,
+    	    @RequestParam(value = "size", defaultValue = "10") int size){
+    	Pageable pageable = PageRequest.of(page, size);
+    	  return ApiRespone.builder()
+                  .result(foodService.getFoodFromFilter(nameFood,idCategory,isSelling,pageable))
+                  .build();
     }
 
 }
