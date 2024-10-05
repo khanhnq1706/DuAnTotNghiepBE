@@ -65,7 +65,6 @@ public class FoodServiceImpl implements FoodService {
 
 	@Override
 	public FoodResponeDTO getFoodById(int idFood) {
-
 		FoodEntity foodEntity = foodRepository.findById(idFood)
 				.orElseThrow(() -> new RuntimeException(" FOOD_NOT_EXISTS"));
 		FoodResponeDTO responeDTO = foodMapper.toFoodResponeDTO(foodEntity);
@@ -120,23 +119,7 @@ public class FoodServiceImpl implements FoodService {
 		return foodMapper.toFoodResponeDTO(foodEntity);
 	}
 	@Override
-//	public Page<FoodResponeDTO> getFoodFromFilter(String nameFood,String idCategory, String isSelling,  Pageable pageable) {
-//
-//				List<FoodEntity> foodEntities = foodRepository.findAll();
-//
-//			    // Các điều kiện lọc khác
-//				List<FoodEntity> fillteredList = foodEntities.stream()
-//						.filter(food ->  !food.getIsDeleted())
-//			            .filter(food  ->  food.getCategory().getIdCategory().equals(idCategory))
-//			            .filter(food ->food.getIsSelling().equals(isSelling))
-//			            .toList();
-//		    List<FoodResponeDTO> foodDtos = foodEntities.stream()
-//		            .map(foodMapper::toFoodResponeDTO)
-//		            .filter(foodDto -> foodDto.getNameFood().contains(nameFood))
-//		            .collect(Collectors.toList());
-//		    return new PageImpl<>(foodDtos);
-// 
-//	}
+
     public Page<FoodResponeDTO> getFoodFromFilter(String nameFood, String idCategory, String isSelling, Pageable pageable) {
         String patterBoolean = "true|false";
         try {
@@ -171,8 +154,6 @@ public class FoodServiceImpl implements FoodService {
         } catch (NumberFormatException e) {
             throw new RuntimeException("Invalid_id_Category");
         }
-
-    }
+        }
 	}
-
 

@@ -15,10 +15,7 @@ public interface FoodService {
     public FoodResponeDTO saveFood(FoodRequestDTO requestDTO, MultipartFile file);
     public FoodResponeDTO updateFood(int idFood,FoodRequestDTO requestDTO, MultipartFile file);
     public FoodResponeDTO getFoodById(int idFood);
-//	public Page<FoodResponeDTO> getFoodFromFilter(String nameFood, Integer idCategory, Boolean isSelling, Pageable pageable);
-//	Page<FoodResponeDTO> getFoodFromFilter(Integer idCategory, Boolean isSelling, String nameFood, Pageable pageable);
-	Page<FoodResponeDTO> getFoodFromFilter(String nameFood, String idCategory, String isSelling, Pageable pageable);
-	
-	
-	
+
+	public Page<FoodResponeDTO> getFoodFromFilter(String nameFood, String idCategory, String isSelling, Pageable pageable);
+
 }
