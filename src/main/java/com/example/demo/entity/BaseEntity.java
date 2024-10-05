@@ -20,9 +20,7 @@ import lombok.experimental.FieldDefaults;
 public class BaseEntity {
 	@Column(updatable = false)
 	@CreatedDate
-	Date dateCreate;
+	private Date dateCreate;
 	@LastModifiedDate
-	Date dateModify;
-
-	
+	private Date dateModify;		
 }
