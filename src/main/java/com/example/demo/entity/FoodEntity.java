@@ -13,14 +13,12 @@ import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
+
 
 @Data
 @NoArgsConstructor
@@ -35,15 +33,11 @@ public class FoodEntity extends BaseEntity {
 	int idFood;
 	String nameFood;
 	float priceFood;
+
  	String imgFood;
 	Boolean isSelling;
 	Boolean isDeleted;
 	String note;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_user")
-	UserEnitty userCreated;
-	
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_category")
 	@Fetch(FetchMode.JOIN)

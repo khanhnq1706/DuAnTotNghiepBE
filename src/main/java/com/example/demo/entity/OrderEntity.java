@@ -33,11 +33,18 @@ public class OrderEntity extends BaseEntity {
 
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+<<<<<<< HEAD
 	private int idOrder;
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private OrderStatus statusOrder;
 	@NotNull
+=======
+	int idOrder;
+	
+	
+	
+>>>>>>> 5d64634f097d397672f30dcd86ba767996727a91
 	@OneToOne
 	@JoinColumn(name = "id_table")
 	TableEntity tableEntity;
@@ -45,6 +52,15 @@ public class OrderEntity extends BaseEntity {
 	@JoinColumn(name = "id_User")
 	UserEnitty userEnitty;
 	
+	
+	
 	@OneToMany(mappedBy = "orderEntity")
 	List<OrderDetailEntity> listOrderDetail;
+<<<<<<< HEAD
+=======
+	
+	
+	String statusOrder;
+	
+>>>>>>> 5d64634f097d397672f30dcd86ba767996727a91
 }
