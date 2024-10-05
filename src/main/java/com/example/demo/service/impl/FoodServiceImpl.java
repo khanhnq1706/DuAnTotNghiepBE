@@ -132,6 +132,33 @@ public class FoodServiceImpl implements FoodService {
         }
         }
 
+@Override
+	public Page<FoodResponeDTO> getFoodFromFilter(String nameFood, String idCategory, Pageable pageable) {
+		  try {
+
+	            Integer categoryId = idCategory == null ? null : Integer.parseInt(idCategory);
+	            System.out.println("idCategory"+categoryId);
+	            List<FoodEntity> foodEntities = foodRepository.findAll();
+	            if (categoryId != null) {
+	                foodEntities = foodEntities
+	                        .stream()
+	                        .filter(foodEntity -> foodEntity.getCategory().getIdCategory() == categoryId).toList();
+	            }
+	            if (nameFood != null) {
+	                foodEntities = foodEntities
+	                        .stream()
+	                        .filter(foodEntity -> foodEntity.getNameFood().contains(nameFood)).toList();
+	            }
+
+	            List<FoodResponeDTO> foodDtos = foodEntities.stream()
+	                    .map(foodMapper::toFoodResponeDTO)
+	                    .collect(Collectors.toList());
+	            return new PageImpl<>(foodDtos);
+	        } catch (NumberFormatException e) {
+	            throw new RuntimeException("Invalid_id_Category");
+	        }
+	}
+
 
 
 }
