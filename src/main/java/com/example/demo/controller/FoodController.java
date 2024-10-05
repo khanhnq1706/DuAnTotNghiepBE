@@ -6,17 +6,22 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.controller.admin.ManageCategoryController;
 import com.example.demo.entity.CategoryFoodEntity;
 import com.example.demo.entity.FoodEntity;
 import com.example.demo.repository.FoodFindRepository;
 import com.example.demo.request.FoodRequestDTO;
+import com.example.demo.respone.ApiRespone;
 import com.example.demo.respone.CategoryRespone;
 import com.example.demo.respone.FoodResponeDTO;
+import com.example.demo.service.FoodService;
 import com.example.demo.service.impl.CategoryServiceImpl;
 import com.example.demo.service.impl.FoodServiceImpl;
 
@@ -26,59 +31,36 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
-
-
 @RestController
-@RequestMapping("/api/foodEntities")
-@CrossOrigin("http://localhost:4200")
+@RequestMapping("api/v1/foodEntities")
+//@CrossOrigin("http://localhost:4200")
 public class FoodController {
 	@Autowired
 	private FoodFindRepository foodFindRepository;
-	
+	@Autowired
+	private FoodService foodService;
 	@Autowired
 	private FoodServiceImpl foodServiceImpl;
-	
+	@Autowired
+	ManageCategoryController categoryController;
 	@Autowired
 	private CategoryServiceImpl categoryServiceImpl;
-	// danh sách món ăn
-	@GetMapping("")
-	public List<FoodEntity> getListFood() {
-		return foodFindRepository.findAll();
-	}
+    @GetMapping
+    public ApiRespone<?> getAllFoods(@RequestParam(required = false, defaultValue = "0") int page,
+                                     @RequestParam(required = false, defaultValue = "10") int size  ) {
+         return ApiRespone.builder()
+                .result(foodService.getAllFood(page,size))
+                .build();
+    }
 	
-	// lọc theo id 
-	@GetMapping("{id}")
-	public List<FoodResponeDTO> getFoodbyidCategory(@PathVariable int id) {
-		CategoryFoodEntity  category = categoryServiceImpl.findByidCategory(id);
-		return foodServiceImpl.findByCategory(category);
-	}
-	
-	// lọc theo id và tên
-	@GetMapping("/find/{id}")
-	public List<FoodResponeDTO> getFoodbyIdCategoryandName(
-			@PathVariable int id, 
-			@RequestParam String name, 
-			@RequestParam Optional<Boolean> sort) {
-		List<FoodResponeDTO> listFood = new ArrayList<>();
-		
-		if (id == 0) {
-			// tìm theo tên
-			listFood = foodServiceImpl.findByNameFoodLike( "%"+ name+ "%",sort.orElse(true));
-		}else {
-			// tìm theo tên và category
-			CategoryFoodEntity  category = categoryServiceImpl.findByidCategory(id);
-			listFood = foodServiceImpl.findByCategoryAndNameFoodLike(category, "%" + name + "%",sort.orElse(true));
-		}
-		
-		
-		return listFood;
-		
-	}
-	
-	
-	
-	
-	
-	
-	
+    @GetMapping("filter")
+    public ApiRespone<?>getFoodFromFilter(@RequestParam(required = false) String  nameFood,
+    		@RequestParam(required = false) String idCategory,
+    		@RequestParam(value = "page", defaultValue = "0") int page,
+    	    @RequestParam(value = "size", defaultValue = "10") int size){
+    	Pageable pageable = PageRequest.of(page, size);
+    	  return ApiRespone.builder()
+                  .result(foodService.getFoodFromFilter(nameFood,idCategory,pageable))
+                  .build();
+    }
 }
