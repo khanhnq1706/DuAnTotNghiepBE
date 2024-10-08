@@ -29,14 +29,13 @@ public class FoodEntity extends BaseEntity {
 	int idFood;
 	String nameFood;
 	float priceFood;
- 	String imgFood;
+	String imgFood;
 	Boolean isSelling;
 	Boolean isDeleted;
 	String note;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_user")
 	UserEnitty userCreated;
-	
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_category")
@@ -44,7 +43,6 @@ public class FoodEntity extends BaseEntity {
 
 	@OneToMany(mappedBy = "foodEntity")
 	List<OrderDetailEntity> listOrderDetail;
-
 
 	@Override
 	public String toString() {
@@ -57,6 +55,5 @@ public class FoodEntity extends BaseEntity {
 				", isDeleted=" + isDeleted +
 				'}';
 	}
-
 
 }

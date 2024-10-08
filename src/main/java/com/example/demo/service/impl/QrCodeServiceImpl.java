@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.entity.QrEntity;
 import com.example.demo.entity.TableEntity;
@@ -86,26 +87,28 @@ public class QrCodeServiceImpl implements QrCodeService {
 	}
 
 	// Update qrcode mới
+	@Transactional
 	@Override
-	public QrResposneDTO recreateQr(int idTable) {
+	public ApiRespone<QrResposneDTO> recreateQr(int idTable) {
 		TableEntity table = tableRepository.findById(idTable)
 				.orElseThrow(() -> new RuntimeException("Table_not_exist"));
-		QrEntity qrCode = qrRepository.findByTableEntity(table);
-		if (qrCode == null) {
+		// tìm qr theo bàn
+		QrEntity qrCode = qrRepository.findByTableEntity(table); // có
+		if (qrCode != null) {
 			String nameImg = formatNameQr + table.getNameTable() + ".png";
-			qrCode.setNameImage(nameImg);
-			qrCode.setLinkImage(hosting + "/QRCode/" + nameImg);
 			this.deleteQrcode(nameImg);
+			qrRepository.deleteByTableEntity(table);
+			System.out.println("Xóa thành công");
 			try {
-				generateQrCodeForTable(nameImg, idTable);
-				qrRepository.save(qrCode);
-			} catch (WriterException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+				createQr(idTable);
+			} catch (RuntimeException e) {
 				e.printStackTrace();
 			}
 		}
-		return qrMaper.toQRResposneDTO(qrCode);
+		return ApiRespone.<QrResposneDTO>builder()
+				.result(qrMaper.toQRResposneDTO(qrCode))
+				.message("Cập nhật QRCode mới thành công!")
+				.build();
 	}
 
 	// Xóa qrcode cũ
@@ -136,6 +139,7 @@ public class QrCodeServiceImpl implements QrCodeService {
 	@Override
 	public ApiRespone<List<QrResposneDTO>> getAllQrCode() {
 		List<QrEntity> qrEntities = qrRepository.findAll();
+
 		List<QrResposneDTO> qrResposneDTOs = qrEntities.stream().map(qrMaper::toQRResposneDTO)
 				.collect(Collectors.toList());
 		return ApiRespone.<List<QrResposneDTO>>builder().result(qrResposneDTOs).build();
