@@ -5,6 +5,8 @@ import com.example.demo.enums.TableStatus;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,8 @@ public class TableRequestDTO {
 	@NotBlank(message = "Name_table_not_blank")
 	String nameTable;
 	boolean isDeleted;
-	TableStatus status;
-
+	@NotNull
+	String location;
+	@Enumerated(EnumType.STRING)
+	private TableStatus status;;
 }

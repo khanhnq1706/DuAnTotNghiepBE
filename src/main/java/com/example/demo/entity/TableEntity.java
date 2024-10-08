@@ -17,6 +17,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,8 +39,10 @@ public class TableEntity extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idTable;
 	String nameTable;
-	boolean isDeleted;
 
+	boolean isDeleted ;
+	@NotNull
+	String location;
 	@Enumerated(EnumType.STRING)
 	private TableStatus status;
 
