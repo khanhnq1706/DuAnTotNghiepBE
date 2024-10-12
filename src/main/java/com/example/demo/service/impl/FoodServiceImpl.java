@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.Specification.FoodSpecs;
 import com.example.demo.entity.CategoryFoodEntity;
 import com.example.demo.entity.FoodEntity;
 import com.example.demo.map.FoodMapper;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -95,44 +97,18 @@ public class FoodServiceImpl implements FoodService {
 
 		return foodMapper.toFoodResponeDTO(foodEntity);
 	}
+
 	@Override
-    public Page<FoodResponeDTO> getFoodFromFilter(String nameFood, String idCategory, String isSelling, Pageable pageable) {
-        String patterBoolean = "true|false";
-        try {
+	public Page<FoodResponeDTO> getFoodFromFilter(String nameFood, String idCategory, String isSelling, Pageable pageable) {
 
-            Integer categoryId = idCategory == null ? null : Integer.parseInt(idCategory);
-            List<FoodEntity> foodEntities = foodRepository.findAll();
-            if (categoryId != null) {
-                foodEntities = foodEntities
-                        .stream()
-                        .filter(foodEntity -> foodEntity.getCategory().getIdCategory() == categoryId).toList();
-            }
-            if (nameFood != null) {
-                foodEntities = foodEntities
-                        .stream()
-                        .filter(foodEntity -> foodEntity.getNameFood().contains(nameFood)).toList();
-            }
-            if (isSelling != null) {
-                if (!isSelling.toLowerCase().matches(patterBoolean)) {
-                    throw new RuntimeException("Invalid_is_Selling");
-                }
-                Boolean isSellingBool =  Boolean.parseBoolean(isSelling);
-                foodEntities = foodEntities
-                        .stream()
-                        .filter(foodEntity -> foodEntity.getIsSelling() == isSellingBool).toList();
-            }
+		Specification<FoodEntity> specsFood = Specification.where(FoodSpecs.hasNameFood(nameFood)
+				.and(FoodSpecs.hasIdCategory(idCategory))
+				.and(FoodSpecs.isSelling(isSelling)));
+		return	foodRepository.findAll(specsFood, pageable).map(foodMapper::toFoodResponeDTO);
 
-            List<FoodResponeDTO> foodDtos = foodEntities.stream()
-                    .map(foodMapper::toFoodResponeDTO)
-                   
-                    .collect(Collectors.toList());
-            return new PageImpl<>(foodDtos);
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("Invalid_id_Category");
-        }
-        }
+	}
 
-@Override
+	@Override
 	public Page<FoodResponeDTO> getFoodFromFilter(String nameFood, String idCategory, Pageable pageable) {
 		  try {
 

@@ -15,7 +15,6 @@ public interface FoodService {
 
 
 	public Page<FoodResponeDTO> getFoodFromFilter(String nameFood, String idCategory, String isSelling, Pageable pageable);
-//	public Page<FoodResponeDTO> getFoodsFromFilter(String nameFood, String idCategory, Pageable pageable);
 	Page<FoodResponeDTO> getFoodFromFilter(String nameFood, String idCategory, Pageable pageable);
 
 

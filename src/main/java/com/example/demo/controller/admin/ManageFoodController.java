@@ -51,6 +51,8 @@ public class ManageFoodController {
     		@RequestParam(required = false) String isSelling,
     		@RequestParam(value = "page", defaultValue = "0") int page,
     	    @RequestParam(value = "size", defaultValue = "10") int size){
+        System.out.println(page);
+        System.out.println(size);
     	Pageable pageable = PageRequest.of(page, size);
     	  return ApiRespone.builder()
                   .result(foodService.getFoodFromFilter(nameFood,idCategory,isSelling,pageable))
