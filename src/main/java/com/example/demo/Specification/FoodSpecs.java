@@ -31,8 +31,14 @@ public class FoodSpecs {
     }
 
     public static Specification<FoodEntity> isSelling(String isSelling) {
-        return (root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("isSelling"), Boolean.valueOf(isSelling));
+        return (root, query, criteriaBuilder) ->{
+         if(isSelling!=null){
+
+             return criteriaBuilder.equal(root.get("isSelling"), Boolean.valueOf(isSelling));
+         }
+
+            return null;
+        };
 
     }
 
