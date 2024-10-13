@@ -27,13 +27,6 @@ public class UserEnitty {
 	String password;
 	boolean isAdmin = false;
 	boolean isDeleted;
-	
-	@OneToMany(mappedBy = "userCreated")
-	List<CategoryFoodEntity> listCategoryCreated;
-	
-	@OneToMany(mappedBy = "userCreated")
-	List<FoodEntity> listFoodCreated;
-	
 	@OneToMany(mappedBy = "userEnitty")
 	List<OrderEntity> listOrderEntity;
 	
