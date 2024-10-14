@@ -31,7 +31,6 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Where(clause = "is_Deleted = false")
 @Builder
 public class TableEntity extends BaseEntity {
 
@@ -40,7 +39,7 @@ public class TableEntity extends BaseEntity {
 	int idTable;
 	String nameTable;
 
-	boolean isDeleted ;
+	boolean isDeleted;
 	@NotNull
 	String location;
 	@Enumerated(EnumType.STRING)
@@ -49,6 +48,5 @@ public class TableEntity extends BaseEntity {
 	@JsonIgnore
 	@OneToOne(mappedBy = "tableEntity")
 	QrEntity qrEntity;
-
 
 }

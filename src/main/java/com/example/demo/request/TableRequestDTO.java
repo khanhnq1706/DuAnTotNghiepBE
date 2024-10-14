@@ -26,5 +26,5 @@ public class TableRequestDTO {
 	@NotNull
 	String location;
 	@Enumerated(EnumType.STRING)
-	private TableStatus status;;
+	private TableStatus status;
 }

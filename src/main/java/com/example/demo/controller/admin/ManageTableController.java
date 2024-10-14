@@ -1,6 +1,5 @@
 package com.example.demo.controller.admin;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -8,8 +7,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,17 +65,33 @@ public class ManageTableController {
 		return tableService.deleteTable(idTable);
 	}
 
-	    @GetMapping("filter")
-	    public ApiRespone<?>getTablesFromFilter(@RequestParam(required = false) String  nameTable,
-	    		@RequestParam(required = false) String  status,
-	    		@RequestParam(required = false) String location,
-	    		@RequestParam(value = "page", defaultValue = "0") int page,
-	    		@RequestParam(value = "page", defaultValue = "10") int size){
-	    	Pageable pageable = PageRequest.of(page, size);
-	    	  return ApiRespone.builder()
-	                  .result(tableService.getTablesFromFilter(nameTable, status, location, pageable))
-	                  .build();
-	   }
+	@GetMapping("by-not_deleted")
+	public ApiRespone<?> getTableNotDeleted() {
+		return ApiRespone.builder().result(tableService.findAllTableNotDelete()).build();
+	}
 
+	@GetMapping("getAll-status")
+	public ApiRespone<List<TableStatusResponeDTO>> getAllStatus() {
+		List<TableStatusResponeDTO> statuses = tableService.getAllStatuses();
+		return ApiRespone.<List<TableStatusResponeDTO>>builder().result(statuses).build();
+	}
+
+	// update status
+	@PutMapping("{id}/status")
+	public ApiRespone<?> updateStatus(@PathVariable("id") int id, @RequestBody TableStatusRequestDTO request) {
+		return tableService.updateStatus(id, request);
+	}
+
+	@GetMapping("filter")
+	public ApiRespone<?> getTablesFromFilter(@RequestParam(required = false) String nameTable,
+			@RequestParam(required = false) String status,
+			@RequestParam(required = false) String location,
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "page", defaultValue = "10") int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		return ApiRespone.builder()
+				.result(tableService.getTablesFromFilter(nameTable, status, location, pageable))
+				.build();
+	}
 
 }
