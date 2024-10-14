@@ -18,10 +18,9 @@ public class ManageFoodController {
     private FoodService foodService;
 
     @GetMapping
-    public ApiRespone<?> getAllFoods(@RequestParam(required = false, defaultValue = "0") int page,
-                                     @RequestParam(required = false, defaultValue = "10") int size  ) {
+    public ApiRespone<?> getAllFoods( ) {
          return ApiRespone.builder()
-                .result(foodService.getAllFood(page,size))
+                .result(foodService.getAllFood())
                 .build();
     }
     @GetMapping("{idfood}")

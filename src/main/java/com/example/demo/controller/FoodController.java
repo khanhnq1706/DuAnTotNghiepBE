@@ -45,13 +45,7 @@ public class FoodController {
 	ManageCategoryController categoryController;
 	@Autowired
 	private CategoryServiceImpl categoryServiceImpl;
-    @GetMapping
-    public ApiRespone<?> getAllFoods(@RequestParam(required = false, defaultValue = "0") int page,
-                                     @RequestParam(required = false, defaultValue = "10") int size  ) {
-         return ApiRespone.builder()
-                .result(foodService.getAllFood(page,size))
-                .build();
-    }
+
 	
     @GetMapping("filter")
     public ApiRespone<?>getFoodFromFilter(@RequestParam(required = false) String  nameFood,

@@ -35,9 +35,9 @@ public class FoodServiceImpl implements FoodService {
 	private CategoryRepository categoryRepository;
 
 	@Override
-	public Page<FoodResponeDTO> getAllFood(int page, int size) {
-		Pageable pageable = PageRequest.of(page, size);
-		return foodRepository.findAll(pageable).map(foodMapper::toFoodResponeDTO);
+	public Page<FoodResponeDTO> getAllFood() {
+
+		return new PageImpl<>(foodRepository.findAll().stream().map(foodMapper::toFoodResponeDTO).collect(Collectors.toList()));
 	}
 
 	@Override
