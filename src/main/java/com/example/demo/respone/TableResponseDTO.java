@@ -5,6 +5,7 @@ import com.example.demo.enums.TableStatus;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,11 @@ public class TableResponseDTO {
 	int idTable;
 	String nameTable;
 	boolean isDeleted;
-	TableStatus status;
+	@NotNull
+	String location;
+	@Enumerated(EnumType.STRING)
+	private TableStatus status;;
+
 	String displayName;
+
 }

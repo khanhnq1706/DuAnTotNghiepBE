@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class FoodServiceImpl implements FoodService {
+    
     @Autowired
     private FoodRepository foodRepository;
     @Autowired
@@ -31,7 +32,13 @@ public class FoodServiceImpl implements FoodService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+    
+    
 
+    @Autowired
+    public FoodServiceImpl(FoodRepository foodRepository) {
+        this.foodRepository = foodRepository;
+    }
     @Override
     public Page<FoodResponeDTO> getAllFood(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);

@@ -29,10 +29,9 @@ public class CategoryFoodEntity extends BaseEntity {
     int idCategory;
     boolean isDeleted;
 
-    @Column(columnDefinition = "varchar(100)")
-    String nameCategory;
+	@Column(columnDefinition = "varchar(100)")
+	String nameCategory;
+	@OneToMany(mappedBy = "category")
+	List<FoodEntity> listFoodCreated;
 
-    @OneToMany(mappedBy = "category")
-    @JsonIgnore
-    List<FoodEntity> listFoodCreated;
 }

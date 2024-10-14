@@ -17,18 +17,21 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.Where;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Where(clause = "is_Deleted = false")
 @Builder
 public class TableEntity extends BaseEntity {
 
@@ -36,8 +39,10 @@ public class TableEntity extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idTable;
 	String nameTable;
-	boolean isDeleted;
 
+	boolean isDeleted ;
+	@NotNull
+	String location;
 	@Enumerated(EnumType.STRING)
 	private TableStatus status;
 
@@ -45,7 +50,5 @@ public class TableEntity extends BaseEntity {
 	@OneToOne(mappedBy = "tableEntity")
 	QrEntity qrEntity;
 
-	@JsonIgnore
-	@OneToOne(mappedBy = "tableEntity")
-	OrderEntity orderEntity;
+
 }

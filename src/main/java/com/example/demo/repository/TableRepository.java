@@ -17,10 +17,6 @@ public interface TableRepository extends JpaRepository<TableEntity, Integer> {
 
 	TableEntity findByNameTable(String nameTable);
 
-	// Page<TableEntity> findByStatusAndMaxCapacityLessThanEqual(TableStatus
-	// available, int numberOfGuests,
-	// Pageable pageable);
-
 	Page<TableEntity> findByStatus(TableStatus status, Pageable pageable);
 
 	// find table delete = false
