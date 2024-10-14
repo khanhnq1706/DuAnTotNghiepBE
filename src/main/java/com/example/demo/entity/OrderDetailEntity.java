@@ -39,11 +39,10 @@ public class OrderDetailEntity  {
 	@Min(1)
 	@Column(nullable = false)
 	private long price;
-	@Column(nullable = false)
-	private long totalPrice;
+//	@Column(nullable = false)
+//	private long totalPrice;
 	@NotNull
 	@Enumerated(EnumType.STRING)
-	@NotNull
 	PaymentStatus paymentStatus;
 	@NotNull
 	@Enumerated(EnumType.STRING)
@@ -57,15 +56,13 @@ public class OrderDetailEntity  {
 	@ManyToOne
 	@JoinColumn(name = "id_food")
 	FoodEntity foodEntity;
-	@PrePersist
-	@PreUpdate
-	public void preTotal() {
-	    if (quantity < 0 || price < 0) {
-	        throw new IllegalArgumentException("Số lượng hoặc đơn giá không hợp lệ");
-	    }
-	    totalPrice = quantity * price;
-//	    if (discount > 0) {
-//	        totalPrice -= totalPrice * discount / 100;
-//	    }
-	}
+//	@PrePersist
+//	@PreUpdate
+//	public void preTotal() {
+//	
+//	    long totalPrice = quantity * price;
+////	    if (discount > 0) {
+////	        totalPrice -= totalPrice * discount / 100;
+////	    }
+//	}
 }

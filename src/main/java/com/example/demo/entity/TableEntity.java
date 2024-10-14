@@ -1,12 +1,16 @@
 package com.example.demo.entity;
 
+import com.example.demo.enums.TableStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +29,10 @@ public class TableEntity {
 	int idTable;
 	String nameTable;
 	boolean isDeleted ;
-	
+	@NotNull
+	String location;
+	@Enumerated(EnumType.STRING)
+	private TableStatus status;
 	@JsonIgnore
 	@OneToOne(mappedBy = "tableEntity")
 	QrEntity qrEntity;
