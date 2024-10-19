@@ -79,7 +79,10 @@ public class FoodServiceImpl implements FoodService {
 		FoodEntity foodEntity = foodRepository.findById(idFood)
 				.orElseThrow(() -> new RuntimeException("FOOD_NOT_EXISTS"));
 		String imgFoodTemp = foodEntity.getImgFood();
-
+		foodEntity = foodRepository.findByNameFood(requestDTO.getNameFood().trim());
+		if (foodEntity != null) {
+			throw new RuntimeException("FOOD_ALREADY_EXISTS");
+		}
 		foodEntity = foodMapper.toFoodEntity(requestDTO);
 
 		if (file != null && !file.getOriginalFilename().trim().equals("")) {

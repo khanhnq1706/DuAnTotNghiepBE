@@ -13,6 +13,7 @@ public class FoodResponeDTO {
 	Integer idFood;
     String nameFood;
     float priceFood;
+    Float discount;
     String imgFood;
     Boolean isSelling;
     Boolean isDeleted;
