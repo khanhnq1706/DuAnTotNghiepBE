@@ -25,4 +25,5 @@ public class TableRequestDTO {
 	@Enumerated(EnumType.STRING)
 	private TableStatus status;
 	boolean isLocked;
+	Integer idArea;
 }
