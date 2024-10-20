@@ -26,17 +26,19 @@ public interface TableRepository extends JpaRepository<TableEntity, Integer> {
 	@Query("SELECT t FROM TableEntity t WHERE t.linkImageQr IS NOT NULL")
 	List<TableEntity> findTablesWithQrCode();
 
-	@Query(value = "SELECT * FROM table_entity ORDER BY CAST(SUBSTRING(name_table, 5) AS UNSIGNED) ASC", nativeQuery = true)
-	Page<TableEntity> findAllSortedByNameTableASC(Pageable pageable);
+	@Query(value = "SELECT * FROM table_entity WHERE id_area = :idArea ORDER BY CAST(SUBSTRING(name_table, 5) AS UNSIGNED) ASC", nativeQuery = true)
+	Page<TableEntity> findAllSortedByNameTableASC(@Param("idArea") Integer idArea, Pageable pageable);
 
-	@Query(value = "SELECT * FROM table_entity ORDER BY CAST(SUBSTRING(name_table, 5) AS UNSIGNED) DESC", nativeQuery = true)
-	Page<TableEntity> findAllSortedByNameTableDESC(Pageable pageable);
+	@Query(value = "SELECT * FROM table_entity WHERE id_area = :idArea ORDER BY CAST(SUBSTRING(name_table, 5) AS UNSIGNED) DESC", nativeQuery = true)
+	Page<TableEntity> findAllSortedByNameTableDESC(@Param("idArea") Integer idArea, Pageable pageable);
 
-	@Query("SELECT t FROM TableEntity t WHERE "
-			+ "( :nameTable IS NULL OR t.nameTable LIKE %:nameTable% ) "
-			+ "AND ( :status IS NULL OR t.status = :status )")
+	// Tìm kiếm theo nameTable, status, idArea với phân trang
+	@Query("SELECT t FROM TableEntity t WHERE " +
+			"(:nameTable IS NULL OR t.nameTable LIKE %:nameTable%) AND " +
+			"(:status IS NULL OR t.status = :status) AND " +
+			"(:idArea IS NULL OR t.area.idArea = :idArea)")
 	Page<TableEntity> findByFilters(@Param("nameTable") String nameTable,
 			@Param("status") TableStatus status,
+			@Param("idArea") Integer idArea,
 			Pageable pageable);
-
 }

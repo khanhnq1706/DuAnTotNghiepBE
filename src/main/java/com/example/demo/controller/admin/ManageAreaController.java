@@ -21,4 +21,5 @@ public class ManageAreaController {
                 .result(areaService.findAll())
                 .build();
     }
+
 }

@@ -18,10 +18,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
+import com.example.demo.entity.AreaEntity;
 import com.example.demo.entity.FoodEntity;
 import com.example.demo.entity.TableEntity;
 import com.example.demo.enums.TableStatus;
 import com.example.demo.map.TableMapper;
+import com.example.demo.repository.AreaRepository;
 import com.example.demo.repository.TableRepository;
 import com.example.demo.request.TableRequestDTO;
 import com.example.demo.request.TableStatusRequestDTO;
@@ -38,6 +40,8 @@ public class TableServiceImpl implements TableService {
 
     @Autowired
     private TableRepository tableRepository;
+    @Autowired
+    private AreaRepository areaRepository;
 
     @Autowired
     private TableMapper tableMapper;
@@ -62,29 +66,33 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public Page<TableResponseDTO> getAllTablesSortASC(int page, int size) {
+    public Page<TableResponseDTO> getAllTablesSortASC(int page, int size, int idArea) {
         Sort sort = Sort.by(Sort.Order.by("nameTable"));
         Pageable pageable = PageRequest.of(page, size);
-        Page<TableEntity> sortedTablesPage = tableRepository.findAllSortedByNameTableASC(pageable);
+        Page<TableEntity> sortedTablesPage = tableRepository.findAllSortedByNameTableASC(idArea, pageable);
         return sortedTablesPage.map(tableMapper::toTableResponseDTO);
     }
 
     @Override
-    public Page<TableResponseDTO> getTablesFromFilter(String nameTable, String status, Pageable pageable) {
-        TableStatus statusEnum = (status == null || status.isEmpty()) ? null : TableStatus.valueOf(status);
-        Page<TableEntity> tableEntities = tableRepository.findByFilters(nameTable, statusEnum, pageable);
+    public Page<TableResponseDTO> getTablesFromFilter(String nameTable, TableStatus status, Integer idArea,
+            Pageable pageable) {
+        // Sử dụng idArea để lọc bàn theo khu vực
+        Page<TableEntity> tableEntities = tableRepository.findByFilters(nameTable, status, idArea, pageable);
+
+        // Chuyển đổi sang DTO
         List<TableResponseDTO> tableDtos = tableEntities
                 .stream()
                 .map(tableMapper::toTableResponseDTO)
                 .collect(Collectors.toList());
+
         return new PageImpl<>(tableDtos, pageable, tableEntities.getTotalElements());
     }
 
     @Override
-    public Page<TableResponseDTO> getAllTablesSortDESC(int page, int size) {
+    public Page<TableResponseDTO> getAllTablesSortDESC(int page, int size, int idArea) {
         Sort sort = Sort.by(Sort.Order.by("nameTable"));
         Pageable pageable = PageRequest.of(page, size);
-        Page<TableEntity> sortedTablesPage = tableRepository.findAllSortedByNameTableDESC(pageable);
+        Page<TableEntity> sortedTablesPage = tableRepository.findAllSortedByNameTableDESC(idArea, pageable);
         return sortedTablesPage.map(tableMapper::toTableResponseDTO);
     }
 
@@ -97,7 +105,10 @@ public class TableServiceImpl implements TableService {
         if (request.getStatus() == null) {
             request.setStatus(TableStatus.AVAILABLE);
         }
+        AreaEntity area = areaRepository.findById(request.getIdArea())
+                .orElseThrow(() -> new RuntimeException("Area_not_found"));
         TableEntity newTable = tableMapper.toTableEntity(request);
+        newTable.setArea(area);
         return tableMapper.toTableResponseDTO(tableRepository.save(newTable));
     }
 

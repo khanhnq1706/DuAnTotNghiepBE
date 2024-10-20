@@ -11,6 +11,7 @@ import com.example.demo.map.AreaMapper;
 import com.example.demo.repository.AreaRepository;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.request.AreaRequestDTO;
+import com.example.demo.respone.ApiRespone;
 import com.example.demo.respone.AreaResponeDTO;
 import com.example.demo.service.AreaService;
 
@@ -32,6 +33,13 @@ public class AreaServiceImpl implements AreaService {
         }
         AreaEntity newArea = areaMapper.toAreaEntity(request);
         return areaMapper.tAreaResponeDTO(areaRepository.save(newArea));
+    }
+
+    public ApiRespone<?> deleteTable(int idArea) {
+        AreaEntity area = areaRepository.findById(idArea)
+                .orElseThrow(() -> new RuntimeException("Table_not_found"));
+        areaRepository.deleteById(idArea);
+        return ApiRespone.builder().message("Table delete successfully!").build();
     }
 
 }

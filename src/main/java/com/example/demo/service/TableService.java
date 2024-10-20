@@ -30,12 +30,15 @@ public interface TableService {
 
 	public ApiRespone<?> updateStatus(int idTable, TableStatusRequestDTO request);
 
-	Page<TableResponseDTO> getTablesFromFilter(String nameTable, String status, Pageable pageable);
-
 	public List<TableResponseDTO> findAllTableNotlocked();
 
-	public Page<TableResponseDTO> getAllTablesSortASC(int page, int size);
+	public Page<TableResponseDTO> getAllTablesSortASC(int page, int size, int idArea);
 
-	public Page<TableResponseDTO> getAllTablesSortDESC(int page, int size);
+	public Page<TableResponseDTO> getAllTablesSortDESC(int page, int size, int idArea);
 
+	// Page<TableResponseDTO> getTablesFromFilter(String nameTable, String status,
+	// Pageable pageable);
+
+	public Page<TableResponseDTO> getTablesFromFilter(String nameTable, TableStatus status, Integer idArea,
+			Pageable pageable);
 }

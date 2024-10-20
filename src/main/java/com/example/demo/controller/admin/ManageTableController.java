@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.enums.TableStatus;
 import com.example.demo.request.TableRequestDTO;
 import com.example.demo.request.TableStatusRequestDTO;
 import com.example.demo.respone.ApiRespone;
@@ -38,13 +40,12 @@ public class ManageTableController {
 	@Autowired
 	private TableService tableService;
 
-	@GetMapping
+	@GetMapping("sort/asc")
 	public ApiRespone<?> getAllTablesASC(
 			@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "size", defaultValue = "17") int size) {
-
-		Page<TableResponseDTO> tablePages = tableService.getAllTablesSortASC(page, size);
-
+			@RequestParam(value = "size", defaultValue = "17") int size,
+			@RequestParam(value = "idArea", defaultValue = "0") int idArea) {
+		Page<TableResponseDTO> tablePages = tableService.getAllTablesSortASC(page, size, idArea);
 		return ApiRespone.builder()
 				.result(tablePages) // Trả về danh sách các bảng
 				.build();
@@ -53,9 +54,10 @@ public class ManageTableController {
 	@GetMapping("sort/desc")
 	public ApiRespone<?> getAllTablesDESC(
 			@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "size", defaultValue = "17") int size) {
+			@RequestParam(value = "size", defaultValue = "17") int size,
+			@RequestParam(value = "idArea", defaultValue = "1") int idArea) {
 
-		Page<TableResponseDTO> tablePages = tableService.getAllTablesSortDESC(page, size);
+		Page<TableResponseDTO> tablePages = tableService.getAllTablesSortDESC(page, size, idArea);
 
 		return ApiRespone.builder()
 				.result(tablePages) // Trả về danh sách các bảng
@@ -64,12 +66,13 @@ public class ManageTableController {
 
 	@GetMapping("filter")
 	public ApiRespone<?> getTablesFromFilter(@RequestParam(required = false) String nameTable,
-			@RequestParam(required = false) String status,
+			@RequestParam(required = false) TableStatus status,
+			@RequestParam(required = false) Integer idArea,
 			@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "size", defaultValue = "2") int size) {
+			@RequestParam(value = "size", defaultValue = "17") int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		return ApiRespone.builder()
-				.result(tableService.getTablesFromFilter(nameTable, status, pageable))
+				.result(tableService.getTablesFromFilter(nameTable, status, idArea, pageable))
 				.build();
 	}
 
