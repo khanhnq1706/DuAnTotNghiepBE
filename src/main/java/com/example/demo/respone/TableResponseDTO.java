@@ -20,11 +20,10 @@ public class TableResponseDTO {
 
 	int idTable;
 	String nameTable;
-	boolean isDeleted;
-	String location;
+	String linkImageQr;
+	String nameImageQr;
 	@Enumerated(EnumType.STRING)
 	private TableStatus status;
-
 	String displayName;
-
+	boolean isLocked;
 }

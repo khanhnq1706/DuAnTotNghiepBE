@@ -12,9 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
-
 
 import java.util.stream.Collectors;
 
@@ -33,7 +33,6 @@ import com.example.demo.service.TableService;
 
 import jakarta.validation.Valid;
 
-
 @Service
 public class TableServiceImpl implements TableService {
 
@@ -44,11 +43,6 @@ public class TableServiceImpl implements TableService {
     private TableMapper tableMapper;
 
     // GetAll
-    @Override
-    public List<TableResponseDTO> getAllTables() {
-        return tableRepository.findAll().stream().map(element -> tableMapper.toTableResponseDTO(element))
-                .collect(Collectors.toList());
-    }
 
     @Override
     public ApiRespone<TableResponseDTO> getTable(int idtable) {
@@ -65,6 +59,33 @@ public class TableServiceImpl implements TableService {
     public Page<TableResponseDTO> getAllPages(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return tableRepository.findAll(pageable).map(tableMapper::toTableResponseDTO);
+    }
+
+    @Override
+    public Page<TableResponseDTO> getAllTablesSortASC(int page, int size) {
+        Sort sort = Sort.by(Sort.Order.by("nameTable"));
+        Pageable pageable = PageRequest.of(page, size);
+        Page<TableEntity> sortedTablesPage = tableRepository.findAllSortedByNameTableASC(pageable);
+        return sortedTablesPage.map(tableMapper::toTableResponseDTO);
+    }
+
+    @Override
+    public Page<TableResponseDTO> getTablesFromFilter(String nameTable, String status, Pageable pageable) {
+        TableStatus statusEnum = (status == null || status.isEmpty()) ? null : TableStatus.valueOf(status);
+        Page<TableEntity> tableEntities = tableRepository.findByFilters(nameTable, statusEnum, pageable);
+        List<TableResponseDTO> tableDtos = tableEntities
+                .stream()
+                .map(tableMapper::toTableResponseDTO)
+                .collect(Collectors.toList());
+        return new PageImpl<>(tableDtos, pageable, tableEntities.getTotalElements());
+    }
+
+    @Override
+    public Page<TableResponseDTO> getAllTablesSortDESC(int page, int size) {
+        Sort sort = Sort.by(Sort.Order.by("nameTable"));
+        Pageable pageable = PageRequest.of(page, size);
+        Page<TableEntity> sortedTablesPage = tableRepository.findAllSortedByNameTableDESC(pageable);
+        return sortedTablesPage.map(tableMapper::toTableResponseDTO);
     }
 
     // save
@@ -89,15 +110,22 @@ public class TableServiceImpl implements TableService {
                 tableRepository.findByNameTable(request.getNameTable()) != null) {
             throw new RuntimeException("Table_exists");
         }
+        table.setLocked(request.isLocked());
         table.setNameTable(request.getNameTable().trim());
-        table.setDeleted(request.isDeleted());
-        table.setStatus(request.getStatus());
         return tableMapper.toTableResponseDTO(tableRepository.save(table));
     }
 
     // Delete
     @Override
     public ApiRespone<?> deleteTable(int idTable) {
+        TableEntity table = tableRepository.findById(idTable)
+                .orElseThrow(() -> new RuntimeException("Table_not_found"));
+        tableRepository.deleteById(idTable);
+        return ApiRespone.builder().message("Table delete successfully!").build();
+    }
+
+    @Override
+    public ApiRespone<?> lockedTable(int idTable) {
         Optional<TableEntity> optionaltable = tableRepository.findById(idTable);
         if (!optionaltable.isPresent()) {
             return ApiRespone.builder()
@@ -105,49 +133,12 @@ public class TableServiceImpl implements TableService {
                     .build();
         }
         TableEntity table = optionaltable.get();
-        table.setDeleted(true);
+        table.setLocked(true);
         tableRepository.save(table);
         return ApiRespone.builder()
                 .result(table)
-                .message("Table deleted successfully")
+                .message("Table locked successfully")
                 .build();
-    }
-   @Override
-   public Page<TableResponseDTO> getTablesFromFilter(String nameTable, String status, String location, Pageable pageable) {
-	   
-           TableStatus status2  = status == null ? null : TableStatus.valueOf(status);
-    	   List<TableEntity> tableEntities = tableRepository.findAll();
-           if (nameTable != null) {
-        	   tableEntities = tableEntities
-                       .stream()
-                       .filter(tableEntity -> tableEntity.getNameTable().contains(nameTable)).toList();
-           }
-           if (location != null) {
-        	   tableEntities = tableEntities
-                       .stream()
-                       .filter(tableEntity -> tableEntity.getLocation().contains(location)).toList();
-           }
-           if (status != null) {
-               tableEntities = tableEntities
-                       .stream()
-                       .filter(tableEntity -> tableEntity.getStatus().equals(status2)).toList();
-           }
-
-           List<TableResponseDTO> tableDtos = tableEntities.stream()
-                   .map(tableMapper::toTableResponseDTO)
-                   .collect(Collectors.toList());
-           return new PageImpl<>(tableDtos);
-   
-
-	}
-
-
-    // Get All Table where table isdelete = false
-    @Override
-    public List<TableResponseDTO> findAllTableNotDelete() {
-        return tableRepository.findByIsDeleted(false).stream()
-                .map(element -> tableMapper.toTableResponseDTO(element))
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -169,6 +160,11 @@ public class TableServiceImpl implements TableService {
 
     }
 
-
+    @Override
+    public List<TableResponseDTO> findAllTableNotlocked() {
+        return tableRepository.findByIsLocked(false).stream()
+                .map(element -> tableMapper.toTableResponseDTO(element))
+                .collect(Collectors.toList());
+    }
 
 }
