@@ -17,8 +17,9 @@ public enum ErrorEnum {
     Is_Selling_not_null(1106, "Is Selling not null"),
     Is_Deleted_not_null(1107, "Is Deleted not null"),
     Invalid_is_Selling(1108, "Invalid isSelling"),
-    Invalid_id_Category(1109, "Invalid Id Category")
-
+    Invalid_id_Category(1109, "Invalid Id Category"),
+    SOME_FOOD_NOT_EXISTS(1110, "Some food not exists"),
+    ID_FOOD_NOT_NULL(1111, "ID food not null")
     // erroe code qr : 120*
     , QR_exist(1201, "Qr exist in database"),
 
@@ -27,6 +28,7 @@ public enum ErrorEnum {
     Category_not_found(1301, "Category not found in database"),
     Id_category_not_null(1302, "Id Category not null"),
 
+    // Error request Order : 140*
 
 
     ;

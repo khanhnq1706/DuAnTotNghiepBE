@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
@@ -19,19 +20,17 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Where(clause = "is_Deleted = false")
 public class FoodEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idFood;
 	String nameFood;
 	float priceFood;
-
- 	String imgFood;
+	String imgFood;
 	Boolean isSelling;
-	Boolean isDeleted;
-	@Column(columnDefinition = "nvarchar(1000)")
+	@Column(columnDefinition = "varchar(3000)")
 	String note;
+	float discount;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_category")
 	@Fetch(FetchMode.JOIN)
@@ -39,6 +38,7 @@ public class FoodEntity extends BaseEntity {
 
 	@OneToMany(mappedBy = "foodEntity")
 	List<OrderDetailEntity> listOrderDetail;
+
 
 
 	@Override
@@ -49,7 +49,6 @@ public class FoodEntity extends BaseEntity {
 				", priceFood=" + priceFood +
 				", imgFood='" + imgFood + '\'' +
 				", isSelling=" + isSelling +
-				", isDeleted=" + isDeleted +
 				'}';
 	}
 
