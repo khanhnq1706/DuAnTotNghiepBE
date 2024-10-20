@@ -5,6 +5,8 @@ import java.util.stream.Stream;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import java.util.List;
@@ -19,8 +21,22 @@ public interface TableRepository extends JpaRepository<TableEntity, Integer> {
 
 	Page<TableEntity> findByStatus(TableStatus status, Pageable pageable);
 
-	// find table delete = false
+	List<TableEntity> findByIsLocked(boolean locked);
 
-	List<TableEntity> findByIsDeleted(boolean deleted);
+	@Query("SELECT t FROM TableEntity t WHERE t.linkImageQr IS NOT NULL")
+	List<TableEntity> findTablesWithQrCode();
+
+	@Query(value = "SELECT * FROM table_entity ORDER BY CAST(SUBSTRING(name_table, 5) AS UNSIGNED) ASC", nativeQuery = true)
+	Page<TableEntity> findAllSortedByNameTableASC(Pageable pageable);
+
+	@Query(value = "SELECT * FROM table_entity ORDER BY CAST(SUBSTRING(name_table, 5) AS UNSIGNED) DESC", nativeQuery = true)
+	Page<TableEntity> findAllSortedByNameTableDESC(Pageable pageable);
+
+	@Query("SELECT t FROM TableEntity t WHERE "
+			+ "( :nameTable IS NULL OR t.nameTable LIKE %:nameTable% ) "
+			+ "AND ( :status IS NULL OR t.status = :status )")
+	Page<TableEntity> findByFilters(@Param("nameTable") String nameTable,
+			@Param("status") TableStatus status,
+			Pageable pageable);
 
 }

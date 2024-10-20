@@ -14,8 +14,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -26,21 +24,23 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderDetailEntity  {
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class OrderDetailEntity {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idOrderDetail;
 	@Min(1)
-    @Max(50)
+	@Max(50)
 	@Column(nullable = false)
 	private int quantity;
 	@Min(1)
 	@Column(nullable = false)
 	private long price;
-//	@Column(nullable = false)
-//	private long totalPrice;
+	// @Column(nullable = false)
+	// private long totalPrice;
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	PaymentStatus paymentStatus;
@@ -52,17 +52,17 @@ public class OrderDetailEntity  {
 	@ManyToOne
 	@JoinColumn(name = "id_order")
 	OrderEntity orderEntity;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "id_food")
 	FoodEntity foodEntity;
-//	@PrePersist
-//	@PreUpdate
-//	public void preTotal() {
-//	
-//	    long totalPrice = quantity * price;
-////	    if (discount > 0) {
-////	        totalPrice -= totalPrice * discount / 100;
-////	    }
-//	}
+	// @PrePersist
+	// @PreUpdate
+	// public void preTotal() {
+	//
+	// long totalPrice = quantity * price;
+	//// if (discount > 0) {
+	//// totalPrice -= totalPrice * discount / 100;
+	//// }
+	// }
 }

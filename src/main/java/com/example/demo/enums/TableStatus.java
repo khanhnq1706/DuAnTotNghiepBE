@@ -5,6 +5,5 @@ public enum TableStatus {
     OCCUPIED, // đang phục vụ
     CLEANING, // đang dọn
     RESERVED, // đặt trước
-    BILL_REQUESTED // yêu cầu thanh toán
-
+    BILL_REQUESTED, // yêu cầu thanh toán
 }

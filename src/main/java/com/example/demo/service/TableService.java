@@ -20,20 +20,22 @@ public interface TableService {
 
 	ApiRespone<?> deleteTable(int idTable);
 
-	List<TableResponseDTO> getAllTables();
-
 	Page<TableResponseDTO> getAllPages(int page, int size);
+
+	ApiRespone<?> lockedTable(int idTable);
 
 	ApiRespone<TableResponseDTO> getTable(int idtable);
 
-	// Find table not deleted
-	List<TableResponseDTO> findAllTableNotDelete();
-
 	List<TableStatusResponeDTO> getAllStatuses();
-
 
 	public ApiRespone<?> updateStatus(int idTable, TableStatusRequestDTO request);
 
-	Page<TableResponseDTO> getTablesFromFilter(String nameTable, String status, String location, Pageable pageable);
+	Page<TableResponseDTO> getTablesFromFilter(String nameTable, String status, Pageable pageable);
+
+	public List<TableResponseDTO> findAllTableNotlocked();
+
+	public Page<TableResponseDTO> getAllTablesSortASC(int page, int size);
+
+	public Page<TableResponseDTO> getAllTablesSortDESC(int page, int size);
 
 }

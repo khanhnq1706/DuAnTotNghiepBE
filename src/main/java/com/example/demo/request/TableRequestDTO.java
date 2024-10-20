@@ -22,9 +22,7 @@ public class TableRequestDTO {
 
 	@NotBlank(message = "Name_table_not_blank")
 	String nameTable;
-	boolean isDeleted;
-	@NotNull
-	String location;
 	@Enumerated(EnumType.STRING)
 	private TableStatus status;
+	boolean isLocked;
 }

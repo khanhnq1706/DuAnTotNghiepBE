@@ -1,6 +1,7 @@
 package com.example.demo.controller.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -38,9 +39,38 @@ public class ManageTableController {
 	private TableService tableService;
 
 	@GetMapping
-	public ApiRespone<?> getAllTables(@RequestParam(required = false, defaultValue = "0") int page,
-			@RequestParam(required = false, defaultValue = "17") int size) {
-		return ApiRespone.builder().result(tableService.getAllPages(page, size)).build();
+	public ApiRespone<?> getAllTablesASC(
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "size", defaultValue = "17") int size) {
+
+		Page<TableResponseDTO> tablePages = tableService.getAllTablesSortASC(page, size);
+
+		return ApiRespone.builder()
+				.result(tablePages) // Trả về danh sách các bảng
+				.build();
+	}
+
+	@GetMapping("sort/desc")
+	public ApiRespone<?> getAllTablesDESC(
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "size", defaultValue = "17") int size) {
+
+		Page<TableResponseDTO> tablePages = tableService.getAllTablesSortDESC(page, size);
+
+		return ApiRespone.builder()
+				.result(tablePages) // Trả về danh sách các bảng
+				.build();
+	}
+
+	@GetMapping("filter")
+	public ApiRespone<?> getTablesFromFilter(@RequestParam(required = false) String nameTable,
+			@RequestParam(required = false) String status,
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "size", defaultValue = "2") int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		return ApiRespone.builder()
+				.result(tableService.getTablesFromFilter(nameTable, status, pageable))
+				.build();
 	}
 
 	@GetMapping("{id}")
@@ -56,7 +86,6 @@ public class ManageTableController {
 	@PutMapping("{id}")
 	public ApiRespone<?> putTable(@RequestBody TableRequestDTO request,
 			@PathVariable("id") int idTable) {
-		ApiRespone<TableResponseDTO> response = new ApiRespone<TableResponseDTO>();
 		return ApiRespone.builder().result(tableService.updateTable(request, idTable)).build();
 	}
 
@@ -67,7 +96,7 @@ public class ManageTableController {
 
 	@GetMapping("by-not_deleted")
 	public ApiRespone<?> getTableNotDeleted() {
-		return ApiRespone.builder().result(tableService.findAllTableNotDelete()).build();
+		return ApiRespone.builder().result(tableService.findAllTableNotlocked()).build();
 	}
 
 	@GetMapping("getAll-status")
@@ -82,16 +111,10 @@ public class ManageTableController {
 		return tableService.updateStatus(id, request);
 	}
 
-	@GetMapping("filter")
-	public ApiRespone<?> getTablesFromFilter(@RequestParam(required = false) String nameTable,
-			@RequestParam(required = false) String status,
-			@RequestParam(required = false) String location,
-			@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "page", defaultValue = "10") int size) {
-		Pageable pageable = PageRequest.of(page, size);
-		return ApiRespone.builder()
-				.result(tableService.getTablesFromFilter(nameTable, status, location, pageable))
-				.build();
+	// Locked table
+	@PutMapping("{id}/locked")
+	public ApiRespone<?> lockedTable(@PathVariable("id") int idTable) {
+		return tableService.lockedTable(idTable);
 	}
 
 }
