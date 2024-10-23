@@ -48,6 +48,7 @@ public class TableEntity {
 	String linkImageQr;
 	String nameImageQr;
 	boolean isLocked;
+	Long secretKey;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_area")

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +39,7 @@ public class QrCodeServiceImpl implements QrCodeService {
 	private TableMapper tableMapper;
 
 	private String hosting = "http://localhost:8080";
+	private String hostingFE = "http://192.168.1.17:4200";
 	private String formatNameQr = "QRCode_Table_";
 
 	@Override
@@ -48,10 +50,12 @@ public class QrCodeServiceImpl implements QrCodeService {
 			throw new RuntimeException("QR_exist");
 		}
 		String nameImg = formatNameQr + table.getNameTable() + ".png";
+		Long secretKey = new Date().getTime();
 		table.setNameImageQr(nameImg);
 		table.setLinkImageQr(hosting + "/QRCode/" + nameImg);
+		table.setSecretKey(secretKey);
 		try {
-			generateQrCodeForTable(nameImg, idTable);
+			generateQrCodeForTable(nameImg, idTable,secretKey);
 			tableRepository.save(table);
 		} catch (WriterException e) {
 			// TODO Auto-generated catch block
@@ -63,9 +67,9 @@ public class QrCodeServiceImpl implements QrCodeService {
 		return tableMapper.toTableResponseDTO(table);
 	}
 
-	public void generateQrCodeForTable(String nameTable, int idTable) throws WriterException, IOException {
+	public void generateQrCodeForTable(String nameTable, int idTable,Long key) throws WriterException, IOException {
 
-		String data = "http://localhost:8080/userview?table=" + idTable;
+		String data = hostingFE+ "/?table=" + idTable+"&secretKey="+key;
 
 		QRCodeWriter qrCodeWriter = new QRCodeWriter();
 		BitMatrix matrix = qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, 250, 250);
