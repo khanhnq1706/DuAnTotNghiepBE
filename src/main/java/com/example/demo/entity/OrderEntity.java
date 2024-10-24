@@ -38,13 +38,15 @@ public class OrderEntity extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private OrderStatus statusOrder;
 	@NotNull
+
 	@OneToOne
 	@JoinColumn(name = "id_table")
 	TableEntity tableEntity;
 	@ManyToOne
 	@JoinColumn(name = "id_User")
 	UserEnitty userEnitty;
-	
+
 	@OneToMany(mappedBy = "orderEntity")
 	List<OrderDetailEntity> listOrderDetail;
+
 }

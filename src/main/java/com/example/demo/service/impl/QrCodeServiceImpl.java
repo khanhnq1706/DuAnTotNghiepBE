@@ -50,7 +50,7 @@ public class QrCodeServiceImpl implements QrCodeService {
 			throw new RuntimeException("QR_exist");
 		}
 		String nameImg = formatNameQr + table.getNameTable() + ".png";
-		Long secretKey = new Date().getTime();
+		Long secretKey = Math.round(Math.random()*10000000);
 		table.setNameImageQr(nameImg);
 		table.setLinkImageQr(hosting + "/QRCode/" + nameImg);
 		table.setSecretKey(secretKey);

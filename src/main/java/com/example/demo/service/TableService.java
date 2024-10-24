@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import com.example.demo.request.VerifyTableRequestDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -41,4 +42,6 @@ public interface TableService {
 
 	public Page<TableResponseDTO> getTablesFromFilter(String nameTable, TableStatus status, Integer idArea,
 			Pageable pageable);
+
+	public TableResponseDTO  verifyTable(VerifyTableRequestDTO Request);
 }
