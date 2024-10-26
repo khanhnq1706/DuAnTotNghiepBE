@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,8 +39,12 @@ public class QrCodeServiceImpl implements QrCodeService {
 	@Autowired
 	private TableMapper tableMapper;
 
-	private String hosting = "http://localhost:8080";
-	private String hostingFE = "http://192.168.1.17:4200";
+	@Value("${host.be}")
+	private String hostBE ;
+
+	@Value("${host.fe}")
+	private String hostFE ;
+
 	private String formatNameQr = "QRCode_Table_";
 
 	@Override
@@ -52,7 +57,7 @@ public class QrCodeServiceImpl implements QrCodeService {
 		String nameImg = formatNameQr + table.getNameTable() + ".png";
 		Long secretKey = Math.round(Math.random()*10000000);
 		table.setNameImageQr(nameImg);
-		table.setLinkImageQr(hosting + "/QRCode/" + nameImg);
+		table.setLinkImageQr(hostBE + "/QRCode/" + nameImg);
 		table.setSecretKey(secretKey);
 		try {
 			generateQrCodeForTable(nameImg, idTable,secretKey);
@@ -69,7 +74,7 @@ public class QrCodeServiceImpl implements QrCodeService {
 
 	public void generateQrCodeForTable(String nameTable, int idTable,Long key) throws WriterException, IOException {
 
-		String data = hostingFE+ "/?table=" + idTable+"&secretKey="+key;
+		String data = hostFE+ "/?table=" + idTable+"&secretKey="+key;
 
 		QRCodeWriter qrCodeWriter = new QRCodeWriter();
 		BitMatrix matrix = qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, 250, 250);
