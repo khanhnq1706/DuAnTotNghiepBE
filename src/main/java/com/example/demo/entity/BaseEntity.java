@@ -18,7 +18,6 @@ import lombok.experimental.FieldDefaults;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
-
 	@Column(updatable = false)
 	@CreatedDate
 	private Date dateCreate;

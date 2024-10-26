@@ -2,7 +2,6 @@ package com.example.demo.entity;
 
 import java.util.List;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -31,6 +30,7 @@ public class CategoryFoodEntity extends BaseEntity {
     @Column(columnDefinition = "varchar(100)")
     String nameCategory;
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     List<FoodEntity> listFoodCreated;
 
 }
