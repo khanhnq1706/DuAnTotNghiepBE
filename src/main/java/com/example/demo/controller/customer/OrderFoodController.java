@@ -20,7 +20,8 @@ public class OrderFoodController {
     @PostMapping
     public ApiRespone<?> postOrder(@RequestBody List<FoodRequestOrderDTO> listFoodOrder,
                                    @RequestParam Integer idTable,@RequestParam(required = false) String numberPhone) {
-
+        System.out.println(listFoodOrder.toString());
+        System.out.println("id table :"+idTable);
         return ApiRespone.builder()
                 .result(orderService.saveOrder(listFoodOrder, idTable, numberPhone))
                 .build();

@@ -7,8 +7,9 @@ public enum ErrorEnum {
     // Error code table : 100*
     Table_exist(1001, "Table exist in database"),
     Table_not_exist(1002, "Table not exist in database"),
-
-    // error  code Food : 110*
+    Table_not_found(1003, "Table not Found"),
+    Table_key_expired(1004, "table's key expired or wrong"),
+    // error code Food : 110*
     FOOD_ALREADY_EXISTS(1101, "Name's Food already exists"),
     FOOD_NOT_EXISTS(1102, "Food not exists"),
     Name_food_not_blank(1103, "Name food not blank "),
