@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class QrResposneDTO {
-	int idQr;
-	String nameImage;
-	String linkImage;
+public class AreaResponeDTO {
+    int idArea;
+    String nameArea;
 }

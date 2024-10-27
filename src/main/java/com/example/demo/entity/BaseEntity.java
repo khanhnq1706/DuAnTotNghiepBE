@@ -22,5 +22,6 @@ public class BaseEntity {
 	@CreatedDate
 	private Date dateCreate;
 	@LastModifiedDate
-	private Date dateModify;		
+	Date dateModify;
+
 }

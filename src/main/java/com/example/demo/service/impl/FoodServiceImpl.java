@@ -67,7 +67,8 @@ public class FoodServiceImpl implements FoodService {
 			fileService.saveFile(file);
 		}
 		foodEntity.setCategory(categoryFood);
-
+		System.out.println(requestDTO.getDiscount());
+		System.out.println(foodEntity.getDiscount());
 		return foodMapper.toFoodResponeDTO(foodRepository.save(foodEntity));
 	}
 
@@ -80,7 +81,7 @@ public class FoodServiceImpl implements FoodService {
 				.orElseThrow(() -> new RuntimeException("FOOD_NOT_EXISTS"));
 		String imgFoodTemp = foodEntity.getImgFood();
 		foodEntity = foodRepository.findByNameFood(requestDTO.getNameFood().trim());
-		if (foodEntity != null) {
+		if (foodEntity != null && foodEntity.getIdFood()!=idFood ) {
 			throw new RuntimeException("FOOD_ALREADY_EXISTS");
 		}
 		foodEntity = foodMapper.toFoodEntity(requestDTO);
@@ -104,7 +105,8 @@ public class FoodServiceImpl implements FoodService {
 	@Override
 	public Page<FoodResponeDTO> getFoodFromFilter(String nameFood, String idCategory, String isSelling, Pageable pageable) {
 
-		Specification<FoodEntity> specsFood = Specification.where(FoodSpecs.hasNameFood(nameFood)
+		Specification<FoodEntity> specsFood = Specification.where(
+				FoodSpecs.hasNameFood(nameFood)
 				.and(FoodSpecs.hasIdCategory(idCategory))
 				.and(FoodSpecs.isSelling(isSelling)));
 		return	foodRepository.findAll(specsFood, pageable).map(foodMapper::toFoodResponeDTO);

@@ -26,7 +26,7 @@ public class FoodEntity extends BaseEntity {
 	int idFood;
 	String nameFood;
 	float priceFood;
- 	String imgFood;
+	String imgFood;
 	Boolean isSelling;
 	@Column(columnDefinition = "varchar(3000)")
 	String note;

@@ -13,14 +13,17 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TableResponseDTO {
 
-	String idTable;
+	int idTable;
 	String nameTable;
-	boolean isDeleted;
-	String location;
+	String linkImageQr;
+	String nameImageQr;
 	@Enumerated(EnumType.STRING)
-	private TableStatus status;;
+	private TableStatus status;
+	String displayName;
+	boolean isLocked;
 }

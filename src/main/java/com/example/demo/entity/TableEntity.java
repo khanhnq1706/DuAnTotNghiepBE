@@ -1,44 +1,34 @@
 package com.example.demo.entity;
 
 import com.example.demo.enums.TableStatus;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
+
 @Builder
 public class TableEntity {
 
-	@Id @GeneratedValue(strategy =  GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idTable;
 	String nameTable;
-	boolean isDeleted ;
-	@NotNull
-	String location;
 	@Enumerated(EnumType.STRING)
 	private TableStatus status;
-	@JsonIgnore
-	@OneToOne(mappedBy = "tableEntity")
-	QrEntity qrEntity;
-	
-	@JsonIgnore
-	@OneToOne(mappedBy = "tableEntity")
-	OrderEntity orderEntity;
-	
+	String linkImageQr;
+	String nameImageQr;
+	boolean isLocked;
+	Long secretKey;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_area")
+	@JsonBackReference
+	AreaEntity area;
+
 }

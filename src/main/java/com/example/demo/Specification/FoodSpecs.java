@@ -12,6 +12,7 @@ public class FoodSpecs {
                 if (categoryId != null) {
                     return criteriaBuilder.equal(root.join("category").get("idCategory"), categoryId);
                 }
+                System.out.println("cate null");
                 return null;
             } catch (Exception e) {
                 throw new RuntimeException("Invalid_id_Category");
@@ -26,6 +27,7 @@ public class FoodSpecs {
             if (keyword != null) {
                 return criteriaBuilder.like(root.get("nameFood"), "%" + keyword + "%");
             }
+            System.out.println("name null");
             return null;
         };
     }
@@ -36,7 +38,7 @@ public class FoodSpecs {
 
              return criteriaBuilder.equal(root.get("isSelling"), Boolean.valueOf(isSelling));
          }
-
+            System.out.println("selling null");
             return null;
         };
 

@@ -6,8 +6,8 @@
     import org.mapstruct.Mapper;
     import org.mapstruct.Mapping;
 
-    @Mapper(componentModel = "spring")
-    public interface FoodMapper {
+@Mapper(componentModel = "spring")
+public interface FoodMapper {
 
         FoodEntity toFoodEntity (FoodRequestDTO requestDTO);
         @Mapping(source = "category.idCategory",target = "idCategory")
