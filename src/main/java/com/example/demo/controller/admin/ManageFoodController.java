@@ -5,6 +5,8 @@ import com.example.demo.respone.ApiRespone;
 import com.example.demo.service.FoodService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,10 +18,9 @@ public class ManageFoodController {
     private FoodService foodService;
 
     @GetMapping
-    public ApiRespone<?> getAllFoods(@RequestParam(required = false, defaultValue = "0") int page,
-                                     @RequestParam(required = false, defaultValue = "10") int size  ) {
+    public ApiRespone<?> getAllFoods( ) {
          return ApiRespone.builder()
-                .result(foodService.getAllFood(page,size))
+                .result(foodService.getAllFood())
                 .build();
     }
     @GetMapping("{idfood}")
@@ -42,6 +43,19 @@ public class ManageFoodController {
         return ApiRespone.builder()
                 .result(foodService.updateFood(idFood,requestDTO,file))
                 .build();
+    }
+    @GetMapping("filter")
+    public ApiRespone<?>getFoodFromFilter(@RequestParam(required = false) String  nameFood,
+    		@RequestParam(required = false) String idCategory,
+    		@RequestParam(required = false) String isSelling,
+    		@RequestParam(value = "page", defaultValue = "0") int page,
+    	    @RequestParam(value = "size", defaultValue = "10") int size){
+        System.out.println(page);
+        System.out.println(size);
+    	Pageable pageable = PageRequest.of(page, size);
+    	  return ApiRespone.builder()
+                  .result(foodService.getFoodFromFilter(nameFood,idCategory,isSelling,pageable))
+                  .build();
     }
 
 }

@@ -3,9 +3,11 @@ package com.example.demo.service.impl;
 import java.util.ArrayList;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.demo.request.VerifyTableRequestDTO;
 import org.hibernate.mapping.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,9 +18,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
+
 import java.util.stream.Collectors;
 
 import com.example.demo.entity.AreaEntity;
+import com.example.demo.entity.FoodEntity;
 import com.example.demo.entity.FoodEntity;
 import com.example.demo.entity.TableEntity;
 import com.example.demo.enums.TableStatus;
@@ -34,6 +38,8 @@ import com.example.demo.respone.TableStatusResponeDTO;
 import com.example.demo.service.TableService;
 
 import jakarta.validation.Valid;
+
+
 
 @Service
 public class TableServiceImpl implements TableService {
@@ -176,6 +182,16 @@ public class TableServiceImpl implements TableService {
         return tableRepository.findByIsLocked(false).stream()
                 .map(element -> tableMapper.toTableResponseDTO(element))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public TableResponseDTO  verifyTable(VerifyTableRequestDTO request){
+        TableEntity tableNeedVerify =  tableRepository.findById(request.getIdTable())
+                .orElseThrow(()-> new RuntimeException("Table_not_found"));
+        if(tableNeedVerify.getSecretKey()-request.getSecretKey()!=0){
+            throw new RuntimeException("Table_key_expired");
+        }
+        return tableMapper.toTableResponseDTO(tableNeedVerify);
     }
 
 }

@@ -30,6 +30,7 @@ public class CategoryFoodEntity extends BaseEntity {
     @Column(columnDefinition = "varchar(100)")
     String nameCategory;
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     List<FoodEntity> listFoodCreated;
 
 }
