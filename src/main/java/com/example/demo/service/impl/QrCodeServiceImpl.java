@@ -5,19 +5,24 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 
-import com.example.demo.entity.QrEntity;
 import com.example.demo.entity.TableEntity;
-import com.example.demo.map.QrMaper;
-import com.example.demo.repository.QrRepository;
+import com.example.demo.map.TableMapper;
 import com.example.demo.repository.TableRepository;
 import com.example.demo.respone.ApiRespone;
-import com.example.demo.respone.QrResposneDTO;
+import com.example.demo.respone.TableResponseDTO;
 import com.example.demo.service.QrCodeService;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -29,32 +34,34 @@ import com.google.zxing.qrcode.QRCodeWriter;
 public class QrCodeServiceImpl implements QrCodeService {
 
 	@Autowired
-	private QrRepository qrRepository;
-
-	@Autowired
 	private TableRepository tableRepository;
 
 	@Autowired
-	private QrMaper qrMaper;
+	private TableMapper tableMapper;
 
-	private String hosting = "http://localhost:8080";
+	@Value("${host.be}")
+	private String hostBE ;
+
+	@Value("${host.fe}")
+	private String hostFE ;
+
 	private String formatNameQr = "QRCode_Table_";
 
 	@Override
-	public QrResposneDTO createQr(int idTable) {
+	public TableResponseDTO createQr(int idTable) {
 		TableEntity table = tableRepository.findById(idTable)
 				.orElseThrow(() -> new RuntimeException("Table_not_exist"));
-		if (qrRepository.findByTableEntity(table) != null) {
+		if (table.getLinkImageQr() != null) {
 			throw new RuntimeException("QR_exist");
 		}
-		QrEntity qrCode = new QrEntity();
 		String nameImg = formatNameQr + table.getNameTable() + ".png";
-		qrCode.setTableEntity(table);
-		qrCode.setNameImage(nameImg);
-		qrCode.setLinkImage(hosting + "/QRCode/" + nameImg);
+		Long secretKey = Math.round(Math.random()*10000000);
+		table.setNameImageQr(nameImg);
+		table.setLinkImageQr(hostBE + "/QRCode/" + nameImg);
+		table.setSecretKey(secretKey);
 		try {
-			generateQrCodeForTable(nameImg, idTable);
-			qrRepository.save(qrCode);
+			generateQrCodeForTable(nameImg, idTable,secretKey);
+			tableRepository.save(table);
 		} catch (WriterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -62,12 +69,12 @@ public class QrCodeServiceImpl implements QrCodeService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return qrMaper.toQRResposneDTO(qrCode);
+		return tableMapper.toTableResponseDTO(table);
 	}
 
-	public void generateQrCodeForTable(String nameTable, int idTable) throws WriterException, IOException {
+	public void generateQrCodeForTable(String nameTable, int idTable,Long key) throws WriterException, IOException {
 
-		String data = "http://localhost:8080/userview?table=" + idTable;
+		String data = hostFE+ "/?table=" + idTable+"&secretKey="+key;
 
 		QRCodeWriter qrCodeWriter = new QRCodeWriter();
 		BitMatrix matrix = qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, 250, 250);
@@ -86,26 +93,30 @@ public class QrCodeServiceImpl implements QrCodeService {
 	}
 
 	// Update qrcode mới
+	@Transactional
 	@Override
-	public QrResposneDTO recreateQr(int idTable) {
+	public ApiRespone<TableResponseDTO> recreateQr(int idTable) {
 		TableEntity table = tableRepository.findById(idTable)
 				.orElseThrow(() -> new RuntimeException("Table_not_exist"));
-		QrEntity qrCode = qrRepository.findByTableEntity(table);
-		if (qrCode == null) {
+		if (table.getLinkImageQr() != null) {
 			String nameImg = formatNameQr + table.getNameTable() + ".png";
-			qrCode.setNameImage(nameImg);
-			qrCode.setLinkImage(hosting + "/QRCode/" + nameImg);
+			table.setLinkImageQr(null);
+			table.setNameImageQr(null);
 			this.deleteQrcode(nameImg);
+			System.out.println("Xóa thành công");
 			try {
-				generateQrCodeForTable(nameImg, idTable);
-				qrRepository.save(qrCode);
-			} catch (WriterException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+				this.createQr(idTable);
+			} catch (RuntimeException e) {
 				e.printStackTrace();
 			}
+		} else {
+			return ApiRespone.<TableResponseDTO>builder()
+					.message("Không tìm thấy mã QRcode!")
+					.build();
 		}
-		return qrMaper.toQRResposneDTO(qrCode);
+		return ApiRespone.<TableResponseDTO>builder()
+				.message("Cập nhật QRCode mới thành công!")
+				.build();
 	}
 
 	// Xóa qrcode cũ
@@ -117,27 +128,13 @@ public class QrCodeServiceImpl implements QrCodeService {
 	}
 
 	@Override
-	public ApiRespone<QrResposneDTO> getQrcodeByIdTable(int idtable) {
-		TableEntity table = tableRepository.findById(idtable)
-				.orElseThrow(() -> new RuntimeException("Table_not_exist"));
-		QrEntity qrEntity = qrRepository.findByTableEntity(table);
-		if (qrEntity != null) {
-			QrResposneDTO qrResponseDTO = qrMaper.toQRResposneDTO(qrEntity);
-			return ApiRespone.<QrResposneDTO>builder()
-					.result(qrResponseDTO)
-					.build();
-		} else {
-			return ApiRespone.<QrResposneDTO>builder()
-					.message("QR code not found")
-					.build();
-		}
-	}
+	public ApiRespone<List<TableResponseDTO>> getAllQrCode() {
+		List<TableEntity> tableEntities = tableRepository.findTablesWithQrCode(); // Gọi phương thức mới
 
-	@Override
-	public ApiRespone<List<QrResposneDTO>> getAllQrCode() {
-		List<QrEntity> qrEntities = qrRepository.findAll();
-		List<QrResposneDTO> qrResposneDTOs = qrEntities.stream().map(qrMaper::toQRResposneDTO)
+		List<TableResponseDTO> tableResponseDTOs = tableEntities.stream()
+				.map(tableMapper::toTableResponseDTO)
 				.collect(Collectors.toList());
-		return ApiRespone.<List<QrResposneDTO>>builder().result(qrResposneDTOs).build();
+
+		return ApiRespone.<List<TableResponseDTO>>builder().result(tableResponseDTOs).build();
 	}
 }

@@ -20,8 +20,7 @@ public class FoodRequestDTO {
     Float priceFood;
     @NotNull(message = "Is_Selling_not_null")
     String isSelling;
-    @NotNull(message = "Is_Deleted_not_null")
-    String isDeleted;
+    Float discount;
     @NotNull(message = "Id_category_not_null")
     Integer idCategory;
     String note;

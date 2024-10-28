@@ -15,9 +15,6 @@ public interface FoodRepository extends JpaRepository<FoodEntity, Integer>, JpaS
     FoodEntity findByNameFood(String name);
 	Page<FoodEntity> findAll(Specification<FoodEntity> spec, Pageable pageable);
 	List<FoodEntity> findAll();
-
-
-
     List<FoodEntity> findByCategory(CategoryFoodEntity category);
 
 }

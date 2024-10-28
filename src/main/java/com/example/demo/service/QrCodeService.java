@@ -3,16 +3,13 @@ package com.example.demo.service;
 import java.util.List;
 
 import com.example.demo.respone.ApiRespone;
-import com.example.demo.respone.QrResposneDTO;
+import com.example.demo.respone.TableResponseDTO;
 
 public interface QrCodeService {
 
-    QrResposneDTO createQr(int idTable);
+    TableResponseDTO createQr(int idTable);
 
-    QrResposneDTO recreateQr(int idTable);
+    ApiRespone<TableResponseDTO> recreateQr(int idTable);
 
-    ApiRespone<QrResposneDTO> getQrcodeByIdTable(int idTable);
-
-    ApiRespone<List<QrResposneDTO>> getAllQrCode();
-
+    ApiRespone<List<TableResponseDTO>> getAllQrCode();
 }
