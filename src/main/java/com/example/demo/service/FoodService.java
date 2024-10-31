@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FoodService {
-    public Page<FoodResponeDTO> getAllFood(int page, int size);
+    public Page<FoodResponeDTO> getAllFood();
     public FoodResponeDTO saveFood(FoodRequestDTO requestDTO, MultipartFile file);
     public FoodResponeDTO updateFood(int idFood,FoodRequestDTO requestDTO, MultipartFile file);
     
