@@ -10,5 +10,5 @@ import com.example.demo.respone.AreaResponeDTO;
 public interface AreaMapper {
     AreaEntity toAreaEntity(AreaRequestDTO requestDTO);
 
-    AreaResponeDTO tAreaResponeDTO(AreaEntity areaEntity);
+    AreaResponeDTO toAreaResponeDTO(AreaEntity areaEntity);
 }
