@@ -31,7 +31,13 @@ public enum ErrorEnum {
 
     // Error request Order : 140*
 
-
+ // Error request Promotion : 150*
+    Promotion_already_exist(1501, "Promotion already exist in database"),
+    Promotion_not_exist(1502, "Promotion not exist in database"),
+    Promotion_not_found(1503, "Promotion not Found"),
+    End_Date_not_valid(1504, "End Date not valid"),
+    Name_promotion_not_blank(1505,"Name promotion not blank"),
+    Discount_not_null(1506,"Discount_not_null")
     ;
     private int code;
     private String message;
