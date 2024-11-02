@@ -40,10 +40,10 @@ public class QrCodeServiceImpl implements QrCodeService {
 	private TableMapper tableMapper;
 
 	@Value("${host.be}")
-	private String hostBE ;
+	private String hostBE;
 
 	@Value("${host.fe}")
-	private String hostFE ;
+	private String hostFE;
 
 	private String formatNameQr = "QRCode_Table_";
 
@@ -55,12 +55,12 @@ public class QrCodeServiceImpl implements QrCodeService {
 			throw new RuntimeException("QR_exist");
 		}
 		String nameImg = formatNameQr + table.getNameTable() + ".png";
-		Long secretKey = Math.round(Math.random()*10000000);
+		Long secretKey = Math.round(Math.random() * 10000000);
 		table.setNameImageQr(nameImg);
 		table.setLinkImageQr(hostBE + "/QRCode/" + nameImg);
 		table.setSecretKey(secretKey);
 		try {
-			generateQrCodeForTable(nameImg, idTable,secretKey);
+			generateQrCodeForTable(nameImg, idTable, secretKey);
 			tableRepository.save(table);
 		} catch (WriterException e) {
 			// TODO Auto-generated catch block
@@ -72,9 +72,9 @@ public class QrCodeServiceImpl implements QrCodeService {
 		return tableMapper.toTableResponseDTO(table);
 	}
 
-	public void generateQrCodeForTable(String nameTable, int idTable,Long key) throws WriterException, IOException {
+	public void generateQrCodeForTable(String nameTable, int idTable, Long key) throws WriterException, IOException {
 
-		String data = hostFE+ "/?table=" + idTable+"&secretKey="+key;
+		String data = hostFE + "/?table=" + idTable + "&secretKey=" + key;
 
 		QRCodeWriter qrCodeWriter = new QRCodeWriter();
 		BitMatrix matrix = qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, 250, 250);

@@ -8,9 +8,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class CorsConfig {
-    
-    @Value("${host.fe}")
-    private String hostFE;
+
+	@Value("${host.fe}")
+	String hostFE;
+
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
