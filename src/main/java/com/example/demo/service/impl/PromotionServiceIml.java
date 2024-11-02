@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,7 +79,8 @@ public class PromotionServiceIml implements PromotionService{
 	@Override
 	public Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion,String status, Pageable pageable) {
 		 try {
-			 LocalDate currentDate = LocalDate.now(); // Lấy ngày hiện tại
+//			 LocalDate currentDate = LocalDate.now(); // Lấy ngày hiện tại
+			 Date currentDate = new Date();
 			 Specification<PromotionEntity> spec = Specification.where(null);
 
 			    if (namePromotion != null && !namePromotion.isEmpty()) {

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.FutureOrPresent;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,13 +29,15 @@ public class PromotionEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     int idPromotion;
-	 @Column(columnDefinition = "nvarchar(255)")
+	@Column(columnDefinition = "nvarchar(255)")
     String namePromotion;
     float discount;
+    @FutureOrPresent
     @Temporal(TemporalType.DATE)
-    LocalDate startDate;
+    Date startDate;
+    @FutureOrPresent
     @Temporal(TemporalType.DATE)
-    LocalDate endDate;
+    Date endDate;
     @Column(columnDefinition = "nvarchar(3000)")
     String description;
 	@OneToMany(mappedBy = "promotionEntity")
