@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,15 +76,24 @@ public class PromotionServiceIml implements PromotionService{
 	}
 
 	@Override
-	public Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion, Pageable pageable) {
+	public Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion,String status, Pageable pageable) {
 		 try {
+			 LocalDate currentDate = LocalDate.now(); // Lấy ngày hiện tại
 			 Specification<PromotionEntity> spec = Specification.where(null);
 
 			    if (namePromotion != null && !namePromotion.isEmpty()) {
 			        spec = spec.and((root, query, criteriaBuilder) ->
 			                criteriaBuilder.like(root.get("namePromotion"), "%" + namePromotion + "%"));
 			    }
-
+			    if (status != null && !status.isEmpty()) {
+			    	if ("expired".equals(status)) {
+			            spec = spec.and((root, query, criteriaBuilder) ->
+			                criteriaBuilder.lessThan(root.get("endDate"), currentDate));
+			        } else if ("active".equals(status)) {
+			            spec = spec.and((root, query, criteriaBuilder) ->
+			                criteriaBuilder.greaterThanOrEqualTo(root.get("endDate"), currentDate));
+			        }
+			      }
 			    Page<PromotionEntity> entities = promotionRepository.findAll(spec, pageable);
 
 			    List<PromotionResponeDTO> prosDtos = entities.stream()

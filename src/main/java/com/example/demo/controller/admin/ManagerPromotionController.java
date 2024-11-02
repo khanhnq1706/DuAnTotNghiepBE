@@ -65,13 +65,14 @@ public class ManagerPromotionController {
 
 	    @GetMapping("filter")
 	    public ApiRespone<?>getPromotionFromFilter(@RequestParam(required = false) String  namePromotion,
+	    		@RequestParam(required = false) String status,
 	    		@RequestParam(value = "page", defaultValue = "0") int page,
 	    	    @RequestParam(value = "size", defaultValue = "10") int size){
 	        System.out.println(page);
 	        System.out.println(size);
 	    	Pageable pageable = PageRequest.of(page, size);
 	    	  return ApiRespone.builder()
-	                  .result(promotionService.getPromotionFromFilter(namePromotion,pageable))
+	                  .result(promotionService.getPromotionFromFilter(namePromotion,status,pageable))
 	                  .build();
 	    }
 }
