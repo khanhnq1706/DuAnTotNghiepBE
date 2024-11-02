@@ -28,24 +28,13 @@ public class PromotionRequestDTO {
     @NotNull(message = "Discount_not_null")
     @Min(value = 0, message = "Discount_not_negative")
     float discount;
-    @FutureOrPresent
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    LocalDate startDate;
-    @FutureOrPresent
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    LocalDate endDate;
-    @Column(columnDefinition = "nvarchar(3000)")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    Date startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    Date endDate;
+    
     String description;
-    public boolean isValidEndDate(LocalDate startDate) {
-        if (endDate == null || !endDate.isAfter(startDate)) {
-       
-           
-            throw new  RuntimeException("End_Date_not_valid");
-        }
-        return true;
-    }
+
 
     
 }
