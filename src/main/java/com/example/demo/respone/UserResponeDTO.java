@@ -1,10 +1,10 @@
-package com.example.demo.entity;
+package com.example.demo.respone;
 
 import java.util.List;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import com.example.demo.entity.OrderEntity;
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,22 +16,15 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
-@Entity
+@AllArgsConstructor @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserEnitty {
-	@Id
-	@GeneratedValue(strategy = GenerationType.UUID)
+public class UserResponeDTO {
 	UUID idUser;
 	String fullname;
-	@Column(columnDefinition = "varchar(50)",name = "user_name")
 	String username;
 	String password;
 	String imgUser;
-	Boolean isAdmin = false;
+	Boolean isAdmin;
 	Boolean isDeleted;
-	@OneToMany(mappedBy = "userEnitty")
-	List<OrderEntity> listOrderEntity;
-	
 	
 }
