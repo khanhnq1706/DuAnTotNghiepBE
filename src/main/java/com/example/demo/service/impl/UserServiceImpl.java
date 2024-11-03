@@ -18,6 +18,7 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.request.UserRequestDTO;
 import com.example.demo.respone.UserResponeDTO;
 import com.example.demo.service.UserService;
+import com.example.demo.util.Encryption;
 
 
 
@@ -38,16 +39,20 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserResponeDTO saveUser(UserRequestDTO requestDTO, MultipartFile file) {
 		UserEnitty userEnitty = userRepository.findByUsername(requestDTO.getUsername().trim());	
+		
 		if (userEnitty != null) {
-			throw new RuntimeException("FOOD_ALREADY_EXISTS");
+			throw new RuntimeException("USER_ALREADY_EXISTS");
 		}
+		
 		userEnitty = userMapper.toUserRequestDTO(requestDTO);
+		
 		if (file != null) {
 			System.out.println(file.getOriginalFilename());
 
 			userEnitty.setImgUser(file.getOriginalFilename());
 			fileService.saveFile(file);
 		}
+		userEnitty.setPassword(Encryption.toSHA1(userEnitty.getPassword()));
 		return userMapper.toUserResponeDTO(userRepository.save(userEnitty));
 	}
 	@Transactional
@@ -55,11 +60,11 @@ public class UserServiceImpl implements UserService {
 	public UserResponeDTO updateUser(UUID idUser, UserRequestDTO requestDTO, MultipartFile file) {
 		
 		UserEnitty userEnitty = userRepository.findById(idUser)
-				.orElseThrow(() -> new RuntimeException("FOOD_NOT_EXISTS"));
+				.orElseThrow(() -> new RuntimeException("USER_NOT_EXISTS"));
 		String imgUserTemp = userEnitty.getImgUser();
 		userEnitty = userRepository.findByUsername(requestDTO.getUsername().trim());
 		if (userEnitty != null && userEnitty.getIdUser()!=idUser ) {
-			throw new RuntimeException("FOOD_ALREADY_EXISTS");
+			throw new RuntimeException("USER_ALREADY_EXISTS");
 		}
 		userEnitty = userMapper.toUserRequestDTO(requestDTO);
 		if (file != null && !file.getOriginalFilename().trim().equals("")) {
@@ -69,14 +74,15 @@ public class UserServiceImpl implements UserService {
 		
 		userEnitty.setIdUser(idUser);
 		userEnitty.setImgUser(imgUserTemp);
+		userEnitty.setPassword(Encryption.toSHA1(userEnitty.getPassword()));
 		userRepository.save(userEnitty);
-
+		
 		return userMapper.toUserResponeDTO(userEnitty);	
 	}
 	@Override
 	public UserResponeDTO getUserById(UUID idUser) {
 		UserEnitty userEnitty = userRepository.findById(idUser)
-				.orElseThrow(() -> new RuntimeException(" FOOD_NOT_EXISTS"));
+				.orElseThrow(() -> new RuntimeException("USER_NOT_EXISTS"));
 		UserResponeDTO responeDTO = userMapper.toUserResponeDTO(userEnitty);
 		return responeDTO;
 	}
