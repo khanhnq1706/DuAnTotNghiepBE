@@ -14,5 +14,4 @@ public interface UserService {
 	    public UserResponeDTO updateUser(UUID idUser,UserRequestDTO requestDTO, MultipartFile file);
 	    public UserResponeDTO getUserById(UUID idUser);
 	    public Page<UserResponeDTO> getUserFromFilter(String username, String fullname, String isAdmin, Pageable pageable);
-//		Page<UserResponeDTO> getFoodFromFilter(String username, String fullname, String isAdmin, Pageable pageable);
 }

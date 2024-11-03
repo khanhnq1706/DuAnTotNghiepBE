@@ -42,7 +42,7 @@ public class ManageUserController {
     }
     @PostMapping
     public ApiRespone<?> postUser(@ModelAttribute @Valid UserRequestDTO requestDTO, @RequestParam(name = "file",required = false) MultipartFile file  ) {
-    	  System.out.println("testing here :"+requestDTO.toString());
+    	  
     	return ApiRespone.builder()
                 .result(userService.saveUser(requestDTO,file))
                 .build();
@@ -50,7 +50,7 @@ public class ManageUserController {
     }
     @PutMapping("{id}")
     public ApiRespone<?> putFood(@PathVariable("id") UUID idUser ,@ModelAttribute @Valid UserRequestDTO requestDTO, @RequestParam(name = "file",required = false) MultipartFile file  ) {
-    	  System.out.println("testing here :"+requestDTO.toString());
+    	
     	return ApiRespone.builder()
                 .result(userService.updateUser(idUser,requestDTO,file))
                 .build();
