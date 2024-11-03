@@ -1,0 +1,145 @@
+----------------------------------------------------------------
+Sun Nov 03 13:43:07 ICT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-0192-f0c3-5a73-000002b85728 
+on database directory memory:E:\DuAnTotNghiep\DuAnTotNghiepBE\f296f0e8-cc5c-400c-98c2-be6f3800866d with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1d44bcfa 
+Loaded from file:/C:/Users/phann/.m2/repository/com/innoventsolutions/birt/runtime/org.apache.derby_10.11.1.1_v201605202053/4.8.0/org.apache.derby_10.11.1.1_v201605202053-4.8.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=17.0.10+11-LTS-240
+user.dir=E:\DuAnTotNghiep\DuAnTotNghiepBE
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Sun Nov 03 13:43:09 ICT 2024:
+Shutting down instance a816c00e-0192-f0c3-5a73-000002b85728 on database directory memory:E:\DuAnTotNghiep\DuAnTotNghiepBE\f296f0e8-cc5c-400c-98c2-be6f3800866d with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1d44bcfa 
+Sun Nov 03 13:43:09 ICT 2024 Thread[Thread-16,5,main] Cleanup action starting
+java.sql.SQLException: Database 'memory:f296f0e8-cc5c-400c-98c2-be6f3800866d' not found.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$LoginCallable.call(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$LoginCallable.call(Unknown Source)
+	at java.base/java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:264)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: ERROR XJ004: Database 'memory:f296f0e8-cc5c-400c-98c2-be6f3800866d' not found.
+	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	... 15 more
+============= begin nested exception, level (1) ===========
+ERROR XJ004: Database 'memory:f296f0e8-cc5c-400c-98c2-be6f3800866d' not found.
+	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$LoginCallable.call(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$LoginCallable.call(Unknown Source)
+	at java.base/java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:264)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+============= end nested exception, level (1) ===========
+Cleanup action completed
+----------------------------------------------------------------
+Sun Nov 03 13:43:09 ICT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance f55fc0a6-0192-f0c3-5a73-000002b85728 
+on database directory memory:E:\DuAnTotNghiep\DuAnTotNghiepBE\f296f0e8-cc5c-400c-98c2-be6f3800866d with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1d44bcfa 
+Loaded from file:/C:/Users/phann/.m2/repository/com/innoventsolutions/birt/runtime/org.apache.derby_10.11.1.1_v201605202053/4.8.0/org.apache.derby_10.11.1.1_v201605202053-4.8.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=17.0.10+11-LTS-240
+user.dir=E:\DuAnTotNghiep\DuAnTotNghiepBE
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Sun Nov 03 13:43:13 ICT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance ed8940a7-0192-f0c3-5a73-000002b85728 
+on database directory memory:E:\DuAnTotNghiep\DuAnTotNghiepBE\d702a513-d1a8-4172-aed8-01e0439b8305 with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1d44bcfa 
+Loaded from file:/C:/Users/phann/.m2/repository/com/innoventsolutions/birt/runtime/org.apache.derby_10.11.1.1_v201605202053/4.8.0/org.apache.derby_10.11.1.1_v201605202053-4.8.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=17.0.10+11-LTS-240
+user.dir=E:\DuAnTotNghiep\DuAnTotNghiepBE
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Sun Nov 03 13:43:13 ICT 2024:
+Shutting down instance ed8940a7-0192-f0c3-5a73-000002b85728 on database directory memory:E:\DuAnTotNghiep\DuAnTotNghiepBE\d702a513-d1a8-4172-aed8-01e0439b8305 with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1d44bcfa 
+----------------------------------------------------------------
+Sun Nov 03 13:43:13 ICT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance 9188413f-0192-f0c3-5a73-000002b85728 
+on database directory memory:E:\DuAnTotNghiep\DuAnTotNghiepBE\d702a513-d1a8-4172-aed8-01e0439b8305 with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1d44bcfa 
+Loaded from file:/C:/Users/phann/.m2/repository/com/innoventsolutions/birt/runtime/org.apache.derby_10.11.1.1_v201605202053/4.8.0/org.apache.derby_10.11.1.1_v201605202053-4.8.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=17.0.10+11-LTS-240
+user.dir=E:\DuAnTotNghiep\DuAnTotNghiepBE
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Sun Nov 03 13:43:26 ICT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a9d80140-0192-f0c3-5a73-000002b85728 
+on database directory memory:E:\DuAnTotNghiep\DuAnTotNghiepBE\d7c1105d-094c-4d59-838b-0ab151167595 with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1d44bcfa 
+Loaded from file:/C:/Users/phann/.m2/repository/com/innoventsolutions/birt/runtime/org.apache.derby_10.11.1.1_v201605202053/4.8.0/org.apache.derby_10.11.1.1_v201605202053-4.8.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=17.0.10+11-LTS-240
+user.dir=E:\DuAnTotNghiep\DuAnTotNghiepBE
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Sun Nov 03 13:43:27 ICT 2024:
+Shutting down instance a9d80140-0192-f0c3-5a73-000002b85728 on database directory memory:E:\DuAnTotNghiep\DuAnTotNghiepBE\d7c1105d-094c-4d59-838b-0ab151167595 with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1d44bcfa 
+----------------------------------------------------------------
+Sun Nov 03 13:43:27 ICT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance 248d01d8-0192-f0c3-5a73-000002b85728 
+on database directory memory:E:\DuAnTotNghiep\DuAnTotNghiepBE\d7c1105d-094c-4d59-838b-0ab151167595 with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1d44bcfa 
+Loaded from file:/C:/Users/phann/.m2/repository/com/innoventsolutions/birt/runtime/org.apache.derby_10.11.1.1_v201605202053/4.8.0/org.apache.derby_10.11.1.1_v201605202053-4.8.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=17.0.10+11-LTS-240
+user.dir=E:\DuAnTotNghiep\DuAnTotNghiepBE
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Sun Nov 03 13:43:40 ICT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance 6d0301d9-0192-f0c3-5a73-000002b85728 
+on database directory memory:E:\DuAnTotNghiep\DuAnTotNghiepBE\5c7b33d7-9d5b-4280-9f6c-e596553d7998 with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1d44bcfa 
+Loaded from file:/C:/Users/phann/.m2/repository/com/innoventsolutions/birt/runtime/org.apache.derby_10.11.1.1_v201605202053/4.8.0/org.apache.derby_10.11.1.1_v201605202053-4.8.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=17.0.10+11-LTS-240
+user.dir=E:\DuAnTotNghiep\DuAnTotNghiepBE
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Sun Nov 03 13:57:04 ICT 2024:
+Shutting down instance 6d0301d9-0192-f0c3-5a73-000002b85728 on database directory memory:E:\DuAnTotNghiep\DuAnTotNghiepBE\5c7b33d7-9d5b-4280-9f6c-e596553d7998 with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1d44bcfa 

@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import java.util.Date;
 import java.util.List;
 
 import com.example.demo.enums.OrderStatus;
@@ -18,12 +19,14 @@ public class OrderEntity extends BaseEntity {
 
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	 Integer idOrder;
+	Integer idOrder;
 	@Column(columnDefinition = "varchar(50)")
 	@Enumerated(EnumType.STRING)
 	private OrderStatus statusOrder;
-	double total;
+	Double total;
 	Boolean isPrinted;
+	String namePaymentMethod;
+	Date paymentDate;
 
 	@NotNull
 	@ManyToOne
@@ -41,5 +44,7 @@ public class OrderEntity extends BaseEntity {
 	@OneToMany(mappedBy = "orderEntity")
 	List<OrderDetailEntity> listOrderDetail;
 
-
+	public double getTotalNeedPayment() {
+		return total;
+	}
 }

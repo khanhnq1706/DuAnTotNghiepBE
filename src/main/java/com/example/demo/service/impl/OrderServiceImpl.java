@@ -48,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         orderEntity = orderRepository.save(orderEntity);
+        long totalPrice  =  0;
         for (FoodRequestOrderDTO foodRequestOrderDTO : listFoodOrder) {
             if (  foodRequestOrderDTO.getIdFood() == null){
                 throw new RuntimeException("ID_FOOD_NOT_NULL");
@@ -64,9 +65,16 @@ public class OrderServiceImpl implements OrderService {
                     .orderEntity(orderEntity)
                     .build();
             orderDetail.setTotalPrice(orderDetail.getPrice() * (100 - food.getDiscount()) / 100);
-            orderEntity.setTotal(orderEntity.getTotal()+orderDetail.getTotalPrice());
+            if(orderEntity.getTotal()==null){
+                orderEntity.setTotal(orderDetail.getTotalPrice());
+            } else {
+                orderEntity.setTotal(orderEntity.getTotal()+orderDetail.getTotalPrice());
+            }
+
             orderDetailRepository.save(orderDetail);
         }
+
+
 
         return orderMapper.toOrderResponeDTO(orderEntity);
     }

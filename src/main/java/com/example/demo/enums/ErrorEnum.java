@@ -30,6 +30,7 @@ public enum ErrorEnum {
     Id_category_not_null(1302, "Id Category not null"),
 
     // Error request Order : 140*
+    Order_not_found(1401, "Order not found in database"),
 
 
     ;
