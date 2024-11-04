@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.Specification.UserSpecs;
 import com.example.demo.entity.UserEnitty;
+import com.example.demo.exception.AppException;
+import com.example.demo.exception.ErrorCode;
 import com.example.demo.map.UserMapper;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.request.UserRequestDTO;
@@ -41,10 +43,10 @@ public class UserServiceImpl implements UserService {
 		UserEnitty userEnitty = userRepository.findByUsername(requestDTO.getUsername().trim());	
 		
 		if (userEnitty != null) {
-			throw new RuntimeException("USER_ALREADY_EXISTS");
+			throw new AppException(ErrorCode.USER_EXISTED);
 		}
 		
-		userEnitty = userMapper.toUserRequestDTO(requestDTO);
+		userEnitty = userMapper.toUserEntity(requestDTO);
 		
 		if (file != null) {
 			System.out.println(file.getOriginalFilename());
@@ -64,9 +66,9 @@ public class UserServiceImpl implements UserService {
 		String imgUserTemp = userEnitty.getImgUser();
 		userEnitty = userRepository.findByUsername(requestDTO.getUsername().trim());
 		if (userEnitty != null && userEnitty.getIdUser()!=idUser ) {
-			throw new RuntimeException("USER_ALREADY_EXISTS");
+			throw new AppException(ErrorCode.PASSWORD_IS_INCORRECT);
 		}
-		userEnitty = userMapper.toUserRequestDTO(requestDTO);
+		userEnitty = userMapper.toUserEntity(requestDTO);
 		if (file != null && !file.getOriginalFilename().trim().equals("")) {
 			imgUserTemp = file.getOriginalFilename();
 			fileService.saveFile(file);

@@ -49,14 +49,14 @@ public class ManageUserController {
 
     }
     @PutMapping("{id}")
-    public ApiRespone<?> putFood(@PathVariable("id") UUID idUser ,@ModelAttribute @Valid UserRequestDTO requestDTO, @RequestParam(name = "file",required = false) MultipartFile file  ) {
+    public ApiRespone<?> putUser(@PathVariable("id") UUID idUser ,@ModelAttribute @Valid UserRequestDTO requestDTO, @RequestParam(name = "file",required = false) MultipartFile file  ) {
     	
     	return ApiRespone.builder()
                 .result(userService.updateUser(idUser,requestDTO,file))
                 .build();
     }
     @GetMapping("filter")
-    public ApiRespone<?>getFoodFromFilter(@RequestParam(required = false) String  username,
+    public ApiRespone<?>getUserFromFilter(@RequestParam(required = false) String  username,
     		@RequestParam(required = false) String fullname,
     		@RequestParam(required = false) String isAdmin,
     		@RequestParam(value = "page", defaultValue = "0") int page,
