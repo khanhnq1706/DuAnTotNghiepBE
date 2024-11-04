@@ -40,6 +40,10 @@ public class OrderEntity extends BaseEntity {
 
 	@OneToMany(mappedBy = "orderEntity")
 	List<OrderDetailEntity> listOrderDetail;
-
+	
+	@ManyToOne
+	@JoinColumn(name = "id_Promotion")
+	PromotionEntity promotionEntity;
+	
 
 }
