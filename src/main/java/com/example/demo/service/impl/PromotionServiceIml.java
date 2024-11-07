@@ -46,7 +46,9 @@ public class PromotionServiceIml implements PromotionService{
 		if (promotionEntity != null) {
 			throw new RuntimeException("Promotion_already_exist");
 		}
+		requestDTO.setDeleted(false);
 		promotionEntity = mapper.toPromotionEntity(requestDTO);
+		
 		return mapper.toPromotionResponeDTO(promotionRepository.save(promotionEntity));
 	}
 
@@ -69,20 +71,21 @@ public class PromotionServiceIml implements PromotionService{
 	@Override
 	public PromotionResponeDTO deletePromotion(int idPromotion) {
 		PromotionEntity promotionEntity = promotionRepository.findById(idPromotion)
-                .orElseThrow(() -> new RuntimeException("Promotion_not_exist"));
-    	promotionRepository.deleteById(idPromotion);
-    	getAllPromotion();
-	         return mapper.toPromotionResponeDTO(promotionEntity);
+				.orElseThrow(() -> new RuntimeException("Promotion_not_exist"));
+		promotionEntity.setDeleted(true);
+    	promotionRepository.save(promotionEntity);
+    	return mapper.toPromotionResponeDTO(promotionEntity);
 	         
 	}
 
 	@Override
 	public Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion,String status, Pageable pageable) {
 		 try {
-//			 LocalDate currentDate = LocalDate.now(); // Lấy ngày hiện tại
 			 Date currentDate = new Date();
-			 Specification<PromotionEntity> spec = Specification.where(null);
-
+			 Specification<PromotionEntity> spec = Specification.where(
+					    (root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get("isDeleted"), true)
+					);
+			 
 			    if (namePromotion != null && !namePromotion.isEmpty()) {
 			        spec = spec.and((root, query, criteriaBuilder) ->
 			                criteriaBuilder.like(root.get("namePromotion"), "%" + namePromotion + "%"));

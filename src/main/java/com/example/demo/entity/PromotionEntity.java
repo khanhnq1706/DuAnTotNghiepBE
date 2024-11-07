@@ -32,14 +32,15 @@ public class PromotionEntity{
 	@Column(columnDefinition = "nvarchar(255)")
     String namePromotion;
     float discount;
-    @FutureOrPresent
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
-    Date startDate;
-    @FutureOrPresent
+    Date startDate;	
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     Date endDate;
     @Column(columnDefinition = "nvarchar(3000)")
     String description;
+    boolean isDeleted;
 	@OneToMany(mappedBy = "promotionEntity")
 	List<OrderEntity> listOrder;
 	@Override
