@@ -4,6 +4,8 @@ import java.util.Date;
 
 import com.example.demo.enums.PaymentMethod;
 import com.example.demo.enums.PaymentStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,15 +23,19 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Builder @Setter @Getter
-public class OrderDetailEntity  {
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	 int idOrderDetail;
+@Builder
+@Setter
+@Getter
+public class OrderDetailEntity {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	Integer idOrderDetail;
 	@Min(1)
-    @Max(50)
+	@Max(50)
 	@Column(nullable = false)
 	int quantity;
 	@Min(1)
@@ -37,13 +43,14 @@ public class OrderDetailEntity  {
 	double price;
 	@Min(1)
 	@Column(nullable = false)
-	double totalPrice ;
+	double totalPrice;
 
 	@Column(columnDefinition = "nvarchar(500)")
 	private String note;
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "id_order")
+	@JsonBackReference
 	OrderEntity orderEntity;
 	@NotNull
 	@ManyToOne

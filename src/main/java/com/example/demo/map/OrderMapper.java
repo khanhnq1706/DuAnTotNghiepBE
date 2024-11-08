@@ -9,11 +9,12 @@ import org.mapstruct.Mappings;
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
 
-    @Mapping(source = "tableEntity.idTable",target = "nameTable")
-    @Mapping(source = "statusOrder",target = "statusOrder")
-    @Mapping(source = "customer.phone",target = "phoneCustomer")
+    @Mapping(source = "tableEntity.nameTable", target = "nameTable")
+    @Mapping(source = "tableEntity.idTable", target = "idTable")
+    @Mapping(source = "tableEntity.area.nameArea", target = "nameArea")
+    @Mapping(source = "statusOrder", target = "statusOrder")
+    @Mapping(source = "customer.phone", target = "phoneCustomer")
+    @Mapping(source = "shift.idShift", target = "idShift")
     OrderResponeDTO toOrderResponeDTO(OrderEntity order);
-
-
 
 }

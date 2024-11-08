@@ -1,6 +1,5 @@
 package com.example.demo.enums;
 
-
 public enum ErrorEnum {
     NULL_FT(1101, "First test null"),
 
@@ -24,15 +23,14 @@ public enum ErrorEnum {
     // erroe code qr : 120*
     , QR_exist(1201, "Qr exist in database"),
 
-
-    // error  code category food : 130*
+    // error code category food : 130*
     Category_not_found(1301, "Category not found in database"),
     Id_category_not_null(1302, "Id Category not null"),
 
     // Error request Order : 140*
+    IdOrder_not_found(140, "Id Order not found"),
+    Please_provide_more_data(140, "Please provide more data");
 
-
-    ;
     private int code;
     private String message;
 
@@ -56,6 +54,5 @@ public enum ErrorEnum {
     public void setMessage(String message) {
         this.message = message;
     }
-
 
 }
