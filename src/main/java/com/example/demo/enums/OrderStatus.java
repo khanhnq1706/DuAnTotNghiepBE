@@ -1,5 +1,5 @@
 package com.example.demo.enums;
 
 public enum OrderStatus {
-	Pending, Completed, Cancelled, Waiting
+	Pending, Preparing, Completed, Cancelled, Waiting,
 }

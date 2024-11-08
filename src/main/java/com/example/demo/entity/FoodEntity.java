@@ -13,6 +13,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Data
 @NoArgsConstructor
@@ -37,9 +38,8 @@ public class FoodEntity extends BaseEntity {
 	CategoryFoodEntity category;
 
 	@OneToMany(mappedBy = "foodEntity")
+	@JsonBackReference
 	List<OrderDetailEntity> listOrderDetail;
-
-
 
 	@Override
 	public String toString() {
@@ -51,6 +51,5 @@ public class FoodEntity extends BaseEntity {
 				", isSelling=" + isSelling +
 				'}';
 	}
-
 
 }
