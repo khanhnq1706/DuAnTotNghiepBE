@@ -1,6 +1,7 @@
 package com.example.demo.service.paymentService;
 
 import com.example.demo.entity.OrderEntity;
+import com.example.demo.enums.OrderStatus;
 import com.example.demo.repository.OrderRepository;
 import com.example.demo.respone.VNPayResponseDTO;
 import lombok.SneakyThrows;
@@ -23,6 +24,9 @@ public class PaymentService {
         OrderEntity orderNeedPayment = orderRepository
                 .findById(idOrder)
                 .orElseThrow(()-> new RuntimeException("Order_not_found"));
+        if(orderNeedPayment.getStatusOrder()== OrderStatus.Completed){
+            throw new RuntimeException("Order_already_completed");
+        }
         try {
             return VNPayResponseDTO
                     .builder()

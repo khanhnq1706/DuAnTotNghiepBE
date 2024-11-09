@@ -47,4 +47,10 @@ public class OrderEntity extends BaseEntity {
 	public double getTotalNeedPayment() {
 		return total;
 	}
+
+	@ManyToOne
+	@JoinColumn(name = "id_Promotion")
+	PromotionEntity promotionEntity;
+
+
 }

@@ -122,6 +122,10 @@ public class VNPayService {
             OrderEntity orderNeedCheck = orderRepository
                     .findById(Integer.valueOf(req.getParameter("vnp_TxnRef")))
                     .orElse(null);
+            responseDTO.setBank(fields.get("vnp_BankCode").toString());
+            responseDTO.setTotalAmount(fields.get("vnp_Amount").toString());
+            responseDTO.setIdOrder(fields.get("vnp_TxnRef").toString());
+            responseDTO.setDateTransaction(fields.get("vnp_PayDate").toString());
 
             String vnp_SecureHash = req.getParameter("vnp_SecureHash");
             if (fields.containsKey("vnp_SecureHashType")) {
@@ -149,6 +153,10 @@ public class VNPayService {
                                 orderNeedCheck.setNamePaymentMethod(PaymentMethod.Ewallet.getName());
                                 orderRepository.save(orderNeedCheck);
                                 responseDTO.setRspCode("00");
+                                String keyCheckVNPayDTO = responseDTO.getBank()+responseDTO.getTotalAmount()
+                                        +responseDTO.getIdOrder()+responseDTO.getDateTransaction()
+                                        +responseDTO.getRspCode();
+                                responseDTO.setKeyCheck(Base64.getEncoder().encodeToString(keyCheckVNPayDTO.getBytes()));
                                 responseDTO.setMessage("GD Thanh cong");
                             } else {
                                 //Xử lý/Cập nhật tình trạng giao dịch thanh toán "Không thành công"
@@ -159,19 +167,16 @@ public class VNPayService {
                             System.out.println("{\"RspCode\":\"00\",\"Message\":\"Confirm Success\"}");
                         } else {
                             //Trạng thái giao dịch đã được cập nhật trước đó
-//                            System.out.println("{\"RspCode\":\"02\",\"Message\":\"Order already confirmed\"}");
                             responseDTO.setRspCode("02");
                             responseDTO.setMessage("Order already confirmed");
                         }
                     } else {
                         //Số tiền không trùng khớp
-//                        System.out.println("{\"RspCode\":\"04\",\"Message\":\"Invalid Amount\"}");
                         responseDTO.setRspCode("04");
                         responseDTO.setMessage("Invalid Amount");
                     }
                 } else {
                     //Mã giao dịch không tồn tại
-//                    System.out.println("{\"RspCode\":\"01\",\"Message\":\"Order not Found\"}");
                     responseDTO.setRspCode("01");
                     responseDTO.setMessage("Order not Found");
                 }

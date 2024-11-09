@@ -34,8 +34,15 @@ public class VNPayController {
     public RedirectView vnpayReturn(){
         VNPayResponseDTO response = vnPayService.vnpayReturn();
         RedirectView redirectView = new RedirectView();
-        redirectView.setUrl(hostFE);
+        System.out.println(response.toString());
+        redirectView.setUrl(hostFE+"/vnpay");
         redirectView.addStaticAttribute("RspCode",response.getRspCode());
+        redirectView.addStaticAttribute("bank",response.getBank());
+        redirectView.addStaticAttribute("dateTransaction",response.getDateTransaction());
+        redirectView.addStaticAttribute("Amount",response.getTotalAmount());
+        redirectView.addStaticAttribute("idOrder",response.getIdOrder());
+        redirectView.addStaticAttribute("keyCheck",response.getKeyCheck());
+
         return redirectView;
     }
 }

@@ -11,7 +11,12 @@ import lombok.NoArgsConstructor;
 
 public class VNPayResponseDTO {
     private String RspCode;
+    private String idOrder;
+    private String totalAmount;
+    private String bank;
+    private String dateTransaction;
     private String Message;
     private String urlToRedirect;
+    private String  keyCheck ;
 
 }
