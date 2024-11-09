@@ -3,6 +3,8 @@ package com.example.demo.controller.admin.staff;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,6 +58,27 @@ public class OrderController {
         // idShift của staff lấy ra tạm thời
         Integer idShift = 1;
         return idShift;
+    }
+
+    @MessageMapping("/confirmorder")
+    @SendTo("/topic/confirmorder")
+    public ApiRespone<OrderResponeDTO> confirmOrdera(@RequestParam Integer idOrder, @RequestParam Integer idTable) {
+        Integer idShift = getLoggedInStaffShift();
+        if (idShift == null) {
+            throw new RuntimeException("Nhân viên không có ca làm việc");
+        }
+
+        System.out.println("confirming");
+        OrderResponeDTO orderResponeDTO = orderService.confirmOrder(idOrder, idShift, idTable);
+        if (orderResponeDTO == null) {
+            throw new RuntimeException("Không thể xác nhận đơn hàng!");
+        }
+
+        // Gửi thông báo qua WebSocket
+        System.out.println("confirm OK");
+        return ApiRespone.<OrderResponeDTO>builder()
+                .result(orderResponeDTO)
+                .build();
     }
 
 }
