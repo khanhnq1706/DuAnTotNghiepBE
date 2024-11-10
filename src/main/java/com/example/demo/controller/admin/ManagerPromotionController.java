@@ -3,6 +3,7 @@ package com.example.demo.controller.admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -62,17 +63,20 @@ public class ManagerPromotionController {
 		                
 			
 		}
-
 	    @GetMapping("filter")
-	    public ApiRespone<?>getPromotionFromFilter(@RequestParam(required = false) String  namePromotion,
-	    		@RequestParam(required = false) String status,
-	    		@RequestParam(value = "page", defaultValue = "0") int page,
-	    	    @RequestParam(value = "size", defaultValue = "10") int size){
-	        System.out.println(page);
-	        System.out.println(size);
-	    	Pageable pageable = PageRequest.of(page, size);
-	    	  return ApiRespone.builder()
-	                  .result(promotionService.getPromotionFromFilter(namePromotion,status,pageable))
-	                  .build();
+	    public ApiRespone<?> getPromotionFromFilter(
+	            @RequestParam(required = false) String namePromotion,
+	            @RequestParam(required = false) String status,
+	    		@RequestParam(value = "sortBy",required = false) String sortField,
+	    		@RequestParam(value = "orderBy", required = false) String sortDirection,
+	            @RequestParam(value = "page", defaultValue = "0") int page,
+	            @RequestParam(value = "size", defaultValue = "10") int size
+	           ) {
+	        Pageable pageable = PageRequest.of(page, size);
+	        return ApiRespone.builder()
+	                .result(promotionService.getPromotionFromFilter(namePromotion, status,sortField,sortDirection, pageable))
+	                .build();
 	    }
+
+	   
 }
