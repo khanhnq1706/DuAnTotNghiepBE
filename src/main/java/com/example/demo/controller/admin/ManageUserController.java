@@ -58,13 +58,14 @@ public class ManageUserController {
     public ApiRespone<?>getUserFromFilter(@RequestParam(required = false) String  username,
     		@RequestParam(required = false) String fullname,
     		@RequestParam(required = false) String isAdmin,
+    		@RequestParam(required = false) String isChangedPass,
     		@RequestParam(value = "page", defaultValue = "0") int page,
     	    @RequestParam(value = "size", defaultValue = "10") int size){
         System.out.println(page);
         System.out.println(size);
     	Pageable pageable = PageRequest.of(page, size);
     	  return ApiRespone.builder()
-                  .result(userService.getUserFromFilter(username,fullname,isAdmin,pageable))
+                  .result(userService.getUserFromFilter(username,fullname,isAdmin,isChangedPass,pageable))
                   .build();
     }
 

@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
 			userEnitty.setImgUser(file.getOriginalFilename());
 			fileService.saveFile(file);
 		}
+		userEnitty.setIsChangedPass(false);
 		userEnitty.setPassword(Encryption.toSHA1(userEnitty.getPassword()));
 		return userMapper.toUserResponeDTO(userRepository.save(userEnitty));
 	}
@@ -75,11 +76,14 @@ public class UserServiceImpl implements UserService {
 		
 		userEnitty.setIdUser(idUser);
 		userEnitty.setImgUser(imgUserTemp);
-		if(!BCrypt.checkpw("123",requestDTO.getPassword())) {
-			userEnitty.setIsChangedPass(true);
-		}
-		userEnitty.setPassword(Encryption.toSHA1(userEnitty.getPassword()));
 		
+		userEnitty.setIsChangedPass(false);
+		userEnitty.setPassword(Encryption.toSHA1(userEnitty.getPassword()));
+		if(!BCrypt.checkpw("123",userEnitty.getPassword())) {
+			userEnitty.setIsChangedPass(true);
+		}else {
+			userEnitty.setIsChangedPass(false);
+		}
 		userRepository.save(userEnitty);
 		
 		return userMapper.toUserResponeDTO(userEnitty);	
@@ -92,13 +96,19 @@ public class UserServiceImpl implements UserService {
 		return responeDTO;
 	}
 	@Override
-	public Page<UserResponeDTO> getUserFromFilter(String username, String fullname, String isAdmin, Pageable pageable) {
+	public Page<UserResponeDTO> getUserFromFilter(String username, String fullname, String isAdmin, String IsChangedPass, Pageable pageable) {
 		Specification<UserEnitty> specsUser = Specification.where(
 				UserSpecs.hasUserName(username)
 				.and(UserSpecs.hasFullName(fullname))
-				.and(UserSpecs.isAdmin(isAdmin)));
+				.and(UserSpecs.isAdmin(isAdmin))
+				.and(UserSpecs.isChangedPass(IsChangedPass)));
 		return	userRepository.findAll(specsUser, pageable).map(userMapper::toUserResponeDTO);
 
 	}
+//	@Override
+//	public Page<UserResponeDTO> getUserFromFilter(String username, String fullname, String isAdmin, Pageable pageable) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 }

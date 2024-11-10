@@ -13,5 +13,7 @@ public interface UserService {
 	    public UserResponeDTO saveUser(UserRequestDTO requestDTO, MultipartFile file);
 	    public UserResponeDTO updateUser(UUID idUser,UserRequestDTO requestDTO, MultipartFile file);
 	    public UserResponeDTO getUserById(UUID idUser);
-	    public Page<UserResponeDTO> getUserFromFilter(String username, String fullname, String isAdmin, Pageable pageable);
+//	    public Page<UserResponeDTO> getUserFromFilter(String username, String fullname, String isAdmin, Pageable pageable);
+	    public Page<UserResponeDTO> getUserFromFilter(String username, String fullname, String isAdmin, String IsChangedPass,
+				Pageable pageable);
 }

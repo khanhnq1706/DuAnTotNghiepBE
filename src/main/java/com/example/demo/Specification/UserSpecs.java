@@ -36,5 +36,16 @@ public class UserSpecs {
         };
 
     }
+    public static Specification<UserEnitty> isChangedPass(String isChangedPass) {
+        return (root, query, criteriaBuilder) ->{
+         if(isChangedPass!=null){
+
+             return criteriaBuilder.equal(root.get("isChangedPass"), Boolean.valueOf(isChangedPass));
+         }
+            System.out.println("IsChangedPass null");
+            return null;
+        };
+
+    }
 
 }
