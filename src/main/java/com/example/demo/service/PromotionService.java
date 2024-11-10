@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.example.demo.request.PromotionRequestDTO;
 import com.example.demo.respone.ApiRespone;
@@ -23,6 +24,11 @@ public interface PromotionService {
 
 //	Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion, Pageable pageable);
 
-	Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion, String status, Pageable pageable);
+//	Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion, String status, Pageable pageable);
+
+//	Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion, String status, Pageable pageable);
+
+	Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion, String status, String sortField, String sortDirection,
+			Pageable pageable);
 
 }

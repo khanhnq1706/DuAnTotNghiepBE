@@ -34,7 +34,8 @@ public class PromotionRequestDTO {
     Date endDate;
     
     String description;
-
+    @NotNull
+    boolean isDeleted;
 
     
 }
