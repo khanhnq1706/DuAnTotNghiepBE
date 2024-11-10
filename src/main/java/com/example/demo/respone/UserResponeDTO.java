@@ -26,5 +26,5 @@ public class UserResponeDTO {
 	String imgUser;
 	Boolean isAdmin;
 	Boolean isDeleted;
-	
+	Boolean isChangedPass;
 }

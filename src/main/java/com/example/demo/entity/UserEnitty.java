@@ -30,6 +30,7 @@ public class UserEnitty {
 	String imgUser;
 	Boolean isAdmin = false;
 	Boolean isDeleted;
+	Boolean isChangedPass = false;
 	@OneToMany(mappedBy = "userEnitty")
 	List<OrderEntity> listOrderEntity;
 	

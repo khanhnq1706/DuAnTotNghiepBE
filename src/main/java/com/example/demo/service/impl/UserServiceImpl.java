@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -74,7 +75,11 @@ public class UserServiceImpl implements UserService {
 		
 		userEnitty.setIdUser(idUser);
 		userEnitty.setImgUser(imgUserTemp);
+		if(!BCrypt.checkpw("123",requestDTO.getPassword())) {
+			userEnitty.setIsChangedPass(true);
+		}
 		userEnitty.setPassword(Encryption.toSHA1(userEnitty.getPassword()));
+		
 		userRepository.save(userEnitty);
 		
 		return userMapper.toUserResponeDTO(userEnitty);	
@@ -88,7 +93,6 @@ public class UserServiceImpl implements UserService {
 	}
 	@Override
 	public Page<UserResponeDTO> getUserFromFilter(String username, String fullname, String isAdmin, Pageable pageable) {
-
 		Specification<UserEnitty> specsUser = Specification.where(
 				UserSpecs.hasUserName(username)
 				.and(UserSpecs.hasFullName(fullname))

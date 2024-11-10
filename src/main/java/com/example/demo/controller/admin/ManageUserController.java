@@ -49,8 +49,7 @@ public class ManageUserController {
 
     }
     @PutMapping("{id}")
-    public ApiRespone<?> putUser(@PathVariable("id") UUID idUser ,@ModelAttribute @Valid UserRequestDTO requestDTO, @RequestParam(name = "file",required = false) MultipartFile file  ) {
-    	
+    public ApiRespone<?> putUser(@PathVariable("id") UUID idUser ,@ModelAttribute @Valid UserRequestDTO requestDTO, @RequestParam(name = "file",required = false) MultipartFile file  ) {    	
     	return ApiRespone.builder()
                 .result(userService.updateUser(idUser,requestDTO,file))
                 .build();

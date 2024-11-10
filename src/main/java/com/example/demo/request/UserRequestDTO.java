@@ -23,5 +23,5 @@ public class UserRequestDTO {
 	String imgUser;
 	Boolean isAdmin;
 	Boolean isDeleted;
-	
+	Boolean isChangedPass;
 }
