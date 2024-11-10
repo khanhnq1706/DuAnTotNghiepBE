@@ -2,9 +2,12 @@ package com.example.demo.service.paymentService;
 
 import com.example.demo.config.vnpayConfig.Config;
 import com.example.demo.entity.OrderEntity;
+import com.example.demo.entity.TableEntity;
 import com.example.demo.enums.OrderStatus;
 import com.example.demo.enums.PaymentMethod;
+import com.example.demo.enums.TableStatus;
 import com.example.demo.repository.OrderRepository;
+import com.example.demo.repository.TableRepository;
 import com.example.demo.respone.VNPayResponseDTO;
 import com.example.demo.service.impl.OrderServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +30,9 @@ public class VNPayService {
 
     @Autowired
     OrderRepository orderRepository;
+
+    @Autowired
+    TableRepository tableRepository;
 
     public String payment(double totalPrice, String vnp_TxnRef,String bankCode) throws IOException {
 
@@ -152,6 +158,10 @@ public class VNPayService {
                                 orderNeedCheck.setPaymentDate(new Date());
                                 orderNeedCheck.setNamePaymentMethod(PaymentMethod.Ewallet.getName());
                                 orderRepository.save(orderNeedCheck);
+                                TableEntity table = orderNeedCheck.getTableEntity();
+                                table.setStatus(TableStatus.AVAILABLE);
+                                table.setCurrentOrderId(null);
+                                tableRepository.save(table);
                                 responseDTO.setRspCode("00");
                                 String keyCheckVNPayDTO = responseDTO.getBank()+responseDTO.getTotalAmount()
                                         +responseDTO.getIdOrder()+responseDTO.getDateTransaction()

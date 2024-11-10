@@ -24,13 +24,14 @@ public enum ErrorEnum {
     // erroe code qr : 120*
     , QR_exist(1201, "Qr exist in database"),
 
-
-    // error  code category food : 130*
+    // error code category food : 130*
     Category_not_found(1301, "Category not found in database"),
     Id_category_not_null(1302, "Id Category not null"),
 
     // Error request Order : 140*
     Order_not_found(1401, "Order not found in database"),
+    IdOrder_not_found(1402, "Id Order not found"),
+    Please_provide_more_data(1403, "Please provide more data"),
 
  // Error request Promotion : 150*
     Promotion_already_exist(1501, "Promotion already exist in database"),

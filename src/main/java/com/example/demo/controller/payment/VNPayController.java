@@ -7,6 +7,7 @@ import com.example.demo.service.paymentService.PaymentService;
 import com.example.demo.service.paymentService.VNPayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -22,6 +23,9 @@ public class VNPayController {
     @Value("${host.fe}")
     private String hostFE;
 
+    @Autowired
+    SimpMessagingTemplate messagingTemplate;
+
     @PostMapping
     public ApiRespone<?> postRequestCallPayment(@RequestParam int idOrder) {
 
@@ -35,6 +39,7 @@ public class VNPayController {
         VNPayResponseDTO response = vnPayService.vnpayReturn();
         RedirectView redirectView = new RedirectView();
         System.out.println(response.toString());
+        messagingTemplate.convertAndSend("/topic/paymentVNPay",response);
         redirectView.setUrl(hostFE+"/vnpay");
         redirectView.addStaticAttribute("RspCode",response.getRspCode());
         redirectView.addStaticAttribute("bank",response.getBank());
