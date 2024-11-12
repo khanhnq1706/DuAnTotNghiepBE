@@ -28,7 +28,5 @@ public class TableResponseDTO {
 	TableStatus status;
 	String displayName;
 	boolean isLocked;
-	// @Transient
-	// boolean hasOrder;
 	Integer currentOrderId;
 }

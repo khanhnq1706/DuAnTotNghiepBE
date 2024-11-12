@@ -43,5 +43,5 @@ public interface TableService {
 	public Page<TableResponseDTO> getTablesFromFilter(String nameTable, TableStatus status, Integer idArea,
 			Pageable pageable);
 
-	public TableResponseDTO  verifyTable(VerifyTableRequestDTO Request);
+	public TableResponseDTO verifyTable(VerifyTableRequestDTO Request);
 }
