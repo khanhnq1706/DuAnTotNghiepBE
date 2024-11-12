@@ -60,34 +60,46 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public UserResponeDTO updateUser(UUID idUser, UserRequestDTO requestDTO, MultipartFile file) {
-		
-		UserEnitty userEnitty = userRepository.findById(idUser)
-				.orElseThrow(() -> new RuntimeException("USER_NOT_EXISTS"));
-		String imgUserTemp = userEnitty.getImgUser();
-		userEnitty = userRepository.findByUsername(requestDTO.getUsername().trim());
-		if (userEnitty != null && userEnitty.getIdUser()!=idUser ) {
-			throw new RuntimeException("PASSWORD_IS_INCORRECT");
-		}
-		userEnitty = userMapper.toUserEntity(requestDTO);
-		if (file != null && !file.getOriginalFilename().trim().equals("")) {
-			imgUserTemp = file.getOriginalFilename();
-			fileService.saveFile(file);
-		}
-		
-		userEnitty.setIdUser(idUser);
-		userEnitty.setImgUser(imgUserTemp);
-		
-		userEnitty.setIsChangedPass(false);
-		userEnitty.setPassword(Encryption.toSHA1(userEnitty.getPassword()));
-		if(!BCrypt.checkpw("123",userEnitty.getPassword())) {
-			userEnitty.setIsChangedPass(true);
+	    
+	    UserEnitty userEntity = userRepository.findById(idUser)
+	            .orElseThrow(() -> new RuntimeException("USER_NOT_EXISTS"));
+	   
+	    String newPassword = requestDTO.getPassword();
+	    if (newPassword.equals("password old") || newPassword.trim().isEmpty()) {
+	    	System.out.println(userEntity.getPassword());
+	        requestDTO.setPassword(userEntity.getPassword());
+	    } else {
+	        requestDTO.setPassword(Encryption.toSHA1(newPassword));
+	    }
+	    
+	  
+	    UserEnitty existingUser = userRepository.findByUsername(requestDTO.getUsername().trim());
+	    if (existingUser != null && !existingUser.getIdUser().equals(idUser)) {
+	        throw new RuntimeException("USERNAME_ALREADY_EXISTS");
+	    }
+	    userEntity.setFullname(requestDTO.getFullname());
+	    userEntity.setUsername(requestDTO.getUsername());
+	    userEntity.setIsAdmin(requestDTO.getIsAdmin());
+	    userEntity.setIsDeleted(requestDTO.getIsDeleted());
+	    userEntity.setPassword(requestDTO.getPassword());	
+	    if(BCrypt.checkpw("123",userEntity.getPassword())) {
+	    	System.out.println(userEntity.getPassword());
+	    	userEntity.setIsChangedPass(false);
 		}else {
-			userEnitty.setIsChangedPass(false);
+			userEntity.setIsChangedPass(true);
 		}
-		userRepository.save(userEnitty);
-		
-		return userMapper.toUserResponeDTO(userEnitty);	
+	    if (file != null && !file.getOriginalFilename().trim().isEmpty()) {
+	        String imgUserTemp = file.getOriginalFilename();
+	        fileService.saveFile(file); 
+	        userEntity.setImgUser(imgUserTemp); 
+	    }
+
+	  
+	    userRepository.save(userEntity);
+
+	    return userMapper.toUserResponeDTO(userEntity);
 	}
+
 	@Override
 	public UserResponeDTO getUserById(UUID idUser) {
 		UserEnitty userEnitty = userRepository.findById(idUser)

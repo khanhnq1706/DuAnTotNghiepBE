@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.request.FoodRequestDTO;
 import com.example.demo.request.UserRequestDTO;
 import com.example.demo.respone.ApiRespone;
 import com.example.demo.service.UserService;
