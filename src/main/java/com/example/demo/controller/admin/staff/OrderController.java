@@ -1,5 +1,7 @@
 package com.example.demo.controller.admin.staff;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.enums.OrderStatus;
+import com.example.demo.enums.TableStatus;
+import com.example.demo.request.FoodRequestOrderDTO;
 import com.example.demo.respone.ApiRespone;
 import com.example.demo.respone.OrderResponeDTO;
 import com.example.demo.respone.TableResponseDTO;
 import com.example.demo.service.OrderService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -60,25 +66,18 @@ public class OrderController {
         return idShift;
     }
 
-    @MessageMapping("/confirmorder")
-    @SendTo("/topic/confirmorder")
-    public ApiRespone<OrderResponeDTO> confirmOrdera(@RequestParam Integer idOrder, @RequestParam Integer idTable) {
-        Integer idShift = getLoggedInStaffShift();
-        if (idShift == null) {
-            throw new RuntimeException("Nhân viên không có ca làm việc");
-        }
-
-        System.out.println("confirming");
-        OrderResponeDTO orderResponeDTO = orderService.confirmOrder(idOrder, idShift, idTable);
-        if (orderResponeDTO == null) {
-            throw new RuntimeException("Không thể xác nhận đơn hàng!");
-        }
-
-        // Gửi thông báo qua WebSocket
-        System.out.println("confirm OK");
-        return ApiRespone.<OrderResponeDTO>builder()
-                .result(orderResponeDTO)
+    @PostMapping("create")
+    public ApiRespone<?> createNewOrder(@RequestBody List<FoodRequestOrderDTO> listFoodOrder,
+            @RequestParam Integer idTable, @RequestParam(required = false) String numberPhone) {
+        return ApiRespone.builder()
+                .result(orderService.saveOrder(listFoodOrder, idTable, numberPhone, OrderStatus.Preparing))
                 .build();
     }
 
+    @PutMapping("{idOrder}")
+    public ApiRespone<?> updateOrder(@PathVariable Integer idOrder,
+            @RequestBody List<FoodRequestOrderDTO> listFoodOrder) {
+        OrderResponeDTO updateorder = orderService.updateOrder(idOrder, listFoodOrder);
+        return ApiRespone.builder().result(updateorder).build();
+    }
 }

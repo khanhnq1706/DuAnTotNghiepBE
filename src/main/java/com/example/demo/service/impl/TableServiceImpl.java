@@ -18,7 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
-
 import java.util.stream.Collectors;
 
 import com.example.demo.entity.AreaEntity;
@@ -38,8 +37,6 @@ import com.example.demo.respone.TableStatusResponeDTO;
 import com.example.demo.service.TableService;
 
 import jakarta.validation.Valid;
-
-
 
 @Service
 public class TableServiceImpl implements TableService {
@@ -185,10 +182,10 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public TableResponseDTO  verifyTable(VerifyTableRequestDTO request){
-        TableEntity tableNeedVerify =  tableRepository.findById(request.getIdTable())
-                .orElseThrow(()-> new RuntimeException("Table_not_found"));
-        if(tableNeedVerify.getSecretKey()-request.getSecretKey()!=0){
+    public TableResponseDTO verifyTable(VerifyTableRequestDTO request) {
+        TableEntity tableNeedVerify = tableRepository.findById(request.getIdTable())
+                .orElseThrow(() -> new RuntimeException("Table_not_found"));
+        if (tableNeedVerify.getSecretKey() - request.getSecretKey() != 0) {
             throw new RuntimeException("Table_key_expired");
         }
         return tableMapper.toTableResponseDTO(tableNeedVerify);

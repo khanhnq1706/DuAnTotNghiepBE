@@ -15,5 +15,4 @@ public class FoodRequestOrderDTO {
     Integer idFood;
     Integer quantity;
     String noteFood;
-    boolean hasOrder;
 }
