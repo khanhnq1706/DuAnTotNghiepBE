@@ -53,26 +53,26 @@ public class UserServiceImpl implements UserService {
 			userEnitty.setImgUser(file.getOriginalFilename());
 			fileService.saveFile(file);
 		}
+		userEnitty.setPassword("123");
 		userEnitty.setIsChangedPass(false);
 		userEnitty.setPassword(Encryption.toSHA1(userEnitty.getPassword()));
 		return userMapper.toUserResponeDTO(userRepository.save(userEnitty));
 	}
 	@Transactional
 	@Override
-	public UserResponeDTO updateUser(UUID idUser, UserRequestDTO requestDTO, MultipartFile file) {
-	    
+	public UserResponeDTO updateUser(UUID idUser, UserRequestDTO requestDTO, MultipartFile file) {    
 	    UserEnitty userEntity = userRepository.findById(idUser)
 	            .orElseThrow(() -> new RuntimeException("USER_NOT_EXISTS"));
 	   
 	    String newPassword = requestDTO.getPassword();
-	    if (newPassword.equals("password old") || newPassword.trim().isEmpty()) {
+	    System.out.println(newPassword);
+	    if (newPassword==null || newPassword.trim().isEmpty()) {
 	    	System.out.println(userEntity.getPassword());
 	        requestDTO.setPassword(userEntity.getPassword());
 	    } else {
 	        requestDTO.setPassword(Encryption.toSHA1(newPassword));
 	    }
 	    
-	  
 	    UserEnitty existingUser = userRepository.findByUsername(requestDTO.getUsername().trim());
 	    if (existingUser != null && !existingUser.getIdUser().equals(idUser)) {
 	        throw new RuntimeException("USERNAME_ALREADY_EXISTS");
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
 	    userEntity.setIsDeleted(requestDTO.getIsDeleted());
 	    userEntity.setPassword(requestDTO.getPassword());	
 	    if(BCrypt.checkpw("123",userEntity.getPassword())) {
-	    	System.out.println(userEntity.getPassword());
+	    	
 	    	userEntity.setIsChangedPass(false);
 		}else {
 			userEntity.setIsChangedPass(true);

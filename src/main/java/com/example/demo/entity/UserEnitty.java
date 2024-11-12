@@ -24,7 +24,7 @@ public class UserEnitty {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	UUID idUser;
 	String fullname;
-	@Column(columnDefinition = "varchar(50)",name = "user_name")
+	@Column(columnDefinition = "varchar(50)",name = "user_name",unique = true)
 	String username;
 	String password;
 	String imgUser;
