@@ -31,7 +31,9 @@ public enum ErrorEnum {
 
     // Error request Order : 140*
 
-
+	USER_EXISTED(1701,"User existed"),
+	USER_NOT_EXISTS(1702,"User not existed"),
+	PASSWORD_IS_INCORRECT(1703,"Password is incorrect");
     ;
     private int code;
     private String message;
