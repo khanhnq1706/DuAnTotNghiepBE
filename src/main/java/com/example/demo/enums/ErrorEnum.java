@@ -41,8 +41,14 @@ public enum ErrorEnum {
     Name_promotion_not_blank(1505,"Name promotion not blank"),
     Discount_not_null(1506,"Discount_not_null"),
 
+
     //error payment
-    Order_already_completed(1601,"Order_already_completed")
+    Order_already_completed(1601,"Order_already_completed"),
+
+
+	USER_EXISTED(1701,"User existed"),
+	USER_NOT_EXISTS(1702,"User not existed"),
+	PASSWORD_IS_INCORRECT(1703,"Password is incorrect");
 
     ;
     private int code;
