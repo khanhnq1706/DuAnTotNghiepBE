@@ -24,6 +24,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 public class OrderDetailResponeDTO {
     Integer idOrderDetail;
+    int idFood;
     int quantity;
     double price;
     double totalPrice;
