@@ -38,9 +38,12 @@ public enum ErrorEnum {
     End_Date_not_valid(1504, "End Date not valid"),
     Name_promotion_not_blank(1505,"Name promotion not blank"),
     Discount_not_null(1506,"Discount_not_null"),
+    // error login
 	USER_EXISTED(1701,"User existed"),
 	USER_NOT_EXISTS(1702,"User not existed"),
-	PASSWORD_IS_INCORRECT(1703,"Password is incorrect");
+	PASSWORD_IS_INCORRECT(1703,"Password is incorrect"),
+    Deleted_USER(1704,"previously  deleted user"),;
+
     ;
     private int code;
     private String message;
