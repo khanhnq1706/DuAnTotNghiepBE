@@ -30,8 +30,9 @@ public class OrderFoodController {
     // @SendTo("/topic/postorder")
     @PostMapping
     public ApiRespone<?> postOrder(@RequestBody List<FoodRequestOrderDTO> listFoodOrder,
-            @RequestParam Integer idTable, @RequestParam(required = false) String numberPhone) {
-        var result = orderService.saveOrder(listFoodOrder, idTable, numberPhone, OrderStatus.Waiting);
+            @RequestParam Integer idTable, @RequestParam String ipCustomer,
+            @RequestParam(required = false) String numberPhone) {
+        var result = orderService.saveOrder(listFoodOrder, idTable, numberPhone, ipCustomer, OrderStatus.Waiting);
         messagingTemplate.convertAndSend("/topic/postorder", result);
         System.out.println(listFoodOrder.toString());
         System.out.println("id table :" + idTable);

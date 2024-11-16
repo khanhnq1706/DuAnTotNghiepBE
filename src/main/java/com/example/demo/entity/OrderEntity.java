@@ -43,7 +43,7 @@ public class OrderEntity extends BaseEntity {
 	@JoinColumn(name = "id_Customer")
 	CustomerEntity customer;
 
-	@OneToMany(mappedBy = "orderEntity")
+	@OneToMany(mappedBy = "orderEntity", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	List<OrderDetailEntity> listOrderDetail;
 

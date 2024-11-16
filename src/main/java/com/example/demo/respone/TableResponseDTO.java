@@ -29,4 +29,5 @@ public class TableResponseDTO {
 	String displayName;
 	boolean isLocked;
 	Integer currentOrderId;
+	String currentIP;
 }
