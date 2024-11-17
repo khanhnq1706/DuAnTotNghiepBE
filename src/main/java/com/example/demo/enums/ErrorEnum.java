@@ -42,7 +42,14 @@ public enum ErrorEnum {
 	USER_EXISTED(1701,"User existed"),
 	USER_NOT_EXISTS(1702,"User not existed"),
 	PASSWORD_IS_INCORRECT(1703,"Password is incorrect"),
-    Deleted_USER(1704,"previously  deleted user"),;
+    Deleted_USER(1704,"previously  deleted user"),
+
+    //error jwt
+    Invalid_token(1801,"Invalid token"),
+    OLD_TOKEN(1802,"old token"),
+    UNAUTHENTICATED(1803,"UNAUTHENTICATED")
+
+    ;
 
     ;
     private int code;

@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,36 +20,32 @@ public class SecurityConfig {
 
 	@Value("${jwt.secretKey}")
 	private String secretKey;
-	
+
+	private JwtDecoderCustom jwtDecoder;
+
+	@Autowired
+	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
 	private String[] EndPointManager = {"/api/v1/users","/api/v1/users/**","/api/QRcode/**","/api/QRcode"};
-	private String[] EndPointStaff = {""};
-	private String[] EndPointCustomer = {"/api/verify-table","/api/order","api/v1/foodEntities/**"
-			,"/api/v1/foods/filter"};
+	private String[] EndPointPublic = {"/api/v1/categories","/api/verify-table","/api/order","api/v1/foodEntities/**"
+			,"/api/v1/foods/filter","/api/login","/api/logout","/api/testVerify"};
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(
 				(requests) ->
 				requests
-						.requestMatchers("/api/login").permitAll()
-						.requestMatchers(EndPointCustomer).permitAll()
+						.requestMatchers(EndPointPublic).permitAll()
 						.requestMatchers(EndPointManager).hasAuthority("SCOPE_MANAGER")
 						.anyRequest().authenticated()
 		);
-		http.oauth2ResourceServer( oauth2 -> oauth2.jwt(jwtConfig -> jwtConfig.decoder(jwtDecoder())) );
+		http.oauth2ResourceServer( oauth2 -> oauth2
+											.jwt(jwtConfig -> jwtConfig.decoder(jwtDecoder))
+											.authenticationEntryPoint(jwtAuthenticationEntryPoint));
 		http.csrf(csrf->csrf.disable());
 
 		return http.build();
 	}
-	
-	@Bean
-	public JwtDecoder jwtDecoder() {
-		
-		SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "SH512");
-			
-		return 	NimbusJwtDecoder.withSecretKey(secretKeySpec)
-				.macAlgorithm(MacAlgorithm.HS512)
-				.build();
-	}
+
 
 }
