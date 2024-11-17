@@ -28,6 +28,7 @@ public class OrderEntity extends BaseEntity {
 	private OrderStatus statusOrder;
 	double total;
 	Boolean isPrinted;
+	String cancellationReason;
 
 	@NotNull
 	@ManyToOne
@@ -43,7 +44,7 @@ public class OrderEntity extends BaseEntity {
 	@JoinColumn(name = "id_Customer")
 	CustomerEntity customer;
 
-	@OneToMany(mappedBy = "orderEntity")
+	@OneToMany(mappedBy = "orderEntity", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	List<OrderDetailEntity> listOrderDetail;
 

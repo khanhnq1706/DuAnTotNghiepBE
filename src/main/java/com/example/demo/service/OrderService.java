@@ -13,10 +13,16 @@ public interface OrderService {
     ApiRespone<OrderResponeDTO> getOrder(int idOrder);
 
     OrderResponeDTO saveOrder(List<FoodRequestOrderDTO> listFoodOrder, Integer idTable, String numbePhone,
+            String ipCustomer,
             OrderStatus status);
 
-    OrderResponeDTO confirmOrder(Integer idOrder, Integer idShift, Integer idTable);
+    OrderResponeDTO confirmOrder(Integer idOrderOld, Integer idOrderNew, Integer idShift);
 
-    public OrderResponeDTO updateOrder(Integer idOrder, List<FoodRequestOrderDTO> listFoodOrder);
+    OrderResponeDTO updateOrder(Integer idOrder, FoodRequestOrderDTO foodOrder);
 
+    OrderResponeDTO updateQuantityOrderDetails(int idOrder, int idOrderdetail, int newQuantity);
+
+    ApiRespone<?> removeOrderdetail(int idOrderDetail);
+
+    ApiRespone<?> cancelOrder(Integer idOrderOld, Integer idOrderNew, String cancellationReason);
 }

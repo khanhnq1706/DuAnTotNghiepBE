@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,14 +41,15 @@ public class OrderController {
     }
 
     @PostMapping
-    public ApiRespone<OrderResponeDTO> confirmOrder(@RequestParam Integer idOrder, @RequestParam Integer idTable) {
+    public ApiRespone<OrderResponeDTO> confirmOrder(@RequestParam Integer idOrderOld,
+            @RequestParam(required = false) Integer idOrderNew) {
         Integer idShift = getLoggedInStaffShift();
         if (idShift == null) {
             throw new RuntimeException("Nhân viên không có ca làm việc");
         }
 
         System.out.println("confirming");
-        OrderResponeDTO orderResponeDTO = orderService.confirmOrder(idOrder, idShift, idTable);
+        OrderResponeDTO orderResponeDTO = orderService.confirmOrder(idOrderOld, idOrderNew, idShift);
         messagingTemplate.convertAndSend("/topic/confirmorder", orderResponeDTO);
         System.out.println("confirm Oke");
         if (orderResponeDTO == null) {
@@ -68,16 +70,45 @@ public class OrderController {
 
     @PostMapping("create")
     public ApiRespone<?> createNewOrder(@RequestBody List<FoodRequestOrderDTO> listFoodOrder,
-            @RequestParam Integer idTable, @RequestParam(required = false) String numberPhone) {
+            @RequestParam Integer idTable, @RequestParam(required = false) String ipCustomer,
+            @RequestParam(required = false) String numberPhone) {
         return ApiRespone.builder()
-                .result(orderService.saveOrder(listFoodOrder, idTable, numberPhone, OrderStatus.Preparing))
+                .result(orderService.saveOrder(listFoodOrder, idTable, numberPhone, ipCustomer, OrderStatus.Preparing))
                 .build();
     }
 
     @PutMapping("{idOrder}")
     public ApiRespone<?> updateOrder(@PathVariable Integer idOrder,
-            @RequestBody List<FoodRequestOrderDTO> listFoodOrder) {
+            @RequestBody FoodRequestOrderDTO listFoodOrder) {
         OrderResponeDTO updateorder = orderService.updateOrder(idOrder, listFoodOrder);
         return ApiRespone.builder().result(updateorder).build();
+    }
+
+    @PutMapping("{idOrder}/orderdetails/{idOrderDetail}")
+    public ApiRespone<?> updateQuantity(@PathVariable("idOrder") int idOrder,
+            @PathVariable("idOrderDetail") int idOrderDetail, @RequestBody int newQuantity) {
+        OrderResponeDTO updatedOrder = orderService.updateQuantityOrderDetails(idOrder, idOrderDetail, newQuantity);
+        return ApiRespone.builder().result(updatedOrder).build();
+    }
+
+    @DeleteMapping("/{idOrderDetail}")
+    public ApiRespone<?> deleteOrderDetail(@PathVariable("idOrderDetail") int idOrderDetail) {
+        return orderService.removeOrderdetail(idOrderDetail);
+    }
+
+    // @DeleteMapping("{idOld}/orderNew/{idNew}")
+    // public ApiRespone<?> cancelOrder(@PathVariable(required = false) Integer
+    // idNew,
+    // @PathVariable(required = false) Integer idOld, @RequestBody String
+    // cancellationReason) {
+    // return ApiRespone.builder().result(orderService.cancelOrder(idOld, idNew,
+    // cancellationReason))
+    // .build();
+    // }
+    @PutMapping("cancel")
+    public ApiRespone<?> cancelOrder(@RequestParam(required = false) Integer idOld,
+            @RequestParam(required = false) Integer idNew, @RequestBody String cancellationReason) {
+        return ApiRespone.builder().result(orderService.cancelOrder(idOld, idNew, cancellationReason))
+                .build();
     }
 }
