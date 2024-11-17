@@ -14,7 +14,7 @@ public class WebsocketConfiguration implements WebSocketMessageBrokerConfigurer 
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // bật hỗ trợ SockJS để đảm bảo rằng các ứng dụng có thể hoạt động trên các
         // trình duyệt không hỗ trợ WebSocket.
-        registry.addEndpoint("/ws/my-websocket-endpoint").setAllowedOrigins("http://192.168.2.5:4200").withSockJS();
+        registry.addEndpoint("/ws/my-websocket-endpoint").setAllowedOrigins("http://192.168.0.193:4200").withSockJS();
     }
 
     @Override

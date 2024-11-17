@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import com.example.demo.entity.FoodEntity;
 import com.example.demo.entity.OrderDetailEntity;
 import com.example.demo.entity.OrderEntity;
 import com.example.demo.entity.TableEntity;
@@ -10,6 +11,7 @@ import java.util.Optional;
 import com.example.demo.respone.InvoiceDetailResponseDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,5 +28,7 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetailEntity, 
             "from OrderDetailEntity oe  where oe.orderEntity.idOrder= ?1"
     )
     public List<InvoiceDetailResponseDTO> getInvoiceDetailsByOrderId(Integer orderId);
+    @Query("SELECT od FROM OrderDetailEntity od WHERE od.orderEntity = :orderEntity AND od.foodEntity = :foodEntity")
+    Optional<OrderDetailEntity> findByOrderEntityAndFoodEntity(@Param("orderEntity") OrderEntity orderEntity, @Param("foodEntity") FoodEntity foodEntity);
 
 }
