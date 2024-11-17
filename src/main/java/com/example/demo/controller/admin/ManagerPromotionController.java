@@ -41,7 +41,8 @@ public class ManagerPromotionController {
 	    }
 	    @PostMapping
 	    public ApiRespone<?> postPromotion(@ModelAttribute PromotionRequestDTO requestDTO ) {
-	        System.out.println(requestDTO.toString());
+	    	
+	        
 	        return ApiRespone.builder()
 	                .result(promotionService.savePromotion(requestDTO))
 	                .build();
@@ -50,7 +51,7 @@ public class ManagerPromotionController {
 	    
 	    @PutMapping("{idPromotion}")
 	    public ApiRespone<?> putPromotion(@PathVariable("idPromotion") int idPromotion ,@ModelAttribute @Valid PromotionRequestDTO requestDTO ) {
-	     
+	   
 	        return ApiRespone.builder()
 	                .result(promotionService.updatePromotion(idPromotion,requestDTO))
 	                .build();
@@ -67,6 +68,7 @@ public class ManagerPromotionController {
 	    public ApiRespone<?> getPromotionFromFilter(
 	            @RequestParam(required = false) String namePromotion,
 	            @RequestParam(required = false) String status,
+	            @RequestParam(required = false) String isIncreasePrice,
 	    		@RequestParam(value = "sortBy",required = false) String sortField,
 	    		@RequestParam(value = "orderBy", required = false) String sortDirection,
 	            @RequestParam(value = "page", defaultValue = "0") int page,
@@ -74,7 +76,7 @@ public class ManagerPromotionController {
 	           ) {
 	        Pageable pageable = PageRequest.of(page, size);
 	        return ApiRespone.builder()
-	                .result(promotionService.getPromotionFromFilter(namePromotion, status,sortField,sortDirection, pageable))
+	                .result(promotionService.getPromotionFromFilter(namePromotion, status,isIncreasePrice,sortField,sortDirection, pageable))
 	                .build();
 	    }
 

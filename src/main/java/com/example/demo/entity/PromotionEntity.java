@@ -41,6 +41,7 @@ public class PromotionEntity extends BaseEntity{
     @Column(columnDefinition = "nvarchar(3000)")
     String description;
     boolean isDeleted;
+    boolean isIncreasePrice;
 	@OneToMany(mappedBy = "promotionEntity")
 	List<OrderEntity> listOrder;
 	@Override

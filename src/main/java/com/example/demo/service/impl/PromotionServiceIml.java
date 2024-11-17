@@ -48,23 +48,29 @@ public class PromotionServiceIml implements PromotionService{
 		if (promotionEntity != null) {
 			throw new RuntimeException("Promotion_already_exist");
 		}
-		requestDTO.setDeleted(false);
-		promotionEntity = mapper.toPromotionEntity(requestDTO);
 		
+		requestDTO.setDeleted(false);
+		
+		promotionEntity = mapper.toPromotionEntity(requestDTO);
+		System.out.println(promotionEntity);
 		return mapper.toPromotionResponeDTO(promotionRepository.save(promotionEntity));
 	}
 	
 	@Override
 	public PromotionResponeDTO updatePromotion(int idPromotion, @Valid PromotionRequestDTO requestDTO) {
-	
+		System.out.println(idPromotion);
 		PromotionEntity promotionEntity = promotionRepository.findById(idPromotion)
 				.orElseThrow(() -> new RuntimeException("Promotion_not_exist"));
 		promotionEntity = promotionRepository.findByNamePromotion(requestDTO.getNamePromotion().trim());
 		if (promotionEntity != null && promotionEntity.getIdPromotion()!=idPromotion ) {
 			throw new RuntimeException("Promotion_already_exist");
 		}
+		System.out.println(requestDTO);
 		promotionEntity = mapper.toPromotionEntity(requestDTO);
 		promotionEntity.setIdPromotion(idPromotion);
+		System.out.println(promotionEntity);
+		System.out.println(promotionEntity.isIncreasePrice());
+		
 		promotionRepository.save(promotionEntity);
 
 		return mapper.toPromotionResponeDTO(promotionEntity);
@@ -80,7 +86,7 @@ public class PromotionServiceIml implements PromotionService{
 	         
 	}
 	@Override
-	public Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion, String status,String sortField,String sortDirection, Pageable pageable) {
+	public Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion, String status,String isIncreasePrice,String sortField,String sortDirection, Pageable pageable) {
 	    try {
 	        Date currentDate = new Date();
 	        Specification<PromotionEntity> spec = Specification.where(
@@ -91,6 +97,11 @@ public class PromotionServiceIml implements PromotionService{
 	            spec = spec.and((root, query, criteriaBuilder) ->
 	                    criteriaBuilder.like(root.get("namePromotion"), "%" + namePromotion + "%"));
 	        }
+	        if(isIncreasePrice!=null){
+	        	spec = spec.and((root, query, criteriaBuilder) ->
+	        	criteriaBuilder.equal(root.get("isIncreasePrice"), Boolean.valueOf(isIncreasePrice)));
+	         }
+
 	        if (status != null && !status.isEmpty()) {
 	            if ("expired".equals(status)) {
 	                spec = spec.and((root, query, criteriaBuilder) ->
