@@ -95,4 +95,20 @@ public class OrderController {
     public ApiRespone<?> deleteOrderDetail(@PathVariable("idOrderDetail") int idOrderDetail) {
         return orderService.removeOrderdetail(idOrderDetail);
     }
+
+    // @DeleteMapping("{idOld}/orderNew/{idNew}")
+    // public ApiRespone<?> cancelOrder(@PathVariable(required = false) Integer
+    // idNew,
+    // @PathVariable(required = false) Integer idOld, @RequestBody String
+    // cancellationReason) {
+    // return ApiRespone.builder().result(orderService.cancelOrder(idOld, idNew,
+    // cancellationReason))
+    // .build();
+    // }
+    @PutMapping("cancel")
+    public ApiRespone<?> cancelOrder(@RequestParam(required = false) Integer idOld,
+            @RequestParam(required = false) Integer idNew, @RequestBody String cancellationReason) {
+        return ApiRespone.builder().result(orderService.cancelOrder(idOld, idNew, cancellationReason))
+                .build();
+    }
 }

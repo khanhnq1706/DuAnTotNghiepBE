@@ -127,7 +127,6 @@ public class OrderServiceImpl implements OrderService {
                                 .orElseThrow(() -> new RuntimeException("Shift_not_exist"));
 
                 if (tableOrder.getCurrentOrderId() != null && idOrderNew != null) {
-                        System.out.println("Pkhuwww" + tableOrder.getCurrentOrderId());
                         OrderEntity subOrder = orderRepository
                                         .findById(idOrderNew)
                                         .orElseThrow(() -> new RuntimeException("Order_not_exist"));
@@ -140,7 +139,6 @@ public class OrderServiceImpl implements OrderService {
                         orderRepository.save(mainOrder);
                         tableOrder.setCurrentOrderId(mainOrder.getIdOrder());
                 } else {
-                        System.out.println("tyyywwnn" + tableOrder.getCurrentOrderId());
                         mainOrder.setShift(shift);
                         mainOrder.setStatusOrder(OrderStatus.Preparing);
                         tableOrder.setStatus(TableStatus.OCCUPIED);
@@ -266,4 +264,33 @@ public class OrderServiceImpl implements OrderService {
                 orderRepository.save(orderEntity);
                 return orderMapper.toOrderResponeDTO(orderEntity);
         }
+
+        @Override
+        public ApiRespone<?> cancelOrder(Integer idOrderOld, Integer idOrderNew, String cancellationReason) {
+                // Tìm đơn phụ (idOrderNew), nếu có
+                OrderEntity subOrder = orderRepository.findById(idOrderNew)
+                                .orElseThrow(() -> new RuntimeException("Sub-order not found"));
+                if (idOrderOld == 0) {
+
+                        // Cập nhật trạng thái đơn phụ thành 'Cancelled'
+                        subOrder.setStatusOrder(OrderStatus.Cancelled);
+                        subOrder.setCancellationReason(cancellationReason);
+                        subOrder.getTableEntity().setStatus(TableStatus.AVAILABLE);
+                        subOrder.getTableEntity().setCurrentOrderId(null);
+                        orderRepository.save(subOrder);
+                } else {
+                        OrderEntity mainOrder = orderRepository.findById(idOrderOld)
+                                        .orElseThrow(() -> new RuntimeException("Order not found"));
+                        subOrder.setCancellationReason(cancellationReason);
+                        subOrder.setStatusOrder(OrderStatus.Cancelled);
+                        subOrder.getTableEntity().setCurrentOrderId(idOrderOld);
+                        subOrder.getTableEntity().setStatus(TableStatus.OCCUPIED);
+                        orderRepository.save(subOrder);
+                }
+                // Trả về thông tin đơn hàng sau khi hủy
+                return ApiRespone.builder()
+                                .result(orderMapper.toOrderResponeDTO(subOrder))
+                                .build();
+        }
+
 }

@@ -28,6 +28,7 @@ public class OrderEntity extends BaseEntity {
 	private OrderStatus statusOrder;
 	double total;
 	Boolean isPrinted;
+	String cancellationReason;
 
 	@NotNull
 	@ManyToOne

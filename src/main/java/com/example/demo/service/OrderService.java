@@ -24,4 +24,5 @@ public interface OrderService {
 
     ApiRespone<?> removeOrderdetail(int idOrderDetail);
 
+    ApiRespone<?> cancelOrder(Integer idOrderOld, Integer idOrderNew, String cancellationReason);
 }
