@@ -1,7 +1,12 @@
 package com.example.demo.entity;
 
+import java.util.List;
+
 import com.example.demo.enums.TableStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -17,10 +22,10 @@ public class TableEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int idTable;
+	Integer idTable;
 	String nameTable;
 	@Enumerated(EnumType.STRING)
-	private TableStatus status;
+	TableStatus status;
 	String linkImageQr;
 	String nameImageQr;
 	boolean isLocked;
@@ -30,5 +35,11 @@ public class TableEntity {
 	@JoinColumn(name = "id_area")
 	@JsonBackReference
 	AreaEntity area;
+	Integer currentOrderId;
+	String currentIP;
+
+	@OneToMany(mappedBy = "tableEntity")
+	@JsonIgnore
+	List<OrderEntity> orders;
 
 }
