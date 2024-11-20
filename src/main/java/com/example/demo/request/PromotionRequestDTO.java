@@ -32,7 +32,7 @@ public class PromotionRequestDTO {
     Date startDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     Date endDate;
-    
+    String isIncreasePrice;
     String description;
     @NotNull
     boolean isDeleted;

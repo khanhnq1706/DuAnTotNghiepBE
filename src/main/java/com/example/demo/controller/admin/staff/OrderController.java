@@ -1,6 +1,7 @@
 package com.example.demo.controller.admin.staff;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -77,12 +78,12 @@ public class OrderController {
                 .build();
     }
 
-    @PutMapping("{idOrder}")
-    public ApiRespone<?> updateOrder(@PathVariable Integer idOrder,
-            @RequestBody FoodRequestOrderDTO listFoodOrder) {
-        OrderResponeDTO updateorder = orderService.updateOrder(idOrder, listFoodOrder);
-        return ApiRespone.builder().result(updateorder).build();
-    }
+//    @PutMapping("{idOrder}")
+//    public ApiRespone<?> updateOrder(@PathVariable Integer idOrder,
+//            @RequestBody FoodRequestOrderDTO listFoodOrder) {
+//        OrderResponeDTO updateorder = orderService.updateOrder(idOrder, listFoodOrder);
+//        return ApiRespone.builder().result(updateorder).build();
+//    }
 
     @PutMapping("{idOrder}/orderdetails/{idOrderDetail}")
     public ApiRespone<?> updateQuantity(@PathVariable("idOrder") int idOrder,
@@ -91,20 +92,33 @@ public class OrderController {
         return ApiRespone.builder().result(updatedOrder).build();
     }
 
-    @DeleteMapping("/{idOrderDetail}")
-    public ApiRespone<?> deleteOrderDetail(@PathVariable("idOrderDetail") int idOrderDetail) {
-        return orderService.removeOrderdetail(idOrderDetail);
+//    @DeleteMapping("/{idOrderDetail}")
+//    public ApiRespone<?> deleteOrderDetail(@PathVariable("idOrderDetail") int idOrderDetail) {
+//        return orderService.removeOrderdetail(idOrderDetail);
+//    }
+    @PutMapping("{idOrder}")
+    public ApiRespone<?> updateOrder(@PathVariable Integer idOrder,
+                                     @RequestBody List<FoodRequestOrderDTO> requestOrderDTO) {
+        var result = orderService.updateOrder1(idOrder, requestOrderDTO);
+        messagingTemplate.convertAndSend("/topic/updateorder", result);
+        return ApiRespone.builder()
+                .result(result)
+                .build();
     }
-
-    // @DeleteMapping("{idOld}/orderNew/{idNew}")
-    // public ApiRespone<?> cancelOrder(@PathVariable(required = false) Integer
-    // idNew,
-    // @PathVariable(required = false) Integer idOld, @RequestBody String
-    // cancellationReason) {
-    // return ApiRespone.builder().result(orderService.cancelOrder(idOld, idNew,
-    // cancellationReason))
-    // .build();
-    // }
+    @DeleteMapping("/delete/{idOrder}")
+    public ResponseEntity<?> deleteOrderById(@PathVariable Integer idOrder) {
+        try {
+            orderService.deleteOrder(idOrder);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR) 
+                    .body(Map.of(
+                        "error", "Internal Server Error",
+                        "message", e.getMessage(),
+                        "idOrder", idOrder
+                    ));
+        }
+    }
     @PutMapping("cancel")
     public ApiRespone<?> cancelOrder(@RequestParam(required = false) Integer idOld,
             @RequestParam(required = false) Integer idNew, @RequestBody String cancellationReason) {
