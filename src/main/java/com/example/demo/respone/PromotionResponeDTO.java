@@ -16,5 +16,6 @@ public class PromotionResponeDTO {
     float discount;
     Date startDate;
     Date endDate;
+    boolean isIncreasePrice;
     String description;
 }

@@ -12,6 +12,8 @@ import com.example.demo.respone.OrderResponeDTO;
 import com.example.demo.respone.TableResponseDTO;
 import com.example.demo.service.OrderService;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -183,67 +185,148 @@ public class OrderServiceImpl implements OrderService {
                 orderRepository.save(mainOrder);
         }
 
+//        @Override
+//        public OrderResponeDTO updateOrder(Integer idOrder, FoodRequestOrderDTO foodOrder) {
+//                OrderEntity order = orderRepository.findById(idOrder)
+//                                .orElseThrow(() -> new RuntimeException("Order_not_found"));
+//
+//                if (foodOrder.getIdFood() == null) {
+//                        throw new RuntimeException("ID_FOOD_NULL");
+//                }
+//
+//                FoodEntity foodEntity = foodRepository.findById(foodOrder.getIdFood())
+//                                .orElseThrow(() -> new RuntimeException("SOME_FOOD_NOT_EXISTS"));
+//                Optional<OrderDetailEntity> existingOrderDetail = orderDetailRepository
+//                                .findByOrderEntityAndFoodEntity(order, foodEntity);
+//                OrderDetailEntity orderDetail;
+//                if (existingOrderDetail.isPresent()) {
+//                        orderDetail = existingOrderDetail.get();
+//                        orderDetail.setQuantity(orderDetail.getQuantity() + foodOrder.getQuantity());
+//                        orderDetail.setTotalPrice(orderDetail.getPrice() * orderDetail.getQuantity()
+//                                        * (100 - foodEntity.getDiscount()) / 100);
+//
+//                        System.out.println("Trùng");
+//                } else {
+//                        orderDetail = OrderDetailEntity.builder().foodEntity(foodEntity)
+//                                        .note(foodOrder.getNoteFood())
+//                                        .quantity(foodOrder.getQuantity())
+//                                        .price(foodEntity.getPriceFood())
+//                                        .orderEntity(order)
+//                                        .build();
+//                        orderDetail.setTotalPrice(orderDetail.getPrice() * orderDetail.getQuantity()
+//                                        * (100 - foodEntity.getDiscount()) / 100);
+//                        orderDetailRepository.save(orderDetail);
+//                }
+//                order.setTotal(order.getListOrderDetail().stream()
+//                                .mapToDouble(OrderDetailEntity::getTotalPrice).sum());
+//                orderRepository.save(order);
+//                return orderMapper.toOrderResponeDTO(order);
+//        }
         @Override
-        public OrderResponeDTO updateOrder(Integer idOrder, FoodRequestOrderDTO foodOrder) {
-                OrderEntity order = orderRepository.findById(idOrder)
-                                .orElseThrow(() -> new RuntimeException("Order_not_found"));
+        public OrderResponeDTO updateOrder1(Integer idOrder, List<FoodRequestOrderDTO> requestOrderDTO) {
+           
+            OrderEntity order = orderRepository
+                    .findById(idOrder)
+                    .orElseThrow(() -> new RuntimeException("Order_not_exist"));
 
-                if (foodOrder.getIdFood() == null) {
-                        throw new RuntimeException("ID_FOOD_NULL");
+            long totalPrice = 0;
+
+            for (FoodRequestOrderDTO foodRequestOrderDTO : requestOrderDTO) {
+                if (foodRequestOrderDTO.getIdFood() == null) {
+                    throw new RuntimeException("ID_FOOD_NOT_NULL");
                 }
 
-                FoodEntity foodEntity = foodRepository.findById(foodOrder.getIdFood())
-                                .orElseThrow(() -> new RuntimeException("SOME_FOOD_NOT_EXISTS"));
+               
+                FoodEntity food = foodRepository.findById(foodRequestOrderDTO.getIdFood())
+                        .orElseThrow(() -> new RuntimeException("SOME_FOOD_NOT_EXISTS"));
+
+               
                 Optional<OrderDetailEntity> existingOrderDetail = orderDetailRepository
-                                .findByOrderEntityAndFoodEntity(order, foodEntity);
-                OrderDetailEntity orderDetail;
-                if (existingOrderDetail.isPresent()) {
-                        orderDetail = existingOrderDetail.get();
-                        orderDetail.setQuantity(orderDetail.getQuantity() + foodOrder.getQuantity());
-                        orderDetail.setTotalPrice(orderDetail.getPrice() * orderDetail.getQuantity()
-                                        * (100 - foodEntity.getDiscount()) / 100);
+                        .findByOrderEntityAndFoodEntity(order, food);
 
-                        System.out.println("Trùng");
-                } else {
-                        orderDetail = OrderDetailEntity.builder().foodEntity(foodEntity)
-                                        .note(foodOrder.getNoteFood())
-                                        .quantity(foodOrder.getQuantity())
-                                        .price(foodEntity.getPriceFood())
-                                        .orderEntity(order)
-                                        .build();
-                        orderDetail.setTotalPrice(orderDetail.getPrice() * orderDetail.getQuantity()
-                                        * (100 - foodEntity.getDiscount()) / 100);
+                if (existingOrderDetail.isPresent()) {
+                    OrderDetailEntity orderDetail = existingOrderDetail.get();
+
+                   
+                    if (foodRequestOrderDTO.getQuantity() == 0) {
+                        orderDetailRepository.delete(orderDetail);
+                    } else {
+                        orderDetail.setQuantity(foodRequestOrderDTO.getQuantity());
+                        orderDetail.setPrice(food.getPriceFood() * foodRequestOrderDTO.getQuantity());
+                        orderDetail.setTotalPrice(orderDetail.getPrice() * (100 - food.getDiscount()) / 100);
+                        orderDetail.setNote(foodRequestOrderDTO.getNoteFood());
+                        totalPrice += orderDetail.getTotalPrice();
                         orderDetailRepository.save(orderDetail);
+                    }
+                } else if (foodRequestOrderDTO.getQuantity() > 0) {
+                    
+                    OrderDetailEntity orderDetail = OrderDetailEntity.builder()
+                            .foodEntity(food)
+                            .note(foodRequestOrderDTO.getNoteFood())
+                            .quantity(foodRequestOrderDTO.getQuantity())
+                            .price(food.getPriceFood() * foodRequestOrderDTO.getQuantity())
+                            .orderEntity(order)
+                            .build();
+                    orderDetail.setTotalPrice(orderDetail.getPrice() * (100 - food.getDiscount()) / 100);
+                    totalPrice += orderDetail.getTotalPrice();
+                    orderDetailRepository.save(orderDetail);
                 }
-                order.setTotal(order.getListOrderDetail().stream()
-                                .mapToDouble(OrderDetailEntity::getTotalPrice).sum());
-                orderRepository.save(order);
-                return orderMapper.toOrderResponeDTO(order);
+            }
+
+            
+            order.setTotal((double) totalPrice);
+
+           
+            if (orderDetailRepository.findByOrderEntity(order).isEmpty()) {
+                orderRepository.delete(order);
+                throw new RuntimeException("Order deleted as no items remain.");
+            }
+
+            
+            return orderMapper.toOrderResponeDTO(order);
         }
 
         @Override
-        public ApiRespone<?> removeOrderdetail(int idOrderDetail) {
-                OrderDetailEntity orderdetail = orderDetailRepository.findById(idOrderDetail)
-                                .orElseThrow(() -> new RuntimeException("IdOrderDetail_NULL"));
-                OrderEntity order = orderdetail.getOrderEntity();
-                try {
-                        order.setTotal(order.getTotal() - orderdetail.getTotalPrice());
-                        orderRepository.save(order);
-                        orderDetailRepository.deleteById(idOrderDetail);
+        @Transactional
+        public void deleteOrder(Integer idOrder) {
+            OrderEntity order = orderRepository
+                    .findById(idOrder)
+                    .orElseThrow(() -> new RuntimeException("Order_not_exist"));
+            System.out.println(idOrder);
+            System.out.println(order);
+            List<OrderDetailEntity> orderDetails = orderDetailRepository.findByOrderEntity(order);
+            
+            if (!orderDetails.isEmpty()) {
+                orderDetailRepository.deleteAll(orderDetails);
+            }
+            orderRepository.delete(order);
 
-                        List<OrderDetailEntity> listOrrderdetail = orderDetailRepository.findByOrderEntity(order);
-                        if (listOrrderdetail == null || listOrrderdetail.isEmpty()) {
-                                order.setStatusOrder(OrderStatus.Cancelled);
-                                order.getTableEntity().setStatus(TableStatus.AVAILABLE);
-                                order.getTableEntity().setCurrentOrderId(null);
-                                order.getTableEntity().setCurrentIP(null);
-                                orderRepository.save(order);
-                        }
-                        return ApiRespone.builder().message("Delete successfully!").build();
-                } catch (Exception e) {
-                        return ApiRespone.builder().message("Delete fail!").build();
-                }
+          
+            System.out.println("Order with ID " + idOrder + " and related order details were deleted successfully.");
         }
+//        @Override
+//        public ApiRespone<?> removeOrderdetail(int idOrderDetail) {
+//                OrderDetailEntity orderdetail = orderDetailRepository.findById(idOrderDetail)
+//                                .orElseThrow(() -> new RuntimeException("IdOrderDetail_NULL"));
+//                OrderEntity order = orderdetail.getOrderEntity();
+//                try {
+//                        order.setTotal(order.getTotal() - orderdetail.getTotalPrice());
+//                        orderRepository.save(order);
+//                        orderDetailRepository.deleteById(idOrderDetail);
+//
+//                        List<OrderDetailEntity> listOrrderdetail = orderDetailRepository.findByOrderEntity(order);
+//                        if (listOrrderdetail == null || listOrrderdetail.isEmpty()) {
+//                                order.setStatusOrder(OrderStatus.Cancelled);
+//                                order.getTableEntity().setStatus(TableStatus.AVAILABLE);
+//                                order.getTableEntity().setCurrentOrderId(null);
+//                                order.getTableEntity().setCurrentIP(null);
+//                                orderRepository.save(order);
+//                        }
+//                        return ApiRespone.builder().message("Delete successfully!").build();
+//                } catch (Exception e) {
+//                        return ApiRespone.builder().message("Delete fail!").build();
+//                }
+//        }
 
         @Override
         public OrderResponeDTO updateQuantityOrderDetails(int idOrder, int idOrderdetail, int newQuantity) {

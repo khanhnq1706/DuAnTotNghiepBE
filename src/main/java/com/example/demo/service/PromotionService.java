@@ -22,13 +22,8 @@ public interface PromotionService {
 
 	PromotionResponeDTO deletePromotion(int idPromotion);
 
-//	Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion, Pageable pageable);
 
-//	Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion, String status, Pageable pageable);
-
-//	Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion, String status, Pageable pageable);
-
-	Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion, String status, String sortField, String sortDirection,
-			Pageable pageable);
+	Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion, String status, String isIncreasePrice,
+			String sortField, String sortDirection, Pageable pageable);
 
 }

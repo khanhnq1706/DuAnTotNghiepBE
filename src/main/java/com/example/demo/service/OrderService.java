@@ -18,11 +18,18 @@ public interface OrderService {
 
     OrderResponeDTO confirmOrder(Integer idOrderOld, Integer idOrderNew, Integer idShift);
 
-    OrderResponeDTO updateOrder(Integer idOrder, FoodRequestOrderDTO foodOrder);
+//    OrderResponeDTO updateOrder(Integer idOrder, FoodRequestOrderDTO foodOrder);
 
     OrderResponeDTO updateQuantityOrderDetails(int idOrder, int idOrderdetail, int newQuantity);
 
-    ApiRespone<?> removeOrderdetail(int idOrderDetail);
+//    ApiRespone<?> removeOrderdetail(int idOrderDetail);
 
     ApiRespone<?> cancelOrder(Integer idOrderOld, Integer idOrderNew, String cancellationReason);
+
+
+	OrderResponeDTO updateOrder1(Integer idOrder, List<FoodRequestOrderDTO> requestOrderDTO);
+
+	void deleteOrder(Integer idOrder);
+
+
 }
