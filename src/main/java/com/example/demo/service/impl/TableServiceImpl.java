@@ -78,7 +78,7 @@ public class TableServiceImpl implements TableService {
 
     @Override
     public Page<TableResponseDTO> getTablesFromFilter(String nameTable, TableStatus status, Integer idArea,
-            Pageable pageable) {
+                                                      Pageable pageable) {
         // Sử dụng idArea để lọc bàn theo khu vực
         Page<TableEntity> tableEntities = tableRepository.findByFilters(nameTable, status, idArea, pageable);
 
@@ -170,7 +170,7 @@ public class TableServiceImpl implements TableService {
         table.setStatus(request.getStatus()); // Cập nhật trạng thái mới
         TableEntity updatedTable = tableRepository.save(table); // Lưu thay đổi
         return ApiRespone.builder().result(tableMapper.toTableResponseDTO(updatedTable)).build(); // Trả về DTO sau
-                                                                                                  // khi cập nhật
+        // khi cập nhật
 
     }
 
