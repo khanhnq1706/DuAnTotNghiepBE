@@ -9,6 +9,7 @@ public enum ErrorEnum {
     Table_not_exist(1002, "Table not exist in database"),
     Table_not_found(1003, "Table not Found"),
     Table_key_expired(1004, "table's key expired or wrong"),
+    Table_being_served(1005, "Tables are being serving"),
     // error code Food : 110*
     FOOD_ALREADY_EXISTS(1101, "Name's Food already exists"),
     FOOD_NOT_EXISTS(1102, "Food not exists"),
@@ -29,9 +30,10 @@ public enum ErrorEnum {
     Id_category_not_null(1302, "Id Category not null"),
 
     // Error request Order : 140*
-    Order_not_found(1401, "Order not found in database"),
-    IdOrder_not_found(1402, "Id Order not found"),
-    Please_provide_more_data(1403, "Please provide more data"),
+    IdOrder_not_found(1401, "Id Order not found"),
+    Please_provide_more_data(1402, "Please provide more data"),
+    Current_order_not_exist(1403, "Current order notexist"),
+    Order_not_found(1404, "Order not found in database"),
 
  // Error request Promotion : 150*
     Promotion_already_exist(1501, "Promotion already exist in database"),
@@ -42,8 +44,11 @@ public enum ErrorEnum {
     Discount_not_null(1506,"Discount_not_null"),
 
     //error payment
-    Order_already_completed(1601,"Order_already_completed")
+    Order_already_completed(1601,"Order_already_completed"),
 
+	USER_EXISTED(1701,"User existed"),
+	USER_NOT_EXISTS(1702,"User not existed"),
+	PASSWORD_IS_INCORRECT(1703,"Password is incorrect");
     ;
     private int code;
     private String message;

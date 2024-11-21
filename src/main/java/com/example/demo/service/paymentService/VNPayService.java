@@ -161,6 +161,7 @@ public class VNPayService {
                                 TableEntity table = orderNeedCheck.getTableEntity();
                                 table.setStatus(TableStatus.AVAILABLE);
                                 table.setCurrentOrderId(null);
+                                table.setCurrentIP(null);
                                 tableRepository.save(table);
                                 responseDTO.setRspCode("00");
                                 String keyCheckVNPayDTO = responseDTO.getBank()+responseDTO.getTotalAmount()

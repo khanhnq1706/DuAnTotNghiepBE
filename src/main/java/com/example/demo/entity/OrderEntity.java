@@ -19,16 +19,17 @@ import lombok.experimental.FieldDefaults;
 @Builder @Getter @Setter
 public class OrderEntity extends BaseEntity {
 
-	@Id 
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer idOrder;
 	@Column(columnDefinition = "varchar(50)")
 	@Enumerated(EnumType.STRING)
 	private OrderStatus statusOrder;
-	Double total;
+	double total;
 	Boolean isPrinted;
 	String namePaymentMethod;
 	Date paymentDate;
+	String cancellationReason;
 
 	@NotNull
 	@ManyToOne
@@ -44,9 +45,15 @@ public class OrderEntity extends BaseEntity {
 	@JoinColumn(name = "id_Customer")
 	CustomerEntity customer;
 
-	@OneToMany(mappedBy = "orderEntity")
+	@OneToMany(mappedBy = "orderEntity", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	List<OrderDetailEntity> listOrderDetail;
+
+	@ManyToOne
+	@JoinColumn(name = "idShift")
+	@JsonBackReference
+	Shift shift;
+
 
 	public double getTotalNeedPayment() {
 		return total;
@@ -56,9 +63,6 @@ public class OrderEntity extends BaseEntity {
 	@JoinColumn(name = "id_Promotion")
 	PromotionEntity promotionEntity;
 
-	@ManyToOne
-	@JoinColumn(name = "idShift")
-	@JsonBackReference
-	Shift shift;
+
 
 }

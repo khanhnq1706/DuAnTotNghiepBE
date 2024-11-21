@@ -37,6 +37,7 @@ public class PaymentService {
         TableEntity table = orderNeedPayment.getTableEntity();
         table.setStatus(TableStatus.AVAILABLE);
         table.setCurrentOrderId(null);
+        table.setCurrentIP(null);
         tableRepository.save(table);
     }
 

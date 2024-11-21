@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import com.example.demo.entity.FoodEntity;
 import com.example.demo.entity.OrderDetailEntity;
 import com.example.demo.entity.OrderEntity;
 import com.example.demo.entity.TableEntity;
@@ -27,4 +28,5 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetailEntity, 
     )
     public List<InvoiceDetailResponseDTO> getInvoiceDetailsByOrderId(Integer orderId);
 
+    Optional<OrderDetailEntity> findByOrderEntityAndFoodEntity(OrderEntity order, FoodEntity food);
 }

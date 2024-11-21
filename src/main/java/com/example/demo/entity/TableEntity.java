@@ -36,6 +36,7 @@ public class TableEntity {
 	@JsonBackReference
 	AreaEntity area;
 	Integer currentOrderId;
+	String currentIP;
 
 	@OneToMany(mappedBy = "tableEntity")
 	@JsonIgnore
