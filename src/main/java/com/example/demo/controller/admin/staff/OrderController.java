@@ -65,7 +65,7 @@ public class OrderController {
     // Phương thức giả lập lấy idShift của nhân viên đang đăng nhập
     private Integer getLoggedInStaffShift() {
         // idShift của staff lấy ra tạm thời
-        Integer idShift = 1;
+        Integer idShift = 2;
         return idShift;
     }
 
@@ -78,12 +78,12 @@ public class OrderController {
                 .build();
     }
 
-//    @PutMapping("{idOrder}")
-//    public ApiRespone<?> updateOrder(@PathVariable Integer idOrder,
-//            @RequestBody FoodRequestOrderDTO listFoodOrder) {
-//        OrderResponeDTO updateorder = orderService.updateOrder(idOrder, listFoodOrder);
-//        return ApiRespone.builder().result(updateorder).build();
-//    }
+    @PutMapping("{idOrder}")
+    public ApiRespone<?> updateOrder(@PathVariable Integer idOrder,
+            @RequestBody FoodRequestOrderDTO listFoodOrder) {
+        OrderResponeDTO updateorder = orderService.updateOrder(idOrder, listFoodOrder);
+        return ApiRespone.builder().result(updateorder).build();
+    }
 
     @PutMapping("{idOrder}/orderdetails/{idOrderDetail}")
     public ApiRespone<?> updateQuantity(@PathVariable("idOrder") int idOrder,
@@ -92,14 +92,14 @@ public class OrderController {
         return ApiRespone.builder().result(updatedOrder).build();
     }
 
-//    @DeleteMapping("/{idOrderDetail}")
-//    public ApiRespone<?> deleteOrderDetail(@PathVariable("idOrderDetail") int idOrderDetail) {
-//        return orderService.removeOrderdetail(idOrderDetail);
-//    }
-    @PutMapping("{idOrder}")
-    public ApiRespone<?> updateOrder(@PathVariable Integer idOrder,
+    @DeleteMapping("/{idOrderDetail}")
+   public ApiRespone<?> deleteOrderDetail(@PathVariable("idOrderDetail") int idOrderDetail) {
+       return orderService.removeOrderdetail(idOrderDetail);
+    }
+    @PutMapping("/update/{idOrder}")
+    public ApiRespone<?> updateOrder1(@PathVariable Integer idOrder,
                                      @RequestBody List<FoodRequestOrderDTO> requestOrderDTO) {
-        var result = orderService.updateOrder1(idOrder, requestOrderDTO);
+        var result = orderService.updateOrderAll(idOrder, requestOrderDTO);
         messagingTemplate.convertAndSend("/topic/updateorder", result);
         return ApiRespone.builder()
                 .result(result)
