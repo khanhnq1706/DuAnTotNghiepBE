@@ -27,9 +27,6 @@ public interface OrderService {
     ApiRespone<?> cancelOrder(Integer idOrderOld, Integer idOrderNew, String cancellationReason);
 
 
-	OrderResponeDTO updateOrderAll(Integer idOrder, List<FoodRequestOrderDTO> requestOrderDTO);
-
-	void deleteOrder(Integer idOrder);
 
 
 

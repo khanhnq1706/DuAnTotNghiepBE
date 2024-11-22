@@ -96,29 +96,8 @@ public class OrderController {
    public ApiRespone<?> deleteOrderDetail(@PathVariable("idOrderDetail") int idOrderDetail) {
        return orderService.removeOrderdetail(idOrderDetail);
     }
-    @PutMapping("/update/{idOrder}")
-    public ApiRespone<?> updateOrder1(@PathVariable Integer idOrder,
-                                     @RequestBody List<FoodRequestOrderDTO> requestOrderDTO) {
-        var result = orderService.updateOrderAll(idOrder, requestOrderDTO);
-        messagingTemplate.convertAndSend("/topic/updateorder", result);
-        return ApiRespone.builder()
-                .result(result)
-                .build();
-    }
-    @DeleteMapping("/delete/{idOrder}")
-    public ResponseEntity<?> deleteOrderById(@PathVariable Integer idOrder) {
-        try {
-            orderService.deleteOrder(idOrder);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR) 
-                    .body(Map.of(
-                        "error", "Internal Server Error",
-                        "message", e.getMessage(),
-                        "idOrder", idOrder
-                    ));
-        }
-    }
+
+
     @PutMapping("cancel")
     public ApiRespone<?> cancelOrder(@RequestParam(required = false) Integer idOld,
             @RequestParam(required = false) Integer idNew, @RequestBody String cancellationReason) {
