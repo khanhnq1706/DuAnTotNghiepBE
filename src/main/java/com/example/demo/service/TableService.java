@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import com.example.demo.enums.TableStatus;
 
 import com.example.demo.request.TableRequestDTO;
+import com.example.demo.request.TableStatusCurrentOrderRequestDTO;
 import com.example.demo.request.TableStatusRequestDTO;
 import com.example.demo.respone.ApiRespone;
 import com.example.demo.respone.TableResponseDTO;
@@ -43,5 +44,7 @@ public interface TableService {
 	public Page<TableResponseDTO> getTablesFromFilter(String nameTable, TableStatus status, Integer idArea,
 			Pageable pageable);
 
-	public TableResponseDTO  verifyTable(VerifyTableRequestDTO Request);
+	public TableResponseDTO verifyTable(VerifyTableRequestDTO Request);
+
+	ApiRespone<?> updateStatusCurrent(int id, TableStatusCurrentOrderRequestDTO request);
 }

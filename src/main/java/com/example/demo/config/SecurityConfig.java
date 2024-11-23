@@ -26,9 +26,12 @@ public class SecurityConfig {
 	@Autowired
 	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-	private String[] EndPointManager = {"/api/v1/users","/api/v1/users/**","/api/QRcode/**","/api/QRcode"};
-	private String[] EndPointPublic = {"/api/v1/categories","/api/verify-table","/api/order","api/v1/foodEntities/**"
-			,"/api/v1/foods/filter","/api/login","/api/logout","/api/testVerify"};
+	private String[] EndPointManager = {"/api/v1/users","/api/v1/users/**","/api/QRcode/**","/api/QRcode","/api/v1/tables",
+			"api/v1/tables/**"};
+	private String[] EndPointPublic = {"/api/v1/categories","/api/verify-table","/api/v1/order","/api/v1/order/**"
+			,"api/v1/foodEntities/**","/api/order","/api/order/**","api/v1/orderdetail","api/v1/orderdetail/**"
+			,"/api/v1/foods/filter","/api/login","/api/logout","/api/testVerify","/api/v1/ip","/api/v1/ip/**"
+			,"/ws/my-websocket-endpoint","/ws/my-websocket-endpoint/**","/images/**","/QRCode/**","api/payment-VNPay"};
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

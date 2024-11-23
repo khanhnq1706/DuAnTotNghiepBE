@@ -4,6 +4,7 @@ import com.example.demo.enums.TableStatus;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -22,8 +23,11 @@ public class TableResponseDTO {
 	String nameTable;
 	String linkImageQr;
 	String nameImageQr;
+	String nameArea;
 	@Enumerated(EnumType.STRING)
-	private TableStatus status;
+	TableStatus status;
 	String displayName;
 	boolean isLocked;
+	Integer currentOrderId;
+	String currentIP;
 }

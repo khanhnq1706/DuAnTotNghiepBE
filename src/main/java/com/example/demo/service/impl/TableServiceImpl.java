@@ -18,7 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
-
 import java.util.stream.Collectors;
 
 import com.example.demo.entity.AreaEntity;
@@ -30,6 +29,7 @@ import com.example.demo.map.TableMapper;
 import com.example.demo.repository.AreaRepository;
 import com.example.demo.repository.TableRepository;
 import com.example.demo.request.TableRequestDTO;
+import com.example.demo.request.TableStatusCurrentOrderRequestDTO;
 import com.example.demo.request.TableStatusRequestDTO;
 import com.example.demo.respone.ApiRespone;
 import com.example.demo.respone.FoodResponeDTO;
@@ -38,8 +38,6 @@ import com.example.demo.respone.TableStatusResponeDTO;
 import com.example.demo.service.TableService;
 
 import jakarta.validation.Valid;
-
-
 
 @Service
 public class TableServiceImpl implements TableService {
@@ -81,7 +79,7 @@ public class TableServiceImpl implements TableService {
 
     @Override
     public Page<TableResponseDTO> getTablesFromFilter(String nameTable, TableStatus status, Integer idArea,
-            Pageable pageable) {
+                                                      Pageable pageable) {
         // Sử dụng idArea để lọc bàn theo khu vực
         Page<TableEntity> tableEntities = tableRepository.findByFilters(nameTable, status, idArea, pageable);
 
@@ -173,7 +171,7 @@ public class TableServiceImpl implements TableService {
         table.setStatus(request.getStatus()); // Cập nhật trạng thái mới
         TableEntity updatedTable = tableRepository.save(table); // Lưu thay đổi
         return ApiRespone.builder().result(tableMapper.toTableResponseDTO(updatedTable)).build(); // Trả về DTO sau
-                                                                                                  // khi cập nhật
+        // khi cập nhật
 
     }
 
@@ -185,13 +183,23 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public TableResponseDTO  verifyTable(VerifyTableRequestDTO request){
-        TableEntity tableNeedVerify =  tableRepository.findById(request.getIdTable())
-                .orElseThrow(()-> new RuntimeException("Table_not_found"));
-        if(tableNeedVerify.getSecretKey()-request.getSecretKey()!=0){
+    public TableResponseDTO verifyTable(VerifyTableRequestDTO request) {
+        TableEntity tableNeedVerify = tableRepository.findById(request.getIdTable())
+                .orElseThrow(() -> new RuntimeException("Table_not_found"));
+        if (tableNeedVerify.getSecretKey() - request.getSecretKey() != 0) {
             throw new RuntimeException("Table_key_expired");
         }
         return tableMapper.toTableResponseDTO(tableNeedVerify);
     }
+    @Override
+	public ApiRespone<?> updateStatusCurrent(int idTable, TableStatusCurrentOrderRequestDTO request) {
+		TableEntity table = tableRepository.findById(idTable)
+                .orElseThrow(() -> new RuntimeException("Table_not_found"));
+
+        table.setStatus(request.getStatus()); 
+        table.setCurrentOrderId(request.getCurrentOrderId());
+        TableEntity updatedTable = tableRepository.save(table);
+        return ApiRespone.builder().result(tableMapper.toTableResponseDTO(updatedTable)).build(); 
+	}
 
 }

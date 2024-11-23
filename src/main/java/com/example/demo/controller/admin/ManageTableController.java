@@ -2,6 +2,7 @@ package com.example.demo.controller.admin;
 
 import com.example.demo.enums.TableStatus;
 import com.example.demo.request.TableRequestDTO;
+import com.example.demo.request.TableStatusCurrentOrderRequestDTO;
 import com.example.demo.request.TableStatusRequestDTO;
 import com.example.demo.respone.ApiRespone;
 import com.example.demo.respone.TableResponseDTO;
@@ -101,6 +102,10 @@ public class ManageTableController {
 	@PutMapping("{id}/locked")
 	public ApiRespone<?> lockedTable(@PathVariable("id") int idTable) {
 		return tableService.lockedTable(idTable);
+	}
+	@PutMapping("{id}/statusAndCurrent")
+	public ApiRespone<?> updateStatusAndCurrent(@PathVariable("id") int id, @RequestBody TableStatusCurrentOrderRequestDTO request) {
+		return tableService.updateStatusCurrent(id, request);
 	}
 
 }
