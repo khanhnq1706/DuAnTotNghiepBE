@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import java.util.Date;
 import java.util.List;
 
 import com.example.demo.enums.OrderStatus;
@@ -26,6 +27,8 @@ public class OrderEntity extends BaseEntity {
 	private OrderStatus statusOrder;
 	double total;
 	Boolean isPrinted;
+	String namePaymentMethod;
+	Date paymentDate;
 	String cancellationReason;
 
 	@NotNull
@@ -51,9 +54,15 @@ public class OrderEntity extends BaseEntity {
 	@JsonBackReference
 	Shift shift;
 
+
+	public double getTotalNeedPayment() {
+		return total;
+	}
+
 	@ManyToOne
 	@JoinColumn(name = "id_Promotion")
 	PromotionEntity promotionEntity;
+
 
 
 }

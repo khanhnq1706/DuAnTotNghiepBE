@@ -53,19 +53,19 @@ public class OrderServiceImpl implements OrderService {
         @Override
         public ApiRespone<OrderResponeDTO> getOrder(int idOrder) {
                 OrderEntity order = orderRepository.findById(idOrder)
-                                .orElseThrow(() -> new RuntimeException("Order not found"));
+                        .orElseThrow(() -> new RuntimeException("Order not found"));
                 OrderResponeDTO responseDTO = orderMapper.toOrderResponeDTO(order);
                 return ApiRespone.<OrderResponeDTO>builder()
-                                .result(responseDTO)
-                                .build();
+                        .result(responseDTO)
+                        .build();
         }
 
         @Override
         public OrderResponeDTO saveOrder(List<FoodRequestOrderDTO> listFoodOrder, Integer idTable, String numbePhone,
-                        String ipCustomer, OrderStatus status) {
+                                         String ipCustomer, OrderStatus status) {
                 TableEntity tableOrder = tableRepository
-                                .findById(idTable)
-                                .orElseThrow(() -> new RuntimeException("Table_not_exist"));
+                        .findById(idTable)
+                        .orElseThrow(() -> new RuntimeException("Table_not_exist"));
                 if (tableOrder.getCurrentOrderId() != null) {
                         if (tableOrder.getCurrentIP() == null || !tableOrder.getCurrentIP().equals(ipCustomer)) {
                                 throw new RuntimeException("Table_being_served");
@@ -73,11 +73,11 @@ public class OrderServiceImpl implements OrderService {
                 }
                 CustomerEntity customerOrder = customerRepository.findByPhone(numbePhone).orElse(null);
                 OrderEntity orderEntity = OrderEntity.builder()
-                                .statusOrder(status)
-                                .isPrinted(false)
-                                .tableEntity(tableOrder)
-                                .customer(customerOrder)
-                                .build();
+                        .statusOrder(status)
+                        .isPrinted(false)
+                        .tableEntity(tableOrder)
+                        .customer(customerOrder)
+                        .build();
                 if (orderEntity.getStatusOrder() == OrderStatus.Waiting) {
                         tableOrder.setStatus(TableStatus.PENDING);
                 } else if (orderEntity.getStatusOrder() == OrderStatus.Preparing) {
@@ -95,18 +95,18 @@ public class OrderServiceImpl implements OrderService {
                                 continue;
                         }
                         FoodEntity food = foodRepository.findById(foodRequestOrderDTO.getIdFood())
-                                        .orElseThrow(() -> new RuntimeException("SOME_FOOD_NOT_EXISTS"));
+                                .orElseThrow(() -> new RuntimeException("SOME_FOOD_NOT_EXISTS"));
 
                         OrderDetailEntity orderDetail = OrderDetailEntity.builder()
-                                        .foodEntity(food)
-                                        .note(foodRequestOrderDTO.getNoteFood())
-                                        .quantity(foodRequestOrderDTO.getQuantity())
-                                        .price(food.getPriceFood())
-                                        .orderEntity(orderEntity)
-                                        .build();
+                                .foodEntity(food)
+                                .note(foodRequestOrderDTO.getNoteFood())
+                                .quantity(foodRequestOrderDTO.getQuantity())
+                                .price(food.getPriceFood())
+                                .orderEntity(orderEntity)
+                                .build();
 
                         orderDetail.setTotalPrice(orderDetail.getPrice() * orderDetail.getQuantity()
-                                        * (100 - food.getDiscount()) / 100);
+                                * (100 - food.getDiscount()) / 100);
 
                         orderEntity.setTotal(orderEntity.getTotal() + orderDetail.getTotalPrice());
                         System.out.println("Plio : " + orderDetail.getTotalPrice());
@@ -119,19 +119,19 @@ public class OrderServiceImpl implements OrderService {
         @Override
         public OrderResponeDTO confirmOrder(Integer idOrderOld, Integer idOrderNew, Integer idShift) {
                 OrderEntity mainOrder = orderRepository
-                                .findById(idOrderOld)
-                                .orElseThrow(() -> new RuntimeException("Order_not_exist"));
+                        .findById(idOrderOld)
+                        .orElseThrow(() -> new RuntimeException("Order_not_exist"));
 
                 TableEntity tableOrder = mainOrder.getTableEntity();
 
                 Shift shift = shiftRepository
-                                .findById(idShift)
-                                .orElseThrow(() -> new RuntimeException("Shift_not_exist"));
+                        .findById(idShift)
+                        .orElseThrow(() -> new RuntimeException("Shift_not_exist"));
 
                 if (tableOrder.getCurrentOrderId() != null && idOrderNew != null) {
                         OrderEntity subOrder = orderRepository
-                                        .findById(idOrderNew)
-                                        .orElseThrow(() -> new RuntimeException("Order_not_exist"));
+                                .findById(idOrderNew)
+                                .orElseThrow(() -> new RuntimeException("Order_not_exist"));
                         mergeOrderDetails(mainOrder, subOrder);
 
                         mainOrder.setStatusOrder(OrderStatus.Preparing);
@@ -155,7 +155,7 @@ public class OrderServiceImpl implements OrderService {
         private void mergeOrderDetails(OrderEntity mainOrder, OrderEntity subOrder) {
                 List<OrderDetailEntity> newDetailsToAdd = new ArrayList<>();
                 for (Iterator<OrderDetailEntity> subOrderIterator = subOrder.getListOrderDetail()
-                                .iterator(); subOrderIterator.hasNext();) {
+                        .iterator(); subOrderIterator.hasNext();) {
                         OrderDetailEntity currentDetail = subOrderIterator.next();
                         boolean isExisting = false;
 
@@ -188,37 +188,37 @@ public class OrderServiceImpl implements OrderService {
         @Override
         public OrderResponeDTO updateOrder(Integer idOrder, FoodRequestOrderDTO foodOrder) {
                 OrderEntity order = orderRepository.findById(idOrder)
-                                .orElseThrow(() -> new RuntimeException("Order_not_found"));
+                        .orElseThrow(() -> new RuntimeException("Order_not_found"));
 
                 if (foodOrder.getIdFood() == null) {
                         throw new RuntimeException("ID_FOOD_NULL");
                 }
 
                 FoodEntity foodEntity = foodRepository.findById(foodOrder.getIdFood())
-                                .orElseThrow(() -> new RuntimeException("SOME_FOOD_NOT_EXISTS"));
+                        .orElseThrow(() -> new RuntimeException("SOME_FOOD_NOT_EXISTS"));
                 Optional<OrderDetailEntity> existingOrderDetail = orderDetailRepository
-                                .findByOrderEntityAndFoodEntity(order, foodEntity);
+                        .findByOrderEntityAndFoodEntity(order, foodEntity);
                 OrderDetailEntity orderDetail;
                 if (existingOrderDetail.isPresent()) {
                         orderDetail = existingOrderDetail.get();
                         orderDetail.setQuantity(orderDetail.getQuantity() + foodOrder.getQuantity());
                         orderDetail.setTotalPrice(orderDetail.getPrice() * orderDetail.getQuantity()
-                                        * (100 - foodEntity.getDiscount()) / 100);
+                                * (100 - foodEntity.getDiscount()) / 100);
 
                         System.out.println("Trùng");
                 } else {
                         orderDetail = OrderDetailEntity.builder().foodEntity(foodEntity)
-                                        .note(foodOrder.getNoteFood())
-                                        .quantity(foodOrder.getQuantity())
-                                        .price(foodEntity.getPriceFood())
-                                        .orderEntity(order)
-                                        .build();
+                                .note(foodOrder.getNoteFood())
+                                .quantity(foodOrder.getQuantity())
+                                .price(foodEntity.getPriceFood())
+                                .orderEntity(order)
+                                .build();
                         orderDetail.setTotalPrice(orderDetail.getPrice() * orderDetail.getQuantity()
-                                        * (100 - foodEntity.getDiscount()) / 100);
+                                * (100 - foodEntity.getDiscount()) / 100);
                         orderDetailRepository.save(orderDetail);
                 }
                 order.setTotal(order.getListOrderDetail().stream()
-                                .mapToDouble(OrderDetailEntity::getTotalPrice).sum());
+                        .mapToDouble(OrderDetailEntity::getTotalPrice).sum());
                 orderRepository.save(order);
                 return orderMapper.toOrderResponeDTO(order);
         }
@@ -226,7 +226,7 @@ public class OrderServiceImpl implements OrderService {
         @Override
         public ApiRespone<?> removeOrderdetail(int idOrderDetail) {
                 OrderDetailEntity orderdetail = orderDetailRepository.findById(idOrderDetail)
-                                .orElseThrow(() -> new RuntimeException("IdOrderDetail_NULL"));
+                        .orElseThrow(() -> new RuntimeException("IdOrderDetail_NULL"));
                 OrderEntity order = orderdetail.getOrderEntity();
                 try {
                         order.setTotal(order.getTotal() - orderdetail.getTotalPrice());
@@ -250,17 +250,17 @@ public class OrderServiceImpl implements OrderService {
         @Override
         public OrderResponeDTO updateQuantityOrderDetails(int idOrder, int idOrderdetail, int newQuantity) {
                 OrderEntity orderEntity = orderRepository.findById(idOrder)
-                                .orElseThrow(() -> new RuntimeException("Order_not_exist"));
+                        .orElseThrow(() -> new RuntimeException("Order_not_exist"));
                 OrderDetailEntity orderdetail = orderDetailRepository.findById(idOrderdetail)
-                                .orElseThrow(() -> new RuntimeException("OrderDetail_not_found"));
+                        .orElseThrow(() -> new RuntimeException("OrderDetail_not_found"));
                 if (newQuantity < 1) {
                         throw new RuntimeException("Quantity_must_be_positive");
                 }
                 orderdetail.setQuantity(newQuantity);
                 orderdetail.setTotalPrice(orderdetail.getPrice() * newQuantity
-                                * (100 - orderdetail.getFoodEntity().getDiscount()) / 100);
+                        * (100 - orderdetail.getFoodEntity().getDiscount()) / 100);
                 orderEntity.setTotal(orderEntity.getListOrderDetail().stream()
-                                .mapToDouble(OrderDetailEntity::getTotalPrice).sum());
+                        .mapToDouble(OrderDetailEntity::getTotalPrice).sum());
 
                 orderDetailRepository.save(orderdetail);
                 orderRepository.save(orderEntity);
@@ -271,7 +271,7 @@ public class OrderServiceImpl implements OrderService {
         public ApiRespone<?> cancelOrder(Integer idOrderOld, Integer idOrderNew, String cancellationReason) {
                 // Tìm đơn phụ (idOrderNew), nếu có
                 OrderEntity subOrder = orderRepository.findById(idOrderNew)
-                                .orElseThrow(() -> new RuntimeException("Sub-order not found"));
+                        .orElseThrow(() -> new RuntimeException("Sub-order not found"));
                 if (idOrderOld == 0) {
 
                         // Cập nhật trạng thái đơn phụ thành 'Cancelled'
@@ -282,7 +282,7 @@ public class OrderServiceImpl implements OrderService {
                         orderRepository.save(subOrder);
                 } else {
                         OrderEntity mainOrder = orderRepository.findById(idOrderOld)
-                                        .orElseThrow(() -> new RuntimeException("Order not found"));
+                                .orElseThrow(() -> new RuntimeException("Order not found"));
                         subOrder.setCancellationReason(cancellationReason);
                         subOrder.setStatusOrder(OrderStatus.Cancelled);
                         subOrder.getTableEntity().setCurrentOrderId(idOrderOld);
@@ -291,8 +291,8 @@ public class OrderServiceImpl implements OrderService {
                 }
                 // Trả về thông tin đơn hàng sau khi hủy
                 return ApiRespone.builder()
-                                .result(orderMapper.toOrderResponeDTO(subOrder))
-                                .build();
+                        .result(orderMapper.toOrderResponeDTO(subOrder))
+                        .build();
         }
 
 }

@@ -33,7 +33,7 @@ public enum ErrorEnum {
     IdOrder_not_found(1401, "Id Order not found"),
     Please_provide_more_data(1402, "Please provide more data"),
     Current_order_not_exist(1403, "Current order notexist"),
-
+    Order_not_found(1404, "Order not found in database"),
 
  // Error request Promotion : 150*
     Promotion_already_exist(1501, "Promotion already exist in database"),
@@ -42,6 +42,10 @@ public enum ErrorEnum {
     End_Date_not_valid(1504, "End Date not valid"),
     Name_promotion_not_blank(1505,"Name promotion not blank"),
     Discount_not_null(1506,"Discount_not_null"),
+
+    //error payment
+    Order_already_completed(1601,"Order_already_completed"),
+
 	USER_EXISTED(1701,"User existed"),
 	USER_NOT_EXISTS(1702,"User not existed"),
 	PASSWORD_IS_INCORRECT(1703,"Password is incorrect");
