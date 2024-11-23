@@ -12,8 +12,6 @@ import com.example.demo.respone.OrderResponeDTO;
 import com.example.demo.respone.TableResponseDTO;
 import com.example.demo.service.OrderService;
 
-import jakarta.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -222,7 +220,7 @@ public class OrderServiceImpl implements OrderService {
                 orderRepository.save(order);
                 return orderMapper.toOrderResponeDTO(order);
         }
- 
+
         @Override
         public ApiRespone<?> removeOrderdetail(int idOrderDetail) {
                 OrderDetailEntity orderdetail = orderDetailRepository.findById(idOrderDetail)
