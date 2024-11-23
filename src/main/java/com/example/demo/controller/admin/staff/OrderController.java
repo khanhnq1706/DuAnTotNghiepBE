@@ -1,6 +1,7 @@
 package com.example.demo.controller.admin.staff;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -64,7 +65,7 @@ public class OrderController {
     // Phương thức giả lập lấy idShift của nhân viên đang đăng nhập
     private Integer getLoggedInStaffShift() {
         // idShift của staff lấy ra tạm thời
-        Integer idShift = 1;
+        Integer idShift = 2;
         return idShift;
     }
 
@@ -92,19 +93,11 @@ public class OrderController {
     }
 
     @DeleteMapping("/{idOrderDetail}")
-    public ApiRespone<?> deleteOrderDetail(@PathVariable("idOrderDetail") int idOrderDetail) {
-        return orderService.removeOrderdetail(idOrderDetail);
+   public ApiRespone<?> deleteOrderDetail(@PathVariable("idOrderDetail") int idOrderDetail) {
+       return orderService.removeOrderdetail(idOrderDetail);
     }
 
-    // @DeleteMapping("{idOld}/orderNew/{idNew}")
-    // public ApiRespone<?> cancelOrder(@PathVariable(required = false) Integer
-    // idNew,
-    // @PathVariable(required = false) Integer idOld, @RequestBody String
-    // cancellationReason) {
-    // return ApiRespone.builder().result(orderService.cancelOrder(idOld, idNew,
-    // cancellationReason))
-    // .build();
-    // }
+
     @PutMapping("cancel")
     public ApiRespone<?> cancelOrder(@RequestParam(required = false) Integer idOld,
                                      @RequestParam(required = false) Integer idNew, @RequestBody String cancellationReason) {

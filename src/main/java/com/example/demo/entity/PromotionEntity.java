@@ -38,6 +38,7 @@ public class PromotionEntity extends BaseEntity{
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     Date endDate;
+    boolean isIncreasePrice;
     @Column(columnDefinition = "nvarchar(3000)")
     String description;
     boolean isDeleted;

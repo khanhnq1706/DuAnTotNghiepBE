@@ -29,6 +29,7 @@ import com.example.demo.map.TableMapper;
 import com.example.demo.repository.AreaRepository;
 import com.example.demo.repository.TableRepository;
 import com.example.demo.request.TableRequestDTO;
+import com.example.demo.request.TableStatusCurrentOrderRequestDTO;
 import com.example.demo.request.TableStatusRequestDTO;
 import com.example.demo.respone.ApiRespone;
 import com.example.demo.respone.FoodResponeDTO;
@@ -190,5 +191,15 @@ public class TableServiceImpl implements TableService {
         }
         return tableMapper.toTableResponseDTO(tableNeedVerify);
     }
+    @Override
+	public ApiRespone<?> updateStatusCurrent(int idTable, TableStatusCurrentOrderRequestDTO request) {
+		TableEntity table = tableRepository.findById(idTable)
+                .orElseThrow(() -> new RuntimeException("Table_not_found"));
+
+        table.setStatus(request.getStatus()); 
+        table.setCurrentOrderId(request.getCurrentOrderId());
+        TableEntity updatedTable = tableRepository.save(table);
+        return ApiRespone.builder().result(tableMapper.toTableResponseDTO(updatedTable)).build(); 
+	}
 
 }

@@ -80,7 +80,7 @@ public class PromotionServiceIml implements PromotionService{
 	         
 	}
 	@Override
-	public Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion, String status,String sortField,String sortDirection, Pageable pageable) {
+	public Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion, String status,String isIncreasePrice,String sortField,String sortDirection, Pageable pageable) {
 	    try {
 	        Date currentDate = new Date();
 	        Specification<PromotionEntity> spec = Specification.where(
@@ -91,6 +91,11 @@ public class PromotionServiceIml implements PromotionService{
 	            spec = spec.and((root, query, criteriaBuilder) ->
 	                    criteriaBuilder.like(root.get("namePromotion"), "%" + namePromotion + "%"));
 	        }
+	        if(isIncreasePrice!=null){
+	        	spec = spec.and((root, query, criteriaBuilder) ->
+	        	criteriaBuilder.equal(root.get("isIncreasePrice"), Boolean.valueOf(isIncreasePrice)));
+	         }
+
 	        if (status != null && !status.isEmpty()) {
 	            if ("expired".equals(status)) {
 	                spec = spec.and((root, query, criteriaBuilder) ->
@@ -114,37 +119,4 @@ public class PromotionServiceIml implements PromotionService{
 	        throw new RuntimeException("Promotion_not_found");
 	    }
 	}
-//	@Override
-//	public Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion,String status, Pageable pageable) {
-//		 try {
-//			 Date currentDate = new Date();
-//			 Specification<PromotionEntity> spec = Specification.where(
-//					    (root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get("isDeleted"), true)
-//					);
-//			 
-//			    if (namePromotion != null && !namePromotion.isEmpty()) {
-//			        spec = spec.and((root, query, criteriaBuilder) ->
-//			                criteriaBuilder.like(root.get("namePromotion"), "%" + namePromotion + "%"));
-//			    }
-//			    if (status != null && !status.isEmpty()) {
-//			    	if ("expired".equals(status)) {
-//			            spec = spec.and((root, query, criteriaBuilder) ->
-//			                criteriaBuilder.lessThan(root.get("endDate"), currentDate));
-//			        } else if ("active".equals(status)) {
-//			            spec = spec.and((root, query, criteriaBuilder) ->
-//			                criteriaBuilder.greaterThanOrEqualTo(root.get("endDate"), currentDate));
-//			        }
-//			      }
-//			    Page<PromotionEntity> entities = promotionRepository.findAll(spec, pageable);
-//
-//			    List<PromotionResponeDTO> prosDtos = entities.stream()
-//			            .map(mapper::toPromotionResponeDTO)
-//			            .collect(Collectors.toList());
-//
-//			    return new PageImpl<>(prosDtos, pageable, entities.getTotalElements());
-//	        } catch (NumberFormatException e) {
-//	            throw new RuntimeException("Promotion_not_found");
-//	        }
-//
-//}
 	}
