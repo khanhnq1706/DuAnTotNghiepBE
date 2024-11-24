@@ -10,7 +10,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import java.util.List;
+import java.util.Optional;
 
+import com.example.demo.entity.OrderEntity;
 import com.example.demo.entity.TableEntity;
 import com.example.demo.enums.TableStatus;
 
@@ -41,4 +43,5 @@ public interface TableRepository extends JpaRepository<TableEntity, Integer> {
 			@Param("status") TableStatus status,
 			@Param("idArea") Integer idArea,
 			Pageable pageable);
+
 }

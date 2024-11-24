@@ -41,15 +41,13 @@ public class OrderController {
     }
 
     @PostMapping
-    public ApiRespone<OrderResponeDTO> confirmOrder(@RequestParam Integer idOrderOld,
-                                                    @RequestParam(required = false) Integer idOrderNew) {
+    public ApiRespone<OrderResponeDTO> confirmOrder(@RequestParam(required = false) Integer idOrder) {
         Integer idShift = getLoggedInStaffShift();
         if (idShift == null) {
             throw new RuntimeException("Nhân viên không có ca làm việc");
         }
 
-        System.out.println("confirming");
-        OrderResponeDTO orderResponeDTO = orderService.confirmOrder(idOrderOld, idOrderNew, idShift);
+        OrderResponeDTO orderResponeDTO = orderService.confirmOrder(idOrder, idShift);
         messagingTemplate.convertAndSend("/topic/confirmorder", orderResponeDTO);
         System.out.println("confirm Oke");
         if (orderResponeDTO == null) {
@@ -70,8 +68,8 @@ public class OrderController {
 
     @PostMapping("create")
     public ApiRespone<?> createNewOrder(@RequestBody List<FoodRequestOrderDTO> listFoodOrder,
-                                        @RequestParam Integer idTable, @RequestParam(required = false) String ipCustomer,
-                                        @RequestParam(required = false) String numberPhone) {
+            @RequestParam Integer idTable, @RequestParam(required = false) String ipCustomer,
+            @RequestParam(required = false) String numberPhone) {
         return ApiRespone.builder()
                 .result(orderService.saveOrder(listFoodOrder, idTable, numberPhone, ipCustomer, OrderStatus.Preparing))
                 .build();
@@ -79,14 +77,14 @@ public class OrderController {
 
     @PutMapping("{idOrder}")
     public ApiRespone<?> updateOrder(@PathVariable Integer idOrder,
-                                     @RequestBody FoodRequestOrderDTO listFoodOrder) {
+            @RequestBody FoodRequestOrderDTO listFoodOrder) {
         OrderResponeDTO updateorder = orderService.updateOrder(idOrder, listFoodOrder);
         return ApiRespone.builder().result(updateorder).build();
     }
 
     @PutMapping("{idOrder}/orderdetails/{idOrderDetail}")
     public ApiRespone<?> updateQuantity(@PathVariable("idOrder") int idOrder,
-                                        @PathVariable("idOrderDetail") int idOrderDetail, @RequestBody int newQuantity) {
+            @PathVariable("idOrderDetail") int idOrderDetail, @RequestBody int newQuantity) {
         OrderResponeDTO updatedOrder = orderService.updateQuantityOrderDetails(idOrder, idOrderDetail, newQuantity);
         return ApiRespone.builder().result(updatedOrder).build();
     }
@@ -106,9 +104,8 @@ public class OrderController {
     // .build();
     // }
     @PutMapping("cancel")
-    public ApiRespone<?> cancelOrder(@RequestParam(required = false) Integer idOld,
-                                     @RequestParam(required = false) Integer idNew, @RequestBody String cancellationReason) {
-        return ApiRespone.builder().result(orderService.cancelOrder(idOld, idNew, cancellationReason))
-                .build();
+    public ApiRespone<?> cancelOrder(@RequestParam Integer idOrder,
+            @RequestBody String cancellationReason) {
+        return orderService.cancelOrder(idOrder, cancellationReason);
     }
 }

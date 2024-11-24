@@ -16,7 +16,7 @@ public interface OrderService {
             String ipCustomer,
             OrderStatus status);
 
-    OrderResponeDTO confirmOrder(Integer idOrderOld, Integer idOrderNew, Integer idShift);
+    OrderResponeDTO confirmOrder(Integer idOrder, Integer idShift);
 
     OrderResponeDTO updateOrder(Integer idOrder, FoodRequestOrderDTO foodOrder);
 
@@ -24,5 +24,5 @@ public interface OrderService {
 
     ApiRespone<?> removeOrderdetail(int idOrderDetail);
 
-    ApiRespone<?> cancelOrder(Integer idOrderOld, Integer idOrderNew, String cancellationReason);
+    ApiRespone<?> cancelOrder(Integer idOrder, String cancellationReason);
 }
