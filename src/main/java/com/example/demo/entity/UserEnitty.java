@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,6 +34,8 @@ public class UserEnitty {
 	Boolean isChangedPass = false;
 	@OneToMany(mappedBy = "userEnitty")
 	List<OrderEntity> listOrderEntity;
-	
-	
+
+	@OneToMany(mappedBy = "userEnitty")
+	@JsonManagedReference
+	List<Shift> shifts;
 }

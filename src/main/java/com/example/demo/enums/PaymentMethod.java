@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum PaymentMethod {
-	Ewallet("ewallet"), Cash("cash");
+	Ewallet("ewallet"), empty("empty"), Cash("cash");
 
 	private  String name;
 }

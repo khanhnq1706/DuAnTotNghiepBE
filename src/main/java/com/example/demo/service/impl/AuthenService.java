@@ -63,6 +63,7 @@ public class AuthenService {
 
 		authRespone.setAuthen(true);
 		authRespone.setToken(token);
+		authRespone.setChangedPassword(userNeedAuthen.getIsChangedPass());
 		respone.setResult(authRespone);
 
 		return respone;

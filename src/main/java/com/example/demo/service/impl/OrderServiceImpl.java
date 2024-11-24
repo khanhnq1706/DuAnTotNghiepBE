@@ -69,12 +69,21 @@ public class OrderServiceImpl implements OrderService {
                                 throw new RuntimeException("Table_being_served");
                         }
                 }
+
+                Shift shift = shiftRepository
+                        .findByIsWorking(true);
+                if(shift==null){
+                        throw  new RuntimeException("Shift_not_exist");
+                }
+
                 CustomerEntity customerOrder = customerRepository.findByPhone(numbePhone).orElse(null);
                 OrderEntity orderEntity = OrderEntity.builder()
                         .statusOrder(status)
                         .isPrinted(false)
                         .tableEntity(tableOrder)
                         .customer(customerOrder)
+                        .namePaymentMethod("empty")
+                        .shift(shift)
                         .build();
                 if (orderEntity.getStatusOrder() == OrderStatus.Waiting) {
                         tableOrder.setStatus(TableStatus.PENDING);
@@ -123,8 +132,10 @@ public class OrderServiceImpl implements OrderService {
                 TableEntity tableOrder = mainOrder.getTableEntity();
 
                 Shift shift = shiftRepository
-                        .findById(idShift)
-                        .orElseThrow(() -> new RuntimeException("Shift_not_exist"));
+                        .findByIsWorking(true);
+                if(shift==null){
+                       throw  new RuntimeException("Shift_not_exist");
+                }
 
                 if (tableOrder.getCurrentOrderId() != null && idOrderNew != null) {
                         OrderEntity subOrder = orderRepository

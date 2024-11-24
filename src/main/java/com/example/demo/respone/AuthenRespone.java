@@ -9,5 +9,5 @@ public class AuthenRespone {
 	
 	private boolean authen;
 	private String token;
-
+	private boolean changedPassword;
 }

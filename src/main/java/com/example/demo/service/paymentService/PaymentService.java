@@ -3,6 +3,7 @@ package com.example.demo.service.paymentService;
 import com.example.demo.entity.OrderEntity;
 import com.example.demo.entity.TableEntity;
 import com.example.demo.enums.OrderStatus;
+import com.example.demo.enums.PaymentMethod;
 import com.example.demo.enums.TableStatus;
 import com.example.demo.repository.OrderRepository;
 import com.example.demo.repository.TableRepository;
@@ -32,6 +33,7 @@ public class PaymentService {
         if(orderNeedPayment.getStatusOrder()== OrderStatus.Completed){
             throw new RuntimeException("Order_already_completed");
         }
+        orderNeedPayment.setNamePaymentMethod(PaymentMethod.Cash.getName());
         orderNeedPayment.setStatusOrder(OrderStatus.Completed);
         orderRepository.save(orderNeedPayment);
         TableEntity table = orderNeedPayment.getTableEntity();
