@@ -48,8 +48,9 @@ public enum ErrorEnum {
 
 	USER_EXISTED(1701,"User existed"),
 	USER_NOT_EXISTS(1702,"User not existed"),
-	PASSWORD_IS_INCORRECT(1703,"Password is incorrect");
-    ;
+	PASSWORD_IS_INCORRECT(1703,"Password is incorrect"),
+  //error report
+    chiu(1801,"User existed");
     private int code;
     private String message;
 
