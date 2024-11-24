@@ -21,4 +21,5 @@ public class OrderResponeDTO {
     String phoneCustomer;
     Double total;
     Boolean isPrinted;
+    Integer idOrderMain;
 }

@@ -30,6 +30,7 @@ public class TableEntity {
 	String nameImageQr;
 	boolean isLocked;
 	Long secretKey;
+	Integer idOrderMain;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_area")

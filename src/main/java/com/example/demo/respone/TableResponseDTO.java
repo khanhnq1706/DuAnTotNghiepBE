@@ -30,4 +30,6 @@ public class TableResponseDTO {
 	boolean isLocked;
 	Integer currentOrderId;
 	String currentIP;
+	Integer idOrderMain;
+
 }

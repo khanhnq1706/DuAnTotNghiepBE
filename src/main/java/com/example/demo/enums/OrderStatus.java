@@ -5,4 +5,5 @@ public enum OrderStatus {
 	Completed, // đã hoàn thành
 	Cancelled, // đã hủy
 	Waiting, // đang chờ xác nhận
+	Merged
 }

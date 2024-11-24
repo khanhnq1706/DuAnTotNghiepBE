@@ -35,7 +35,6 @@ public class OrderDetailEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer idOrderDetail;
 	@Min(1)
-	@Max(50)
 	@Column(nullable = false)
 	int quantity;
 	@Min(1)
