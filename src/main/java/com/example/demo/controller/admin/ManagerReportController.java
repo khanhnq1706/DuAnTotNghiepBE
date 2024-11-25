@@ -21,19 +21,20 @@ public class ManagerReportController {
 	
 	@GetMapping("filter")
 	public ApiRespone<?> getReport(@RequestParam(required = false) String startDate,
-	                               @RequestParam(required = false) String endDate) {
+	                               @RequestParam(required = false) String endDate,
+	                               @RequestParam(required = false) String groupBy) {
 
 	        return ApiRespone.builder()
-	                .result(reportService.getReportData(startDate, endDate))
+	                .result(reportService.getReportData(startDate, endDate,groupBy))
 	                .build();
 	
 }
-	@GetMapping("filterchart")
-	public ApiRespone<?> getChartData(@RequestParam(required = false) String groupBy) {
-
-	        return ApiRespone.builder()
-	                .result(reportService.getReportDataGroupBy(groupBy))
-	                .build();
-	
-}
+//	@GetMapping("filterchart")
+//	public ApiRespone<?> getChartData(@RequestParam(required = false) String groupBy) {
+//
+//	        return ApiRespone.builder()
+//	                .result(reportService.getReportDataGroupBy(groupBy))
+//	                .build();
+//	
+//}
 	}

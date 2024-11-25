@@ -41,6 +41,7 @@ import com.example.demo.request.ReportRequestDTO;
 import com.example.demo.respone.ApiRespone;
 import com.example.demo.respone.ChartData;
 import com.example.demo.respone.ReportData;
+import com.example.demo.respone.ReportResponse;
 import com.example.demo.respone.ReportResponseDTO;
 import com.example.demo.service.ReportService;
 
@@ -56,18 +57,32 @@ public class ReportServiceImpl<A> implements ReportService {
 	  
 	 
 	@Override
-	public ReportData getReportData(String startDate, String endDate) {
+	public ReportResponse getReportData(String startDate, String endDate, String groupBy) {
 		 ReportData reportData = new ReportData();
+		 Date startDateParsed;
+		 Date endDateParsed;
           Specification<OrderEntity> spec = Specification.where(
               (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("statusOrder"),  OrderStatus.Completed)
           );
-
+          SimpleDateFormat sdf;
+          switch (groupBy) {
+              case "day":
+                  sdf = new SimpleDateFormat("yyyy-MM-dd");
+                  break;
+              case "month":
+                  sdf = new SimpleDateFormat("yyyy-MM");
+                  break;
+              case "year":
+                  sdf = new SimpleDateFormat("yyyy");
+                  break;
+              default:
+                  throw new IllegalArgumentException("Invalid groupBy: " + groupBy);
+          }
           if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
-        	  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
         	  try {
-        		  Date startDateParsed = sdf.parse(startDate);
-				Date endDateParsed = sdf.parse(endDate);
+        		  
+        		  startDateParsed= sdf.parse(startDate);
+        		  endDateParsed= sdf.parse(endDate);
 				endDateParsed.setHours(23);
 				endDateParsed.setMinutes(59);
 				endDateParsed.setSeconds(59);
@@ -80,9 +95,49 @@ public class ReportServiceImpl<A> implements ReportService {
 
             
           }
+          
           List<OrderEntity> orders = orderRepository.findAll(spec);
+          Map<Object, Double> groupedData = orders.stream()
+                  .collect(Collectors.groupingBy(
+                          order -> getLabelByGroup(order, groupBy),
+                          Collectors.summingDouble(OrderEntity::getTotal)
+                  ));
+          List<ChartData> chartDataList = groupedData.entrySet().stream()
+	                .map(entry -> {
+	                    ChartData chartData = new ChartData();
+	                    chartData.setLabels(entry.getKey().toString());
+	                    chartData.setValues(entry.getValue());
+	                    return chartData;
+	                })
+	                .collect(Collectors.toList());
+	        // Sắp xếp danh sách ChartData theo label (ngày/tháng/năm)
 
-          // Tính toán tổng doanh thu và số lượng đơn hàngSS
+          Comparator<ChartData> compaDay = new Comparator<ChartData>() {
+        	    @Override
+        	    public int compare(ChartData o1, ChartData o2) {
+        	        SimpleDateFormat sdf;
+        	        try {
+        	           
+        	            String label1 = o1.getLabels();
+        	            String label2 = o2.getLabels();
+        	            if (label1.length() == 10) { // yyyy-MM-dd
+        	                sdf = new SimpleDateFormat("yyyy-MM-dd");
+        	            } else if (label1.length() == 7) { // yyyy-MM
+        	                sdf = new SimpleDateFormat("yyyy-MM");
+        	            } else { // yyyy
+        	                sdf = new SimpleDateFormat("yyyy");
+        	            }
+
+        	            Date dateO1 = sdf.parse(label1);
+        	            Date dateO2 = sdf.parse(label2);
+        	            return dateO1.compareTo(dateO2);
+        	        } catch (ParseException e) {
+        	            System.err.println("Lỗi khi phân tích cú pháp ngày: " + e.getMessage());
+        	            return 0; // Hoặc xử lý lỗi theo cách khác
+        	        }
+        	    }
+        	};
+			        Collections.sort(chartDataList, compaDay);
           double  totalRevenue = orders.stream().mapToDouble(OrderEntity::getTotal).sum();
           int totalOrders = orders.size();
           System.out.println(totalOrders);
@@ -90,43 +145,22 @@ public class ReportServiceImpl<A> implements ReportService {
           reportData.setTotalRevenue(totalRevenue);
           reportData.setTotalOrders(totalOrders);
 
-          return reportData;
-	}
-	public List<ChartData> getReportDataGroupBy(String groupBy){
-		List<ChartData> doanhSo = new ArrayList<>();
-		  Specification<OrderEntity> spec = Specification.where(
-	              (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("statusOrder"),  OrderStatus.Completed)
-	          );
-		  List<OrderEntity> orders = orderRepository.findAll(spec);
+          ReportResponse response = new ReportResponse();
+          response.setReportData(reportData);
+          response.setChartData(chartDataList);
 
-		        Map<Object, Double> groupedData = orders.stream()
-		                .collect(Collectors.groupingBy(
-		                        order -> getLabelByGroup(order, groupBy),
-		                        Collectors.summingDouble(OrderEntity::getTotal)
-		                ));
-		        // Tạo đối tượng ChartData và thêm vào danh sách
-		        List<ChartData> chartDataList = groupedData.entrySet().stream()
-		                .map(entry -> {
-		                    ChartData chartData = new ChartData();
-		                    chartData.setLabels(entry.getKey().toString());
-		                    chartData.setValues(entry.getValue());
-		                    return chartData;
-		                })
-		                .collect(Collectors.toList());
-
-		        // Sắp xếp danh sách ChartData theo label (ngày/tháng/năm)
-		        Collections.sort(chartDataList, Comparator.comparing(ChartData::getLabels));
-		  return chartDataList;
+          return response;
 	}
+
 	private Object getLabelByGroup(OrderEntity order, String groupBy) {
 	    Date date = order.getDateModify(); // Giả sử dateModify là thuộc tính LocalDate
 	    SimpleDateFormat formatter;
 	    switch (groupBy) {
 	    case "day":
-            formatter = new SimpleDateFormat("dd/MM/yyyy");
+            formatter = new SimpleDateFormat("yyyy-MM-dd");
             return formatter.format(date);
         case "month":
-            formatter = new SimpleDateFormat("MM/yyyy");
+            formatter = new SimpleDateFormat("yyyy-MM");
             return formatter.format(date);
         case "year":
             formatter = new SimpleDateFormat("yyyy");
