@@ -12,14 +12,23 @@ import com.example.demo.respone.OrderResponeDTO;
 import com.example.demo.respone.TableResponseDTO;
 import com.example.demo.service.OrderService;
 
+import org.hibernate.sql.ast.tree.expression.Over;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -56,6 +65,14 @@ public class OrderServiceImpl implements OrderService {
                 return ApiRespone.<OrderResponeDTO>builder()
                                 .result(responseDTO)
                                 .build();
+        }
+
+        @Override
+        public Page<OrderEntity> filterOrders(OrderStatus statusOrder, Integer idOrder, Date dateFrom, Date dateTo,
+                        String searchKeyword, int page, int size) {
+                Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,
+                                "idOrder"));
+                return orderRepository.filterOrders(statusOrder, idOrder, dateFrom, dateTo, searchKeyword, pageable);
         }
 
         @Override
@@ -163,8 +180,6 @@ public class OrderServiceImpl implements OrderService {
                                         detail.setTotalPrice(currentDetail.getTotalPrice() + detail.getTotalPrice());
                                         isExisting = true;
 
-                                        // Xóa món ăn đã trùng khỏi subOrder
-                                        subOrderIterator.remove();
                                         break;
                                 }
                         }
