@@ -20,6 +20,8 @@ public class OrderResponeDTO {
     String nameArea;
     String phoneCustomer;
     Double total;
+    String namePaymentMethod;
+    String cancellationReason;
     Boolean isPrinted;
     Integer idOrderMain;
 }
