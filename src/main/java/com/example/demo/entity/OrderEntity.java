@@ -16,7 +16,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Builder @Getter @Setter
+@Builder
+@Getter
+@Setter
 public class OrderEntity extends BaseEntity {
 
 	@Id
@@ -24,7 +26,7 @@ public class OrderEntity extends BaseEntity {
 	Integer idOrder;
 	@Column(columnDefinition = "varchar(50)")
 	@Enumerated(EnumType.STRING)
-	private OrderStatus statusOrder;
+	OrderStatus statusOrder;
 	double total;
 	Boolean isPrinted;
 	String namePaymentMethod;
@@ -54,7 +56,6 @@ public class OrderEntity extends BaseEntity {
 	@JsonBackReference
 	Shift shift;
 
-
 	public double getTotalNeedPayment() {
 		return total;
 	}
@@ -62,7 +63,5 @@ public class OrderEntity extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "id_Promotion")
 	PromotionEntity promotionEntity;
-
-
 
 }

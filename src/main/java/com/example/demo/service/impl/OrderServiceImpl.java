@@ -12,14 +12,23 @@ import com.example.demo.respone.OrderResponeDTO;
 import com.example.demo.respone.TableResponseDTO;
 import com.example.demo.service.OrderService;
 
+import org.hibernate.sql.ast.tree.expression.Over;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -51,19 +60,27 @@ public class OrderServiceImpl implements OrderService {
         @Override
         public ApiRespone<OrderResponeDTO> getOrder(int idOrder) {
                 OrderEntity order = orderRepository.findById(idOrder)
-                        .orElseThrow(() -> new RuntimeException("Order not found"));
+                                .orElseThrow(() -> new RuntimeException("Order not found"));
                 OrderResponeDTO responseDTO = orderMapper.toOrderResponeDTO(order);
                 return ApiRespone.<OrderResponeDTO>builder()
-                        .result(responseDTO)
-                        .build();
+                                .result(responseDTO)
+                                .build();
+        }
+
+        @Override
+        public Page<OrderEntity> filterOrders(OrderStatus statusOrder, Integer idOrder, Date dateFrom, Date dateTo,
+                        String searchKeyword, int page, int size) {
+                Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,
+                                "idOrder"));
+                return orderRepository.filterOrders(statusOrder, idOrder, dateFrom, dateTo, searchKeyword, pageable);
         }
 
         @Override
         public OrderResponeDTO saveOrder(List<FoodRequestOrderDTO> listFoodOrder, Integer idTable, String numbePhone,
-                                         String ipCustomer, OrderStatus status) {
+                        String ipCustomer, OrderStatus status) {
                 TableEntity tableOrder = tableRepository
-                        .findById(idTable)
-                        .orElseThrow(() -> new RuntimeException("Table_not_exist"));
+                                .findById(idTable)
+                                .orElseThrow(() -> new RuntimeException("Table_not_exist"));
                 if (tableOrder.getCurrentOrderId() != null) {
                         if (tableOrder.getCurrentIP() == null || !tableOrder.getCurrentIP().equals(ipCustomer)) {
                                 throw new RuntimeException("Table_being_served");
@@ -71,11 +88,11 @@ public class OrderServiceImpl implements OrderService {
                 }
                 CustomerEntity customerOrder = customerRepository.findByPhone(numbePhone).orElse(null);
                 OrderEntity orderEntity = OrderEntity.builder()
-                        .statusOrder(status)
-                        .isPrinted(false)
-                        .tableEntity(tableOrder)
-                        .customer(customerOrder)
-                        .build();
+                                .statusOrder(status)
+                                .isPrinted(false)
+                                .tableEntity(tableOrder)
+                                .customer(customerOrder)
+                                .build();
                 if (orderEntity.getStatusOrder() == OrderStatus.Waiting) {
                         tableOrder.setStatus(TableStatus.PENDING);
                 } else if (orderEntity.getStatusOrder() == OrderStatus.Preparing) {
@@ -93,18 +110,18 @@ public class OrderServiceImpl implements OrderService {
                                 continue;
                         }
                         FoodEntity food = foodRepository.findById(foodRequestOrderDTO.getIdFood())
-                                .orElseThrow(() -> new RuntimeException("SOME_FOOD_NOT_EXISTS"));
+                                        .orElseThrow(() -> new RuntimeException("SOME_FOOD_NOT_EXISTS"));
 
                         OrderDetailEntity orderDetail = OrderDetailEntity.builder()
-                                .foodEntity(food)
-                                .note(foodRequestOrderDTO.getNoteFood())
-                                .quantity(foodRequestOrderDTO.getQuantity())
-                                .price(food.getPriceFood())
-                                .orderEntity(orderEntity)
-                                .build();
+                                        .foodEntity(food)
+                                        .note(foodRequestOrderDTO.getNoteFood())
+                                        .quantity(foodRequestOrderDTO.getQuantity())
+                                        .price(food.getPriceFood())
+                                        .orderEntity(orderEntity)
+                                        .build();
 
                         orderDetail.setTotalPrice(orderDetail.getPrice() * orderDetail.getQuantity()
-                                * (100 - food.getDiscount()) / 100);
+                                        * (100 - food.getDiscount()) / 100);
 
                         orderEntity.setTotal(orderEntity.getTotal() + orderDetail.getTotalPrice());
                         System.out.println("Plio : " + orderDetail.getTotalPrice());
@@ -115,45 +132,42 @@ public class OrderServiceImpl implements OrderService {
         }
 
         @Override
-        public OrderResponeDTO confirmOrder(Integer idOrderOld, Integer idOrderNew, Integer idShift) {
-                OrderEntity mainOrder = orderRepository
-                        .findById(idOrderOld)
-                        .orElseThrow(() -> new RuntimeException("Order_not_exist"));
-
-                TableEntity tableOrder = mainOrder.getTableEntity();
-
-                Shift shift = shiftRepository
-                        .findById(idShift)
-                        .orElseThrow(() -> new RuntimeException("Shift_not_exist"));
-
-                if (tableOrder.getCurrentOrderId() != null && idOrderNew != null) {
-                        OrderEntity subOrder = orderRepository
-                                .findById(idOrderNew)
+        public OrderResponeDTO confirmOrder(Integer idOrder, Integer idShift) {
+                OrderEntity suborder = orderRepository.findById(idOrder)
                                 .orElseThrow(() -> new RuntimeException("Order_not_exist"));
-                        mergeOrderDetails(mainOrder, subOrder);
+                TableEntity tableOrder = suborder.getTableEntity();
+                Shift shift = shiftRepository
+                                .findById(idShift)
+                                .orElseThrow(() -> new RuntimeException("Shift_not_exist"));
+                if (tableOrder.getIdOrderMain() != null && idOrder != null) {
 
+                        OrderEntity mainOrder = orderRepository
+                                        .findById(tableOrder.getIdOrderMain())
+                                        .orElseThrow(() -> new RuntimeException("IdOrderMain_not_exist"));
+                        mergeOrderDetails(mainOrder, suborder);
                         mainOrder.setStatusOrder(OrderStatus.Preparing);
-                        subOrder.setStatusOrder(OrderStatus.Cancelled);
+                        suborder.setStatusOrder(OrderStatus.Merged);
                         tableOrder.setStatus(TableStatus.OCCUPIED);
-                        mainOrder.setTotal(subOrder.getTotal() + mainOrder.getTotal());
+                        mainOrder.setTotal(suborder.getTotal() + mainOrder.getTotal());
                         orderRepository.save(mainOrder);
                         tableOrder.setCurrentOrderId(mainOrder.getIdOrder());
                 } else {
-                        mainOrder.setShift(shift);
-                        mainOrder.setStatusOrder(OrderStatus.Preparing);
+                        System.out.println("yepppp");
+                        suborder.setShift(shift);
+                        suborder.setStatusOrder(OrderStatus.Preparing);
                         tableOrder.setStatus(TableStatus.OCCUPIED);
-                        orderRepository.save(mainOrder);
+                        tableOrder.setIdOrderMain(idOrder);
+                        orderRepository.save(suborder);
                 }
                 tableRepository.save(tableOrder);
-                System.out.println("nooooo" + tableOrder.getCurrentOrderId());
-                return orderMapper.toOrderResponeDTO(mainOrder);
+                return orderMapper.toOrderResponeDTO(suborder);
         }
 
         // Hàm gộp chi tiết đơn hàng
         private void mergeOrderDetails(OrderEntity mainOrder, OrderEntity subOrder) {
                 List<OrderDetailEntity> newDetailsToAdd = new ArrayList<>();
                 for (Iterator<OrderDetailEntity> subOrderIterator = subOrder.getListOrderDetail()
-                        .iterator(); subOrderIterator.hasNext();) {
+                                .iterator(); subOrderIterator.hasNext();) {
                         OrderDetailEntity currentDetail = subOrderIterator.next();
                         boolean isExisting = false;
 
@@ -166,8 +180,6 @@ public class OrderServiceImpl implements OrderService {
                                         detail.setTotalPrice(currentDetail.getTotalPrice() + detail.getTotalPrice());
                                         isExisting = true;
 
-                                        // Xóa món ăn đã trùng khỏi subOrder
-                                        subOrderIterator.remove();
                                         break;
                                 }
                         }
@@ -186,37 +198,37 @@ public class OrderServiceImpl implements OrderService {
         @Override
         public OrderResponeDTO updateOrder(Integer idOrder, FoodRequestOrderDTO foodOrder) {
                 OrderEntity order = orderRepository.findById(idOrder)
-                        .orElseThrow(() -> new RuntimeException("Order_not_found"));
+                                .orElseThrow(() -> new RuntimeException("Order_not_found"));
 
                 if (foodOrder.getIdFood() == null) {
                         throw new RuntimeException("ID_FOOD_NULL");
                 }
 
                 FoodEntity foodEntity = foodRepository.findById(foodOrder.getIdFood())
-                        .orElseThrow(() -> new RuntimeException("SOME_FOOD_NOT_EXISTS"));
+                                .orElseThrow(() -> new RuntimeException("SOME_FOOD_NOT_EXISTS"));
                 Optional<OrderDetailEntity> existingOrderDetail = orderDetailRepository
-                        .findByOrderEntityAndFoodEntity(order, foodEntity);
+                                .findByOrderEntityAndFoodEntity(order, foodEntity);
                 OrderDetailEntity orderDetail;
                 if (existingOrderDetail.isPresent()) {
                         orderDetail = existingOrderDetail.get();
                         orderDetail.setQuantity(orderDetail.getQuantity() + foodOrder.getQuantity());
                         orderDetail.setTotalPrice(orderDetail.getPrice() * orderDetail.getQuantity()
-                                * (100 - foodEntity.getDiscount()) / 100);
+                                        * (100 - foodEntity.getDiscount()) / 100);
 
                         System.out.println("Trùng");
                 } else {
                         orderDetail = OrderDetailEntity.builder().foodEntity(foodEntity)
-                                .note(foodOrder.getNoteFood())
-                                .quantity(foodOrder.getQuantity())
-                                .price(foodEntity.getPriceFood())
-                                .orderEntity(order)
-                                .build();
+                                        .note(foodOrder.getNoteFood())
+                                        .quantity(foodOrder.getQuantity())
+                                        .price(foodEntity.getPriceFood())
+                                        .orderEntity(order)
+                                        .build();
                         orderDetail.setTotalPrice(orderDetail.getPrice() * orderDetail.getQuantity()
-                                * (100 - foodEntity.getDiscount()) / 100);
+                                        * (100 - foodEntity.getDiscount()) / 100);
                         orderDetailRepository.save(orderDetail);
                 }
                 order.setTotal(order.getListOrderDetail().stream()
-                        .mapToDouble(OrderDetailEntity::getTotalPrice).sum());
+                                .mapToDouble(OrderDetailEntity::getTotalPrice).sum());
                 orderRepository.save(order);
                 return orderMapper.toOrderResponeDTO(order);
         }
@@ -224,7 +236,7 @@ public class OrderServiceImpl implements OrderService {
         @Override
         public ApiRespone<?> removeOrderdetail(int idOrderDetail) {
                 OrderDetailEntity orderdetail = orderDetailRepository.findById(idOrderDetail)
-                        .orElseThrow(() -> new RuntimeException("IdOrderDetail_NULL"));
+                                .orElseThrow(() -> new RuntimeException("IdOrderDetail_NULL"));
                 OrderEntity order = orderdetail.getOrderEntity();
                 try {
                         order.setTotal(order.getTotal() - orderdetail.getTotalPrice());
@@ -248,17 +260,17 @@ public class OrderServiceImpl implements OrderService {
         @Override
         public OrderResponeDTO updateQuantityOrderDetails(int idOrder, int idOrderdetail, int newQuantity) {
                 OrderEntity orderEntity = orderRepository.findById(idOrder)
-                        .orElseThrow(() -> new RuntimeException("Order_not_exist"));
+                                .orElseThrow(() -> new RuntimeException("Order_not_exist"));
                 OrderDetailEntity orderdetail = orderDetailRepository.findById(idOrderdetail)
-                        .orElseThrow(() -> new RuntimeException("OrderDetail_not_found"));
+                                .orElseThrow(() -> new RuntimeException("OrderDetail_not_found"));
                 if (newQuantity < 1) {
                         throw new RuntimeException("Quantity_must_be_positive");
                 }
                 orderdetail.setQuantity(newQuantity);
                 orderdetail.setTotalPrice(orderdetail.getPrice() * newQuantity
-                        * (100 - orderdetail.getFoodEntity().getDiscount()) / 100);
+                                * (100 - orderdetail.getFoodEntity().getDiscount()) / 100);
                 orderEntity.setTotal(orderEntity.getListOrderDetail().stream()
-                        .mapToDouble(OrderDetailEntity::getTotalPrice).sum());
+                                .mapToDouble(OrderDetailEntity::getTotalPrice).sum());
 
                 orderDetailRepository.save(orderdetail);
                 orderRepository.save(orderEntity);
@@ -266,31 +278,62 @@ public class OrderServiceImpl implements OrderService {
         }
 
         @Override
-        public ApiRespone<?> cancelOrder(Integer idOrderOld, Integer idOrderNew, String cancellationReason) {
-                // Tìm đơn phụ (idOrderNew), nếu có
-                OrderEntity subOrder = orderRepository.findById(idOrderNew)
-                        .orElseThrow(() -> new RuntimeException("Sub-order not found"));
-                if (idOrderOld == 0) {
+        public ApiRespone<?> cancelOrder(Integer idOrder, String cancellationReason) {
+                OrderEntity subOrder = orderRepository.findById(idOrder)
+                                .orElseThrow(() -> new RuntimeException("IdOrder_not_found"));
 
-                        // Cập nhật trạng thái đơn phụ thành 'Cancelled'
-                        subOrder.setStatusOrder(OrderStatus.Cancelled);
-                        subOrder.setCancellationReason(cancellationReason);
-                        subOrder.getTableEntity().setStatus(TableStatus.AVAILABLE);
-                        subOrder.getTableEntity().setCurrentOrderId(null);
-                        orderRepository.save(subOrder);
+                TableEntity tableOrder = subOrder.getTableEntity();
+                if (tableOrder.getIdOrderMain() != null) {
+                        // Bàn có IdOrderMain
+                        OrderEntity mainOrder = orderRepository.findById(tableOrder.getIdOrderMain())
+                                        .orElseThrow(() -> new RuntimeException("IdOrderMain_not_exist"));
+
+                        if (idOrder != tableOrder.getIdOrderMain() && !idOrder.equals(tableOrder.getIdOrderMain())) {
+                                System.out.println("idorder=o");
+                                System.out.println(tableOrder.getIdOrderMain());
+                                System.out.println(idOrder);
+                                // Trường hợp hủy gộp đơn
+                                subOrder.setStatusOrder(OrderStatus.Cancelled);
+                                subOrder.setCancellationReason(cancellationReason);
+
+                                tableOrder.setCurrentOrderId(tableOrder.getIdOrderMain());
+                                tableOrder.setStatus(TableStatus.OCCUPIED);
+                                orderRepository.save(mainOrder);
+                                orderRepository.save(subOrder);
+                        } else {
+                                System.out.println("Donchinhvadonhientai");
+                                // Hủy cả đơn chính và đơn hiện tại
+                                subOrder.setStatusOrder(OrderStatus.Cancelled);
+                                subOrder.setCancellationReason(cancellationReason);
+
+                                mainOrder.setStatusOrder(OrderStatus.Cancelled);
+                                mainOrder.setCancellationReason(cancellationReason);
+                                // Thiết lập bàn
+                                tableOrder.setCurrentOrderId(null);
+                                tableOrder.setIdOrderMain(null);
+                                tableOrder.setStatus(TableStatus.AVAILABLE);
+                                tableOrder.setCurrentIP(null);
+
+                                orderRepository.save(subOrder);
+                                orderRepository.save(mainOrder);
+                        }
                 } else {
-                        OrderEntity mainOrder = orderRepository.findById(idOrderOld)
-                                .orElseThrow(() -> new RuntimeException("Order not found"));
-                        subOrder.setCancellationReason(cancellationReason);
+                        // bàn không có IdOrderMain
                         subOrder.setStatusOrder(OrderStatus.Cancelled);
-                        subOrder.getTableEntity().setCurrentOrderId(idOrderOld);
-                        subOrder.getTableEntity().setStatus(TableStatus.OCCUPIED);
+                        subOrder.setCancellationReason(cancellationReason);
+
+                        tableOrder.setCurrentOrderId(null);
+                        tableOrder.setIdOrderMain(null);
+                        tableOrder.setStatus(TableStatus.AVAILABLE);
+                        tableOrder.setCurrentIP(null);
                         orderRepository.save(subOrder);
                 }
-                // Trả về thông tin đơn hàng sau khi hủy
+
+                tableRepository.save(tableOrder);
+
                 return ApiRespone.builder()
-                        .result(orderMapper.toOrderResponeDTO(subOrder))
-                        .build();
+                                .result(orderMapper.toOrderResponeDTO(subOrder))
+                                .build();
         }
 
 }
