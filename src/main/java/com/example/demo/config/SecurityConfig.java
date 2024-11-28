@@ -40,7 +40,7 @@ public class SecurityConfig {
 			,"api/v1/foodEntities/**","/api/order","/api/order/**","api/v1/orderdetail","api/v1/orderdetail/**"
 			,"/api/v1/foods/filter","/api/login","/api/logout","/api/testVerify","/api/v1/ip","/api/v1/ip/**"
 			,"/ws/my-websocket-endpoint","/ws/my-websocket-endpoint/**","/images/**","/QRCode/**","api/payment-VNPay"
-	,"/api/v1/foods/**","/api/v1/foods"};
+	,"/api/v1/foods/**","/api/v1/foods","api/orderCustomer/**"};
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

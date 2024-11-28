@@ -11,5 +11,6 @@ public interface OrderdetailMapper {
     @Mapping(source = "foodEntity.nameFood", target = "nameFood")
     @Mapping(source = "foodEntity.idFood", target = "idFood")
     @Mapping(source = "foodEntity.discount", target = "discount")
+    @Mapping(source = "foodEntity.imgFood", target = "thumbnail")
     OrderDetailResponeDTO toOrderDetailResponeDTO(OrderDetailEntity orderdetaientity);
 }
