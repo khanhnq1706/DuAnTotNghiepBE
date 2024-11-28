@@ -8,13 +8,11 @@ import com.example.demo.request.ReportRequestDTO;
 import com.example.demo.respone.ApiRespone;
 import com.example.demo.respone.ChartData;
 import com.example.demo.respone.ReportData;
+import com.example.demo.respone.ReportResponse;
 
 public interface ReportService {
 
-//	ReportData getReportData(ReportRequestDTO request);
 
-	ReportData getReportData(String startDate, String endDate);
-
-	List<ChartData> getReportDataGroupBy(String groupBy);	
+	ReportResponse getReportData(String startDate, String endDate, String groupBy);	
 
 }
