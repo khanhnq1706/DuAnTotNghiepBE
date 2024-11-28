@@ -46,11 +46,32 @@ public enum ErrorEnum {
     //error payment
     Order_already_completed(1601,"Order_already_completed"),
 
+    // error login
 	USER_EXISTED(1701,"User existed"),
 	USER_NOT_EXISTS(1702,"User not existed"),
 	PASSWORD_IS_INCORRECT(1703,"Password is incorrect"),
-  //error report
-    chiu(1801,"User existed");
+    Deleted_USER(1704,"previously  deleted user"),
+    PASSWORD_NOt_NULL(1705,"Password NOT NULL"),
+    PASSWORD_CHANGED(1706,"PASSWORD CHANGED"),
+
+    //error jwt
+    Invalid_token(1801,"Invalid token"),
+    OLD_TOKEN(1802,"old token"),
+    UNAUTHENTICATED(1803,"UNAUTHENTICATED"),
+    // error shift
+    another_shift_working(1901,"there is another shift working"),
+    there_is_not_any_shift_working(1901,"there is not any shift working"),
+    wrong_cash_checkout(1902,"wrong cash when checkout"),
+    Shift_not_exist(1901,"there is not any shift working"),
+    Have_Order_Serving(1903,"Have Order Serving"),
+    NOT_YOUR_SHIFT(1904,"Not your shift"),
+    chiu(1801,"User existed"),
+
+
+
+    ;
+
+
     private int code;
     private String message;
 

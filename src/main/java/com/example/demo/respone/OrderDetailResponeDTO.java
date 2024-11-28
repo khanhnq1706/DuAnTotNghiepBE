@@ -31,4 +31,5 @@ public class OrderDetailResponeDTO {
     String note;
     String nameFood;
     float discount;
+    String thumbnail;
 }

@@ -8,6 +8,7 @@ import com.example.demo.map.TableMapper;
 import com.example.demo.repository.*;
 import com.example.demo.request.FoodRequestOrderDTO;
 import com.example.demo.respone.ApiRespone;
+import com.example.demo.respone.OrderCustomerDTO;
 import com.example.demo.respone.OrderResponeDTO;
 import com.example.demo.respone.TableResponseDTO;
 import com.example.demo.service.OrderService;
@@ -335,5 +336,17 @@ public class OrderServiceImpl implements OrderService {
                                 .result(orderMapper.toOrderResponeDTO(subOrder))
                                 .build();
         }
+
+    public List<OrderCustomerDTO> getListOrderByListId(List<Integer> listIdOrder) {
+        List<OrderCustomerDTO> dtoList = new ArrayList<>();
+        for (int ele : listIdOrder) {
+            try {
+                OrderCustomerDTO dto = orderMapper.toOrderCustomerDTO(orderRepository.findById(ele).get());
+                dtoList.add(dto);
+            } catch (Exception e) {
+            }
+        }
+        return dtoList;
+    }
 
 }

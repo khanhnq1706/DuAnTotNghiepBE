@@ -1,6 +1,7 @@
 package com.example.demo.map;
 
 import com.example.demo.entity.OrderEntity;
+import com.example.demo.respone.OrderCustomerDTO;
 import com.example.demo.respone.OrderResponeDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,5 +18,7 @@ public interface OrderMapper {
     @Mapping(source = "shift.idShift", target = "idShift")
     @Mapping(source = "tableEntity.idOrderMain", target = "idOrderMain")
     OrderResponeDTO toOrderResponeDTO(OrderEntity order);
+
+    OrderCustomerDTO toOrderCustomerDTO(OrderEntity order);
 
 }

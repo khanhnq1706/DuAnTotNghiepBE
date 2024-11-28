@@ -3,12 +3,14 @@ package com.example.demo.service.impl;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.example.demo.request.ChangePassRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +31,9 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepository;
 	@Autowired
 	private UserMapper userMapper;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder ;
 
 	@Autowired
 	private FileService fileService;
@@ -122,5 +127,17 @@ public class UserServiceImpl implements UserService {
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
+
+	public UserResponeDTO changePass(ChangePassRequestDTO requestDTO) {
+		UserEnitty userEnitty = userRepository.findById(requestDTO.getIdUser())
+				.orElseThrow(() -> new RuntimeException("USER_NOT_EXISTS"));
+		userEnitty.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
+
+		if(userEnitty.getIsChangedPass()){
+			throw new RuntimeException("PASSWORD_CHANGED");
+		}
+		userEnitty.setIsChangedPass(true);
+		return  userMapper.toUserResponeDTO(userRepository.save(userEnitty));
+	}
 
 }

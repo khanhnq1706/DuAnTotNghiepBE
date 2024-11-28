@@ -10,4 +10,5 @@ import com.example.demo.entity.Shift;
 @Repository
 public interface ShiftRepository extends JpaRepository<Shift, Integer> {
     Optional<Shift> findByOrders_IdOrder(Integer idOrder);
+    Shift findByIsWorking(Boolean isWorking);
 }
