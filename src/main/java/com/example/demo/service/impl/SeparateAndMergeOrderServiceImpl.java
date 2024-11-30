@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.demo.entity.*;
+import com.example.demo.enums.PaymentMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entity.FoodEntity;
-import com.example.demo.entity.OrderDetailEntity;
-import com.example.demo.entity.OrderEntity;
-import com.example.demo.entity.TableEntity;
 import com.example.demo.enums.TableStatus;
 import com.example.demo.map.OrderMapper;
 import com.example.demo.map.TableMapper;
@@ -58,6 +56,12 @@ public class SeparateAndMergeOrderServiceImpl implements SeparateAndMergeOrderSe
     	    List<OrderDetailEntity> orderDetails = new ArrayList<>();
     	    long totalPrice = 0;
 
+		 Shift shift = shiftRepository
+				 .findByIsWorking(true);
+		 if (shift == null) {
+			 throw new RuntimeException("Shift_not_exist");
+		 }
+
     	    for (FoodRequestOrderDTO foodRequestOrderDTO : requestOrderDTO) {
     	        FoodEntity food = foodRepository.findById(foodRequestOrderDTO.getIdFood())
     	                .orElseThrow(() -> new RuntimeException("SOME_FOOD_NOT_EXISTS"));
@@ -93,6 +97,8 @@ public class SeparateAndMergeOrderServiceImpl implements SeparateAndMergeOrderSe
 
     	    orderDetailRepository.saveAll(orderDetails);
     	    order.setTotal((double) totalPrice);
+			order.setShift(shift);
+			order.setNamePaymentMethod(PaymentMethod.empty.getName());
 
     	    if (orderDetails.isEmpty()) {
     	        orderRepository.delete(order);
@@ -124,6 +130,7 @@ public class SeparateAndMergeOrderServiceImpl implements SeparateAndMergeOrderSe
          if (table != null) {
              table.setStatus(TableStatus.AVAILABLE);
              table.setCurrentOrderId(null);
+			 table.setCurrentIP(null);
              tableRepository.save(table); 
          }
 

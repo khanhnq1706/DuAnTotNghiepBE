@@ -34,6 +34,7 @@ public enum ErrorEnum {
     Please_provide_more_data(1402, "Please provide more data"),
     Current_order_not_exist(1403, "Current order notexist"),
     Order_not_found(1404, "Order not found in database"),
+    waiting_for_accept(1405, "Waiting for accept request"),
 
  // Error request Promotion : 150*
     Promotion_already_exist(1501, "Promotion already exist in database"),

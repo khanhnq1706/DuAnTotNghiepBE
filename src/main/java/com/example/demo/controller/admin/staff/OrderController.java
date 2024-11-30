@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.example.demo.entity.Shift;
+import com.example.demo.repository.ShiftRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,8 @@ public class OrderController {
     OrderService orderService;
     @Autowired
     SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    private ShiftRepository shiftRepository;
 
     @GetMapping("{id}")
     public ApiRespone<OrderResponeDTO> getOrder(@PathVariable("id") int id) {
@@ -64,12 +68,13 @@ public class OrderController {
 
     @PostMapping
     public ApiRespone<OrderResponeDTO> confirmOrder(@RequestParam(required = false) Integer idOrder) {
-        Integer idShift = getLoggedInStaffShift();
-        if (idShift == null) {
-            throw new RuntimeException("Nhân viên không có ca làm việc");
+        Shift shift = shiftRepository
+                .findByIsWorking(true);
+        if (shift == null) {
+            throw new RuntimeException("Shift_not_exist");
         }
 
-        OrderResponeDTO orderResponeDTO = orderService.confirmOrder(idOrder, idShift);
+        OrderResponeDTO orderResponeDTO = orderService.confirmOrder(idOrder, shift.getIdShift());
         messagingTemplate.convertAndSend("/topic/confirmorder", orderResponeDTO);
         System.out.println("confirm Oke");
         if (orderResponeDTO == null) {

@@ -198,6 +198,7 @@ public class ShiftServiceImpl {
                 .bankAmountEnd(totalEwallet)
                 .cashAmountEnd(totalCash)
                 .cashAtStart(shift.getCashAtStart())
+                .DateStart(shift.getDateStart())
                 .build();
     }
 

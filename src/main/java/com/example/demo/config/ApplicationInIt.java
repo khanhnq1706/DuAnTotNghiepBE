@@ -35,6 +35,7 @@ public class ApplicationInIt {
             adminUser.setPassword(pe.encode("admin"));
             adminUser.setFullname("Administrator");
             adminUser.setIsAdmin(true);
+            adminUser.setIsDeleted(false);
             userRepository.save(adminUser); // Thêm người dùng admin vào database
             System.out.println("Admin user added successfully!");
         }

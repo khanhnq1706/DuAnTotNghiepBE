@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Date;
 
 @Service
 public class PaymentService {
@@ -34,6 +35,7 @@ public class PaymentService {
         }
         orderNeedPayment.setNamePaymentMethod(PaymentMethod.Cash.getName());
         orderNeedPayment.setStatusOrder(OrderStatus.Completed);
+        orderNeedPayment.setPaymentDate(new Date());
         orderRepository.save(orderNeedPayment);
         TableEntity table = orderNeedPayment.getTableEntity();
         table.setStatus(TableStatus.AVAILABLE);

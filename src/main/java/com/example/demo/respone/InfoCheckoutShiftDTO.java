@@ -4,6 +4,9 @@ package com.example.demo.respone;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor @Builder
@@ -14,4 +17,5 @@ public class InfoCheckoutShiftDTO {
     Double bankAmountEnd;
     Double shiftRevenue;
     Double totalServing;
+    LocalDateTime DateStart;
 }
