@@ -15,11 +15,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.entity.FoodEntity;
 import com.example.demo.entity.PromotionEntity;
 import com.example.demo.map.PromotionMapper;
 import com.example.demo.repository.PromotionRepository;
 import com.example.demo.request.PromotionRequestDTO;
 import com.example.demo.respone.ApiRespone;
+import com.example.demo.respone.FoodResponeDTO;
 import com.example.demo.respone.PromotionResponeDTO;
 import com.example.demo.service.PromotionService;
 
@@ -32,9 +34,12 @@ public class PromotionServiceIml implements PromotionService{
 	@Autowired
 	PromotionMapper mapper;
 	@Override
-	public PromotionResponeDTO getFoodById(int idPromotion) {
-		// TODO Auto-generated method stub
-		return null;
+	public PromotionResponeDTO getPromotionById(int idPromotion) {
+		System.out.println(idPromotion);
+		PromotionEntity promotionEntity = promotionRepository.findById(idPromotion)
+				.orElseThrow(() -> new RuntimeException("Promotion_not_exist"));
+		PromotionResponeDTO responeDTO = mapper.toPromotionResponeDTO(promotionEntity);
+		return responeDTO;
 	}
 
 	@Override

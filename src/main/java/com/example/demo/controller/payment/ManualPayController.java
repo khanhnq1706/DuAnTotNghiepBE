@@ -13,8 +13,8 @@ public class ManualPayController {
     PaymentService paymentService;
 
     @PostMapping
-    public ApiRespone<?> manualPay(@RequestParam int idOrder) {
-        paymentService.paymentBycash(idOrder);
+    public ApiRespone<?> manualPay(@RequestParam int idOrder,@RequestParam int idPromotion) {
+        paymentService.paymentBycash(idOrder,idPromotion);
         return ApiRespone
                 .builder()
                 .build();

@@ -12,6 +12,7 @@ import com.example.demo.entity.PromotionEntity;
 public interface PromotionRepository extends JpaRepository<PromotionEntity, Integer> {
 
 	PromotionEntity findByNamePromotion(String name);
+	PromotionEntity findByIdPromotion(Integer id);
 
 	Page<PromotionEntity> findAll(Specification<PromotionEntity> spec, Pageable pageable);
 

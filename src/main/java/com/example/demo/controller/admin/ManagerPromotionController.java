@@ -36,7 +36,7 @@ public class ManagerPromotionController {
 	    @GetMapping("{idPromotion}")
 	    public ApiRespone<?> getPromotionById(@PathVariable("idPromotion") int idPromotion) {
 	        return ApiRespone.builder()
-	                .result(promotionService.getFoodById(idPromotion))
+	                .result(promotionService.getPromotionById(idPromotion))
 	                .build();
 	    }
 	    @PostMapping

@@ -17,6 +17,7 @@ public interface OrderMapper {
     @Mapping(source = "customer.phone", target = "phoneCustomer")
     @Mapping(source = "shift.idShift", target = "idShift")
     @Mapping(source = "tableEntity.idOrderMain", target = "idOrderMain")
+    @Mapping(source = "promotionEntity.idPromotion", target = "idPromotion")
     OrderResponeDTO toOrderResponeDTO(OrderEntity order);
 
     OrderCustomerDTO toOrderCustomerDTO(OrderEntity order);

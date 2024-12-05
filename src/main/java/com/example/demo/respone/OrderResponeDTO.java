@@ -16,6 +16,7 @@ public class OrderResponeDTO {
     String statusOrder;
     Integer idTable;
     Integer idShift;
+    Integer idPromotion;
     String nameTable;
     String nameArea;
     String phoneCustomer;

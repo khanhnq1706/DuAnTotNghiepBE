@@ -27,11 +27,11 @@ public class VNPayController {
     SimpMessagingTemplate messagingTemplate;
 
     @PostMapping
-    public ApiRespone<?> postRequestCallPayment(@RequestParam int idOrder) {
+    public ApiRespone<?> postRequestCallPayment(@RequestParam int idOrder,@RequestParam int idPromotion) {
 
         return ApiRespone
                 .builder()
-                .result(paymentService.paymentByVNpay(idOrder))
+                .result(paymentService.paymentByVNpay(idOrder,idPromotion))
                 .build();
     }
     @GetMapping

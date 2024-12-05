@@ -12,7 +12,7 @@ import jakarta.validation.Valid;
 
 public interface PromotionService {
 
-	PromotionResponeDTO getFoodById(int idPromotion);
+	
 
 	Page<PromotionResponeDTO> getAllPromotion();
 
@@ -25,5 +25,8 @@ public interface PromotionService {
 
 	Page<PromotionResponeDTO> getPromotionFromFilter(String namePromotion, String status, String isIncreasePrice,
 			String sortField, String sortDirection, Pageable pageable);
+
+	PromotionResponeDTO getPromotionById(int idPromotion);
+
 
 }
